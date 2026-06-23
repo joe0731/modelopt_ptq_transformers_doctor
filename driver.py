@@ -1,0 +1,50 @@
+"""Orchestrate: contract × versions → compatibility matrix."""
+
+from __future__ import annotations
+
+from packaging.version import Version
+
+from .bisect import compatible_ranges
+from .models import OK, ContractRecord
+
+
+def build_matrix(records: list[ContractRecord], versions: list[str], env_runner) -> dict:
+    static = [r for r in records if not r.dynamic]
+    dynamic = [r for r in records if r.dynamic]
+    record_dicts = [r.to_dict() for r in static]
+
+    cache: dict[str, dict] = {}
+    env_errors: dict[str, str] = {}
+
+    def probe(version: str) -> dict:
+        if version not in cache:
+            res = env_runner.probe_version(version, record_dicts)
+            cache[version] = res
+            if res["status"] != "OK":
+                env_errors[version] = res["status"]
+        return cache[version]
+
+    matrix = {"versions_probed": [], "symbols": {}, "dynamic": [], "env_errors": env_errors}
+
+    for r in static:
+        def is_ok(version: str, key: str = r.key) -> bool:
+            res = probe(version)
+            if res["status"] != "OK":
+                return False
+            return res["statuses"].get(key) == OK
+
+        ranges = compatible_ranges(versions, is_ok)
+        statuses = {}
+        for v in cache:
+            res = cache[v]
+            statuses[v] = res["statuses"].get(r.key, res["status"]) if res["status"] == "OK" \
+                else res["status"]
+        matrix["symbols"][r.key] = {
+            "file": r.file, "line": r.line, "guarded": r.guarded, "role": r.role,
+            "compatible_ranges": ranges, "statuses": statuses,
+        }
+
+    matrix["dynamic"] = [{"file": r.file, "line": r.line, "note": r.symbol or "runtime-discovered"}
+                         for r in dynamic]
+    matrix["versions_probed"] = sorted(cache, key=Version)
+    return matrix
