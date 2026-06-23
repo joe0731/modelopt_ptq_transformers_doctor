@@ -1,3 +1,5 @@
+import sys
+
 from modelopt_ptq_transformers_doctor import cli
 from modelopt_ptq_transformers_doctor import progress as progress_mod
 from modelopt_ptq_transformers_doctor.models import ContractRecord
@@ -116,3 +118,4 @@ def test_progress_on_by_default_uses_reporter(tmp_path, monkeypatch):
                    "--out", str(tmp_path / "r")])
     assert rc == 0
     assert isinstance(seen["reporter"], progress_mod.ProgressReporter)
+    assert seen["reporter"].stream is sys.stderr
