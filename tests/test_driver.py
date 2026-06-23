@@ -81,3 +81,41 @@ def test_statuses_cover_same_versions_for_all_symbols():
     m = build_matrix(recs, VERSIONS, TwoSymRunner())
     keysets = [set(info["statuses"]) for info in m["symbols"].values()]
     assert keysets[0] == keysets[1]  # every symbol covers the same probed versions
+
+
+class SpyReporter:
+    def __init__(self):
+        self.started = None
+        self.starts = []
+        self.dones = []
+        self.finished = False
+
+    def start(self, n_versions, n_symbols):
+        self.started = (n_versions, n_symbols)
+
+    def probe_start(self, version):
+        self.starts.append(version)
+
+    def probe_done(self, version, status):
+        self.dones.append((version, status))
+
+    def finish(self):
+        self.finished = True
+
+
+def test_reporter_fires_once_per_unique_version():
+    runner = FakeRunner(present_from=50)
+    spy = SpyReporter()
+    # two symbols share the per-version cache -> callbacks count unique installs
+    build_matrix([_rec(), _rec()], VERSIONS, runner, reporter=spy)
+    assert spy.started == (len(VERSIONS), 2)
+    assert sorted(set(spy.starts)) == sorted(spy.starts)   # no version started twice
+    assert len(spy.starts) == len(spy.dones) == runner.calls
+    assert len(spy.starts) <= len(VERSIONS)
+    assert spy.finished is True
+
+
+def test_build_matrix_without_reporter_still_works():
+    runner = FakeRunner(present_from=50)
+    m = build_matrix([_rec()], VERSIONS, runner)  # no reporter kwarg
+    assert m["symbols"]  # unchanged behaviour
