@@ -1,4 +1,5 @@
 from modelopt_ptq_transformers_doctor import cli
+from modelopt_ptq_transformers_doctor import progress as progress_mod
 from modelopt_ptq_transformers_doctor.models import ContractRecord
 
 
@@ -52,3 +53,66 @@ def test_main_returns_nonzero_when_extraction_fails(monkeypatch, tmp_path):
     monkeypatch.setattr(cli, "extract_contract", boom)
     rc = cli.main(["scan", "--out", str(tmp_path / "o")])
     assert rc == 2
+
+
+def test_parser_accepts_no_progress_flag():
+    p = cli.build_arg_parser()
+    ns = p.parse_args(["scan", "--no-progress"])
+    assert ns.no_progress is True
+    ns2 = p.parse_args(["scan"])
+    assert ns2.no_progress is False
+
+
+def test_no_progress_uses_null_reporter(tmp_path, monkeypatch):
+    rec = ContractRecord("transformers.models.x.modeling_x", "XAttn",
+                         "f.py", 1, guarded=False, dynamic=False, role="quant")
+    monkeypatch.setattr(cli, "installed_modelopt_root", lambda: "/x")
+    monkeypatch.setattr(cli, "extract_contract", lambda root: [rec])
+    monkeypatch.setattr(cli, "fetch_available_versions",
+                        lambda: ["4.48.0", "4.49.0"])
+
+    class FakeRunner:
+        def __init__(self, *a, **k):
+            pass
+
+        def probe_version(self, version, records):
+            return {"status": "OK", "installed": version,
+                    "statuses": {f"{r['module_path']}:{r['symbol']}": "OK"
+                                 for r in records}}
+
+    monkeypatch.setattr(cli, "EnvRunner", FakeRunner)
+
+    seen = {}
+
+    def fake_build_matrix(records, versions, runner, reporter=None):
+        seen["reporter"] = reporter
+        return {"versions_probed": versions, "symbols": {}, "dynamic": [],
+                "env_errors": {}}
+
+    monkeypatch.setattr(cli, "build_matrix", fake_build_matrix)
+    out = tmp_path / "report"
+    rc = cli.main(["scan", "--min", "4.48.0", "--max", "4.49.0",
+                   "--out", str(out), "--no-progress"])
+    assert rc == 0
+    assert isinstance(seen["reporter"], progress_mod.NullProgress)
+    assert not isinstance(seen["reporter"], progress_mod.ProgressReporter)
+
+
+def test_progress_on_by_default_uses_reporter(tmp_path, monkeypatch):
+    monkeypatch.setattr(cli, "installed_modelopt_root", lambda: "/x")
+    monkeypatch.setattr(cli, "extract_contract", lambda root: [])
+    monkeypatch.setattr(cli, "fetch_available_versions", lambda: ["4.48.0"])
+    monkeypatch.setattr(cli, "EnvRunner", lambda *a, **k: object())
+
+    seen = {}
+
+    def fake_build_matrix(records, versions, runner, reporter=None):
+        seen["reporter"] = reporter
+        return {"versions_probed": versions, "symbols": {}, "dynamic": [],
+                "env_errors": {}}
+
+    monkeypatch.setattr(cli, "build_matrix", fake_build_matrix)
+    rc = cli.main(["scan", "--min", "4.48.0", "--max", "4.48.0",
+                   "--out", str(tmp_path / "r")])
+    assert rc == 0
+    assert isinstance(seen["reporter"], progress_mod.ProgressReporter)

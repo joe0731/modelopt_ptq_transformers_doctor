@@ -9,6 +9,7 @@ from . import prober
 from .contract import extract_contract, installed_modelopt_root
 from .driver import build_matrix
 from .envman import EnvRunner
+from .progress import ProgressReporter, NullProgress
 from .report import write_report
 from .versions import fetch_available_versions, select_versions
 
@@ -24,6 +25,8 @@ def build_arg_parser() -> argparse.ArgumentParser:
     scan.add_argument("--pypi", action="store_true",
                       help="use the full stable PyPI release list as the search space")
     scan.add_argument("--out", default="doctor-report", help="output directory")
+    scan.add_argument("--no-progress", action="store_true",
+                      help="disable the live progress bar / ETA output")
     return parser
 
 
@@ -49,7 +52,8 @@ def _run_scan(args) -> int:
         return 3
 
     runner = EnvRunner(prober.__file__)
-    matrix = build_matrix(records, versions, runner)
+    reporter = NullProgress() if args.no_progress else ProgressReporter(stream=sys.stderr)
+    matrix = build_matrix(records, versions, runner, reporter=reporter)
     json_path, md_path = write_report(matrix, args.out)
     print(f"wrote {json_path}\nwrote {md_path}")
     return 0
