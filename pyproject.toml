@@ -1,0 +1,16 @@
+[project]
+name = "modelopt-ptq-transformers-doctor"
+version = "0.1.0"
+description = "Compatibility matrix between modelopt PTQ and transformers versions"
+requires-python = ">=3.10"
+dependencies = ["packaging>=21.0"]
+
+[project.scripts]
+doctor = "modelopt_ptq_transformers_doctor.cli:main"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
