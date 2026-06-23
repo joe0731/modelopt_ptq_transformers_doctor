@@ -31,3 +31,11 @@ def test_write_report_creates_both_artifacts(tmp_path):
     assert Path(md_path).name == "REPORT.md"
     assert json.loads(Path(json_path).read_text())["versions_probed"] == MATRIX["versions_probed"]
     assert "XAttn" in Path(md_path).read_text()
+
+
+def test_compatible_ranges_round_trip_as_lists(tmp_path):
+    json_path, _ = write_report(MATRIX, str(tmp_path / "out"))
+    loaded = json.loads(Path(json_path).read_text(encoding="utf-8"))
+    ranges = loaded["symbols"]["transformers.models.x.modeling_x:XAttn"]["compatible_ranges"]
+    # JSON has no tuple type: ranges come back as lists of [lo, hi] with values preserved.
+    assert ranges == [["4.50.0", "4.51.0"]]
