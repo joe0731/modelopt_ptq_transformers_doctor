@@ -14,7 +14,7 @@ def _fake_opener(payload):
 
 def test_fetch_filters_prereleases_and_sorts():
     payload = {"releases": {"4.50.0": [], "4.49.0": [], "4.51.0rc1": [], "bogus": []}}
-    out = fetch_available_versions(opener=lambda url: _fake_opener(payload))
+    out = fetch_available_versions(opener=lambda url, timeout=None: _fake_opener(payload))
     assert out == ["4.49.0", "4.50.0"]
 
 

@@ -10,9 +10,10 @@ from packaging.version import InvalidVersion, Version
 PYPI_URL = "https://pypi.org/pypi/transformers/json"
 
 
-def fetch_available_versions(opener=urllib.request.urlopen, url=PYPI_URL) -> list[str]:
+def fetch_available_versions(opener=urllib.request.urlopen, url=PYPI_URL,
+                             timeout: float = 30.0) -> list[str]:
     """Return all stable (non-pre/dev-release) transformers versions from PyPI, sorted ascending."""
-    with opener(url) as resp:
+    with opener(url, timeout=timeout) as resp:
         data = json.load(resp)
     out = []
     for raw in data.get("releases", {}):
