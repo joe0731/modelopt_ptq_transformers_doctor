@@ -2,7 +2,9 @@
 name = "modelopt-ptq-transformers-doctor"
 version = "0.1.0"
 description = "Compatibility matrix between modelopt PTQ and transformers versions"
+readme = "README.md"
 requires-python = ">=3.10"
+license = { text = "MIT" }
 dependencies = ["packaging>=21.0"]
 
 [project.scripts]
@@ -12,5 +14,9 @@ doctor = "modelopt_ptq_transformers_doctor.cli:main"
 requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools.packages.find]
+where = ["src"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["src"]
