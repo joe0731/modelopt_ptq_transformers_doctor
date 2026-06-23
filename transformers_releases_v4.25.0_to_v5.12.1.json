@@ -1,0 +1,1057 @@
+{
+  "source": "https://github.com/huggingface/transformers/releases",
+  "range": {
+    "from": "v4.25.0",
+    "to": "v5.12.1"
+  },
+  "generated_note": "v4.25.0 has no standalone GitHub release; earliest tag in range is v4.25.1. Pre-release (rc) and single-model -preview tags are excluded.",
+  "versioning_scheme": {
+    "format": "MAJOR.MINOR.PATCH",
+    "major": "Backward-incompatible changes (true 'big' version). Only v5.0.0 in this range.",
+    "minor": "Feature release: new models/features, backward compatible (X.Y.0).",
+    "patch": "Bug-fix only release (third number >= 1)."
+  },
+  "summary": {
+    "total_releases_in_range": 129,
+    "major_count": 1,
+    "minor_feature_count": 41,
+    "patch_count": 87,
+    "major_versions": [
+      "5.0.0"
+    ]
+  },
+  "releases": [
+    {
+      "tag": "v4.25.1",
+      "version": "4.25.1",
+      "type": "patch",
+      "title": "PyTorch 2.0 support, Audio Spectogram Transformer, Jukebox, Switch Transformers and more",
+      "published_at": "2022-12-02T16:03:31Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.25.1"
+    },
+    {
+      "tag": "v4.26.0",
+      "version": "4.26.0",
+      "type": "minor",
+      "title": "v4.26.0: Generation configs, image processors, backbones and plenty of new models!",
+      "published_at": "2023-01-25T18:32:44Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.26.0"
+    },
+    {
+      "tag": "v4.26.1",
+      "version": "4.26.1",
+      "type": "patch",
+      "title": "V4.26.1: Patch release",
+      "published_at": "2023-02-09T19:30:35Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.26.1"
+    },
+    {
+      "tag": "v4.27.0",
+      "version": "4.27.0",
+      "type": "minor",
+      "title": "BridgeTower, Whisper speedup, DETA, SpeechT5, BLIP-2, CLAP, ALIGN, API updates",
+      "published_at": "2023-03-15T16:25:12Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.27.0"
+    },
+    {
+      "tag": "v4.27.1",
+      "version": "4.27.1",
+      "type": "patch",
+      "title": "v4.27.1: Patch release",
+      "published_at": "2023-03-15T19:50:18Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.27.1"
+    },
+    {
+      "tag": "v4.27.2",
+      "version": "4.27.2",
+      "type": "patch",
+      "title": "v4.27.2: Patch release",
+      "published_at": "2023-03-20T17:42:11Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.27.2"
+    },
+    {
+      "tag": "v4.27.3",
+      "version": "4.27.3",
+      "type": "patch",
+      "title": "v4.27.3: Patch release",
+      "published_at": "2023-03-23T19:01:13Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.27.3"
+    },
+    {
+      "tag": "v4.27.4",
+      "version": "4.27.4",
+      "type": "patch",
+      "title": "v4.27.4: Patch release",
+      "published_at": "2023-03-29T17:08:29Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.27.4"
+    },
+    {
+      "tag": "v4.28.0",
+      "version": "4.28.0",
+      "type": "minor",
+      "title": "v4.28.0: LLaMa, Pix2Struct, MatCha, DePlot, MEGA, NLLB-MoE, GPTBigCode",
+      "published_at": "2023-04-13T18:40:02Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.28.0"
+    },
+    {
+      "tag": "v4.28.1",
+      "version": "4.28.1",
+      "type": "patch",
+      "title": "v4.28.1: Patch release",
+      "published_at": "2023-04-14T16:57:36Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.28.1"
+    },
+    {
+      "tag": "v4.29.0",
+      "version": "4.29.0",
+      "type": "minor",
+      "title": "v4.29.0: Transformers Agents, SAM, RWKV, FocalNet, OpenLLaMa",
+      "published_at": "2023-05-10T21:55:11Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.29.0"
+    },
+    {
+      "tag": "v4.29.1",
+      "version": "4.29.1",
+      "type": "patch",
+      "title": "V4.29.1: Patch release",
+      "published_at": "2023-05-11T20:45:04Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.29.1"
+    },
+    {
+      "tag": "v4.29.2",
+      "version": "4.29.2",
+      "type": "patch",
+      "title": "v4.29.2: Patch release",
+      "published_at": "2023-05-16T19:47:56Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.29.2"
+    },
+    {
+      "tag": "v4.30.0",
+      "version": "4.30.0",
+      "type": "minor",
+      "title": "v4.30.0: 100k, Agents improvements, Safetensors core dependency, Swiftformer, Autoformer, MobileViTv2, timm-as-a-backbone",
+      "published_at": "2023-06-08T18:07:10Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.30.0"
+    },
+    {
+      "tag": "v4.30.1",
+      "version": "4.30.1",
+      "type": "patch",
+      "title": "v4.30.1 Patch release",
+      "published_at": "2023-06-09T15:58:10Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.30.1"
+    },
+    {
+      "tag": "v4.30.2",
+      "version": "4.30.2",
+      "type": "patch",
+      "title": "v4.30.2: Patch release",
+      "published_at": "2023-06-13T19:29:33Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.30.2"
+    },
+    {
+      "tag": "v4.31.0",
+      "version": "4.31.0",
+      "type": "minor",
+      "title": "v4.31.0: Llama v2, MusicGen, Bark, MMS, EnCodec, InstructBLIP, Umt5, MRa, vIvIt",
+      "published_at": "2023-07-18T20:16:04Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.31.0"
+    },
+    {
+      "tag": "v4.32.0",
+      "version": "4.32.0",
+      "type": "minor",
+      "title": "IDEFICS, GPTQ Quantization",
+      "published_at": "2023-08-22T13:11:09Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.32.0"
+    },
+    {
+      "tag": "v4.32.1",
+      "version": "4.32.1",
+      "type": "patch",
+      "title": "Patch release: v4.32.1",
+      "published_at": "2023-08-28T12:48:30Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.32.1"
+    },
+    {
+      "tag": "v4.33.1",
+      "version": "4.33.1",
+      "type": "patch",
+      "title": "Falcon, Code Llama, ViTDet, DINO v2, VITS",
+      "published_at": "2023-09-06T21:14:16Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.33.1"
+    },
+    {
+      "tag": "v4.33.2",
+      "version": "4.33.2",
+      "type": "patch",
+      "title": "Patch release: v4.33.2",
+      "published_at": "2023-09-15T20:24:23Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.33.2"
+    },
+    {
+      "tag": "v4.33.3",
+      "version": "4.33.3",
+      "type": "patch",
+      "title": "Patch release: v4.33.3",
+      "published_at": "2023-09-27T15:09:05Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.33.3"
+    },
+    {
+      "tag": "v4.34.0",
+      "version": "4.34.0",
+      "type": "minor",
+      "title": "v4.34: Mistral, Persimmon, Prompt templating, Flash Attention 2, Tokenizer refactor",
+      "published_at": "2023-10-03T15:00:52Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.34.0"
+    },
+    {
+      "tag": "v4.34.1",
+      "version": "4.34.1",
+      "type": "patch",
+      "title": "Patch release: v4.34.1",
+      "published_at": "2023-10-18T21:15:29Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.34.1"
+    },
+    {
+      "tag": "v4.35.0",
+      "version": "4.35.0",
+      "type": "minor",
+      "title": "Safetensors serialization by default, DistilWhisper, Fuyu, Kosmos-2, SeamlessM4T, Owl-v2",
+      "published_at": "2023-11-02T17:00:05Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.35.0"
+    },
+    {
+      "tag": "v4.35.1",
+      "version": "4.35.1",
+      "type": "patch",
+      "title": "Patch release: v4.35.1",
+      "published_at": "2023-11-14T14:59:15Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.35.1"
+    },
+    {
+      "tag": "v4.35.2",
+      "version": "4.35.2",
+      "type": "patch",
+      "title": "Patch release: v4.35.2",
+      "published_at": "2023-11-15T16:39:42Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.35.2"
+    },
+    {
+      "tag": "v4.36.0",
+      "version": "4.36.0",
+      "type": "minor",
+      "title": "v4.36: Mixtral, Llava/BakLlava, SeamlessM4T v2, AMD ROCm, F.sdpa wide-spread support",
+      "published_at": "2023-12-11T12:12:34Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.36.0"
+    },
+    {
+      "tag": "v4.36.1",
+      "version": "4.36.1",
+      "type": "patch",
+      "title": "Patch release: v4.36.1",
+      "published_at": "2023-12-14T06:57:27Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.36.1"
+    },
+    {
+      "tag": "v4.36.2",
+      "version": "4.36.2",
+      "type": "patch",
+      "title": "Patch release: v4.36.2",
+      "published_at": "2023-12-18T18:44:02Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.36.2"
+    },
+    {
+      "tag": "v4.37.0",
+      "version": "4.37.0",
+      "type": "minor",
+      "title": "v4.37 Qwen2, Phi-2, SigLIP, ViP-LLaVA, Fast2SpeechConformer, 4-bit serialization, Whisper longform generation",
+      "published_at": "2024-01-22T11:20:12Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.37.0"
+    },
+    {
+      "tag": "v4.37.1",
+      "version": "4.37.1",
+      "type": "patch",
+      "title": "Patch release: v4.37.1",
+      "published_at": "2024-01-24T16:15:23Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.37.1"
+    },
+    {
+      "tag": "v4.37.2",
+      "version": "4.37.2",
+      "type": "patch",
+      "title": "Patch release v4.37.2",
+      "published_at": "2024-01-29T16:11:49Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.37.2"
+    },
+    {
+      "tag": "v4.38.0",
+      "version": "4.38.0",
+      "type": "minor",
+      "title": "v4.38: Gemma, Depth Anything, Stable LM; Static Cache, HF Quantizer, AQLM",
+      "published_at": "2024-02-21T13:40:42Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.38.0"
+    },
+    {
+      "tag": "v4.38.1",
+      "version": "4.38.1",
+      "type": "patch",
+      "title": "v4.38.1",
+      "published_at": "2024-02-22T00:24:34Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.38.1"
+    },
+    {
+      "tag": "v4.38.2",
+      "version": "4.38.2",
+      "type": "patch",
+      "title": "v4.38.2",
+      "published_at": "2024-03-01T03:24:28Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.38.2"
+    },
+    {
+      "tag": "v4.39.0",
+      "version": "4.39.0",
+      "type": "minor",
+      "title": "Release v4.39.0",
+      "published_at": "2024-03-21T01:18:35Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.39.0"
+    },
+    {
+      "tag": "v4.39.1",
+      "version": "4.39.1",
+      "type": "patch",
+      "title": "Patch release v4.39.1",
+      "published_at": "2024-03-22T17:01:14Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.39.1"
+    },
+    {
+      "tag": "v4.39.2",
+      "version": "4.39.2",
+      "type": "patch",
+      "title": "Patch release v4.39.2",
+      "published_at": "2024-03-28T17:36:27Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.39.2"
+    },
+    {
+      "tag": "v4.39.3",
+      "version": "4.39.3",
+      "type": "patch",
+      "title": "Release v4.39.3",
+      "published_at": "2024-04-02T09:36:10Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.39.3"
+    },
+    {
+      "tag": "v4.40.0",
+      "version": "4.40.0",
+      "type": "minor",
+      "title": "v4.40.0: Llama 3, Idefics 2, Recurrent Gemma, Jamba, DBRX, OLMo, Qwen2MoE, Grounding Dino",
+      "published_at": "2024-04-18T14:01:56Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.40.0"
+    },
+    {
+      "tag": "v4.40.1",
+      "version": "4.40.1",
+      "type": "patch",
+      "title": "v4.40.1: fix `EosTokenCriteria` for `Llama3` on `mps`",
+      "published_at": "2024-04-23T22:01:20Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.40.1"
+    },
+    {
+      "tag": "v4.40.2",
+      "version": "4.40.2",
+      "type": "patch",
+      "title": "v4.40.2",
+      "published_at": "2024-05-06T16:09:45Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.40.2"
+    },
+    {
+      "tag": "v4.41.0",
+      "version": "4.41.0",
+      "type": "minor",
+      "title": "v4.41.0: Phi3, JetMoE, PaliGemma, VideoLlava, Falcon2, FalconVLM & GGUF support",
+      "published_at": "2024-05-17T16:28:45Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.41.0"
+    },
+    {
+      "tag": "v4.41.1",
+      "version": "4.41.1",
+      "type": "patch",
+      "title": "Release v4.41.1 Fix PaliGemma finetuning, and some small bugs",
+      "published_at": "2024-05-22T20:36:44Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.41.1"
+    },
+    {
+      "tag": "v4.41.2",
+      "version": "4.41.2",
+      "type": "patch",
+      "title": "Release v4.41.2",
+      "published_at": "2024-05-30T17:59:26Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.41.2"
+    },
+    {
+      "tag": "v4.42.0",
+      "version": "4.42.0",
+      "type": "minor",
+      "title": "v4.42.0: Gemma 2, RTDETR, InstructBLIP, LLAVa Next, New Model Adder",
+      "published_at": "2024-06-27T15:49:01Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.42.0"
+    },
+    {
+      "tag": "v4.42.1",
+      "version": "4.42.1",
+      "type": "patch",
+      "title": "v4.42.1: Patch release",
+      "published_at": "2024-06-27T17:47:01Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.42.1"
+    },
+    {
+      "tag": "v4.42.2",
+      "version": "4.42.2",
+      "type": "patch",
+      "title": "Patch release v4.42.2",
+      "published_at": "2024-06-28T06:42:26Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.42.2"
+    },
+    {
+      "tag": "v4.42.3",
+      "version": "4.42.3",
+      "type": "patch",
+      "title": "Patch release v4.42.3",
+      "published_at": "2024-06-28T15:35:36Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.42.3"
+    },
+    {
+      "tag": "v4.42.4",
+      "version": "4.42.4",
+      "type": "patch",
+      "title": "Patch release v4.42.4",
+      "published_at": "2024-07-11T17:09:38Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.42.4"
+    },
+    {
+      "tag": "v4.43.0",
+      "version": "4.43.0",
+      "type": "minor",
+      "title": "v4.43.0: Llama 3.1, Chameleon, ZoeDepth, Hiera",
+      "published_at": "2024-07-23T15:09:04Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.43.0"
+    },
+    {
+      "tag": "v4.43.1",
+      "version": "4.43.1",
+      "type": "patch",
+      "title": "v4.43.1: Patch release",
+      "published_at": "2024-07-23T15:55:56Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.43.1"
+    },
+    {
+      "tag": "v4.43.2",
+      "version": "4.43.2",
+      "type": "patch",
+      "title": "v4.43.2: Patch release",
+      "published_at": "2024-07-24T15:50:18Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.43.2"
+    },
+    {
+      "tag": "v4.43.3",
+      "version": "4.43.3",
+      "type": "patch",
+      "title": "v4.43.3 Patch deepspeed",
+      "published_at": "2024-07-26T15:30:58Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.43.3"
+    },
+    {
+      "tag": "v4.43.4",
+      "version": "4.43.4",
+      "type": "patch",
+      "title": "v4.43.4 Patch Release",
+      "published_at": "2024-08-05T10:57:24Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.43.4"
+    },
+    {
+      "tag": "v4.44.0",
+      "version": "4.44.0",
+      "type": "minor",
+      "title": "Release v4.44.0",
+      "published_at": "2024-08-06T18:39:34Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.44.0"
+    },
+    {
+      "tag": "v4.44.1",
+      "version": "4.44.1",
+      "type": "patch",
+      "title": "Patch release v4.44.1",
+      "published_at": "2024-08-20T17:51:51Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.44.1"
+    },
+    {
+      "tag": "v4.44.2",
+      "version": "4.44.2",
+      "type": "patch",
+      "title": "Release v4.44.2",
+      "published_at": "2024-08-22T16:56:32Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.44.2"
+    },
+    {
+      "tag": "v4.45.0",
+      "version": "4.45.0",
+      "type": "minor",
+      "title": "Llama 3.2, mllama, Qwen2-Audio, Qwen2-VL, OLMoE, Llava Onevision, Pixtral, FalconMamba, Modular Transformers",
+      "published_at": "2024-09-25T18:11:59Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.45.0"
+    },
+    {
+      "tag": "v4.45.1",
+      "version": "4.45.1",
+      "type": "patch",
+      "title": "Patch Release v4.45.1",
+      "published_at": "2024-09-26T18:07:17Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.45.1"
+    },
+    {
+      "tag": "v4.45.2",
+      "version": "4.45.2",
+      "type": "patch",
+      "title": "Release v4.45.2",
+      "published_at": "2024-10-07T17:42:52Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.45.2"
+    },
+    {
+      "tag": "v4.46.0",
+      "version": "4.46.0",
+      "type": "minor",
+      "title": "Release v4.46.0",
+      "published_at": "2024-10-24T08:15:48Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.46.0"
+    },
+    {
+      "tag": "v4.46.1",
+      "version": "4.46.1",
+      "type": "patch",
+      "title": "Patch release v4.46.1",
+      "published_at": "2024-10-29T15:50:03Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.46.1"
+    },
+    {
+      "tag": "v4.46.2",
+      "version": "4.46.2",
+      "type": "patch",
+      "title": "Patch release v4.46.2",
+      "published_at": "2024-11-05T18:21:54Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.46.2"
+    },
+    {
+      "tag": "v4.46.3",
+      "version": "4.46.3",
+      "type": "patch",
+      "title": "Patch release v4.46.3",
+      "published_at": "2024-11-18T22:13:14Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.46.3"
+    },
+    {
+      "tag": "v4.47.0",
+      "version": "4.47.0",
+      "type": "minor",
+      "title": "v4.47.0: PaliGemma-2, I-JEPA, OLMo-2, LayerSkip, Tensor Parallel",
+      "published_at": "2024-12-05T17:45:28Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.47.0"
+    },
+    {
+      "tag": "v4.47.1",
+      "version": "4.47.1",
+      "type": "patch",
+      "title": "v4.47.1",
+      "published_at": "2024-12-17T15:42:54Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.47.1"
+    },
+    {
+      "tag": "v4.48.0",
+      "version": "4.48.0",
+      "type": "minor",
+      "title": "v4.48.0: ModernBERT, Aria, TimmWrapper, ColPali, Falcon3, Bamba, VitPose, DinoV2 w/ Registers, Emu3, Cohere v2, TextNet, DiffLlama, PixtralLarge, Moonshine",
+      "published_at": "2025-01-10T12:14:21Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.48.0"
+    },
+    {
+      "tag": "v4.48.1",
+      "version": "4.48.1",
+      "type": "patch",
+      "title": "Patch release v4.48.1",
+      "published_at": "2025-01-20T16:36:05Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.48.1"
+    },
+    {
+      "tag": "v4.48.2",
+      "version": "4.48.2",
+      "type": "patch",
+      "title": "Patch release v4.48.2",
+      "published_at": "2025-01-30T19:52:27Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.48.2"
+    },
+    {
+      "tag": "v4.48.3",
+      "version": "4.48.3",
+      "type": "patch",
+      "title": "Patch release v4.48.3",
+      "published_at": "2025-02-07T10:10:54Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.48.3"
+    },
+    {
+      "tag": "v4.49.0",
+      "version": "4.49.0",
+      "type": "minor",
+      "title": "v4.49.0: Helium, Qwen2.5-VL, SuperGlue, Granite Vision, Zamba2, GOT-OCR 2.0,  DAB-DETR, Depth Pro, RT-DETRv2, GPTQModel",
+      "published_at": "2025-02-17T15:19:57Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.49.0"
+    },
+    {
+      "tag": "v4.50.0",
+      "version": "4.50.0",
+      "type": "minor",
+      "title": "Release v4.50.0",
+      "published_at": "2025-03-21T13:40:28Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.50.0"
+    },
+    {
+      "tag": "v4.50.1",
+      "version": "4.50.1",
+      "type": "patch",
+      "title": "Patch release v4.50.1",
+      "published_at": "2025-03-25T14:34:24Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.50.1"
+    },
+    {
+      "tag": "v4.50.2",
+      "version": "4.50.2",
+      "type": "patch",
+      "title": "Patch release v4.50.2",
+      "published_at": "2025-03-27T09:08:09Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.50.2"
+    },
+    {
+      "tag": "v4.50.3",
+      "version": "4.50.3",
+      "type": "patch",
+      "title": "Patch release v4.50.3",
+      "published_at": "2025-03-28T18:21:03Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.50.3"
+    },
+    {
+      "tag": "v4.51.0",
+      "version": "4.51.0",
+      "type": "minor",
+      "title": "v4.51.0: Llama 4, Phi4-Multimodal, DeepSeek-v3, Qwen3",
+      "published_at": "2025-04-05T20:07:09Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.51.0"
+    },
+    {
+      "tag": "v4.51.1",
+      "version": "4.51.1",
+      "type": "patch",
+      "title": "Patch release v4.51.1",
+      "published_at": "2025-04-08T09:23:42Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.51.1"
+    },
+    {
+      "tag": "v4.51.2",
+      "version": "4.51.2",
+      "type": "patch",
+      "title": "Patch Release 4.51.2",
+      "published_at": "2025-04-10T16:00:16Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.51.2"
+    },
+    {
+      "tag": "v4.51.3",
+      "version": "4.51.3",
+      "type": "patch",
+      "title": "Patch release v4.51.3",
+      "published_at": "2025-04-14T15:51:52Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.51.3"
+    },
+    {
+      "tag": "v4.52.1",
+      "version": "4.52.1",
+      "type": "patch",
+      "title": "v4.52.1: Qwen2.5-Omni, SAM-HQ, GraniteMoeHybrid, D-FINE, CSM, BitNet, LlamaGuard, TimesFM, MLCD, Janus, InternVL",
+      "published_at": "2025-05-20T16:32:38Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.52.1"
+    },
+    {
+      "tag": "v4.52.2",
+      "version": "4.52.2",
+      "type": "patch",
+      "title": "Patch release v4.52.2",
+      "published_at": "2025-05-21T13:47:03Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.52.2"
+    },
+    {
+      "tag": "v4.52.3",
+      "version": "4.52.3",
+      "type": "patch",
+      "title": "Patch release v4.52.3",
+      "published_at": "2025-05-22T14:40:55Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.52.3"
+    },
+    {
+      "tag": "v4.52.4",
+      "version": "4.52.4",
+      "type": "patch",
+      "title": "Patch release: v4.52.4",
+      "published_at": "2025-05-30T09:18:50Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.52.4"
+    },
+    {
+      "tag": "v4.53.0",
+      "version": "4.53.0",
+      "type": "minor",
+      "title": "Release v4.53.0",
+      "published_at": "2025-06-26T16:07:22Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.53.0"
+    },
+    {
+      "tag": "v4.53.1",
+      "version": "4.53.1",
+      "type": "patch",
+      "title": "Patch Release v4.53.1",
+      "published_at": "2025-07-04T08:29:22Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.53.1"
+    },
+    {
+      "tag": "v4.53.2",
+      "version": "4.53.2",
+      "type": "patch",
+      "title": "Patch Release v4.53.2",
+      "published_at": "2025-07-11T12:39:25Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.53.2"
+    },
+    {
+      "tag": "v4.53.3",
+      "version": "4.53.3",
+      "type": "patch",
+      "title": "Patch release v4.53.3",
+      "published_at": "2025-07-22T07:30:59Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.53.3"
+    },
+    {
+      "tag": "v4.54.0",
+      "version": "4.54.0",
+      "type": "minor",
+      "title": "v4.54.0: Kernels, Transformers Serve, Ernie, Voxtral, LFM2, DeepSeek v2, ModernBERT Decoder...",
+      "published_at": "2025-07-25T18:58:35Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.54.0"
+    },
+    {
+      "tag": "4.54.1",
+      "version": "4.54.1",
+      "type": "patch",
+      "title": "Patch release 4.54.1",
+      "published_at": "2025-07-29T15:57:27Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/4.54.1"
+    },
+    {
+      "tag": "v4.55.0",
+      "version": "4.55.0",
+      "type": "minor",
+      "title": "v4.55.0: New openai GPT OSS model!",
+      "published_at": "2025-08-05T16:11:32Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.55.0"
+    },
+    {
+      "tag": "v4.55.1",
+      "version": "4.55.1",
+      "type": "patch",
+      "title": "Patch release 4.55.1",
+      "published_at": "2025-08-13T08:57:53Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.55.1"
+    },
+    {
+      "tag": "v4.55.2",
+      "version": "4.55.2",
+      "type": "patch",
+      "title": "Patch release 4.55.2: for FA2 users!",
+      "published_at": "2025-08-13T18:25:51Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.55.2"
+    },
+    {
+      "tag": "v4.55.3",
+      "version": "4.55.3",
+      "type": "patch",
+      "title": "Patch release v4.55.3",
+      "published_at": "2025-08-21T09:45:11Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.55.3"
+    },
+    {
+      "tag": "v4.55.4",
+      "version": "4.55.4",
+      "type": "patch",
+      "title": "Patch v4.55.4",
+      "published_at": "2025-08-22T15:18:46Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.55.4"
+    },
+    {
+      "tag": "v4.56.0",
+      "version": "4.56.0",
+      "type": "minor",
+      "title": "v4.56: Dino v3, X-Codec, Ovis 2, MetaCLIP 2, Florence 2, SAM 2, Kosmos 2.5, HunYuan, GLMV-4.5",
+      "published_at": "2025-08-29T18:24:00Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.56.0"
+    },
+    {
+      "tag": "v4.56.1",
+      "version": "4.56.1",
+      "type": "patch",
+      "title": "Patch release v4.56.1",
+      "published_at": "2025-09-04T20:47:27Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.56.1"
+    },
+    {
+      "tag": "v4.56.2",
+      "version": "4.56.2",
+      "type": "patch",
+      "title": "Patch release v4.56.2",
+      "published_at": "2025-09-17T09:13:17Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.56.2"
+    },
+    {
+      "tag": "v4.57.0",
+      "version": "4.57.0",
+      "type": "minor",
+      "title": "v4.57.0: Qwen3-Next, Vault Gemma, Qwen3 VL, LongCat Flash, Flex OLMO, LFM2 VL, BLT, Qwen3 OMNI MoE, Parakeet, EdgeTAM, OLMO3",
+      "published_at": "2025-10-03T17:04:51Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.57.0"
+    },
+    {
+      "tag": "v4.57.1",
+      "version": "4.57.1",
+      "type": "patch",
+      "title": "Patch release v4.57.1",
+      "published_at": "2025-10-14T15:39:34Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.57.1"
+    },
+    {
+      "tag": "v4.57.2",
+      "version": "4.57.2",
+      "type": "patch",
+      "title": "Patch Release v4.57.2",
+      "published_at": "2025-11-24T17:54:34Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.57.2"
+    },
+    {
+      "tag": "v4.57.3",
+      "version": "4.57.3",
+      "type": "patch",
+      "title": "Patch release v4.57.3",
+      "published_at": "2025-11-25T15:51:36Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.57.3"
+    },
+    {
+      "tag": "v4.57.4",
+      "version": "4.57.4",
+      "type": "patch",
+      "title": "Patch release v4.57.4",
+      "published_at": "2026-01-13T11:07:40Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.57.4"
+    },
+    {
+      "tag": "v4.57.5",
+      "version": "4.57.5",
+      "type": "patch",
+      "title": "Patch release v4.57.5",
+      "published_at": "2026-01-13T13:29:13Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.57.5"
+    },
+    {
+      "tag": "v4.57.6",
+      "version": "4.57.6",
+      "type": "patch",
+      "title": "Patch release v4.57.6",
+      "published_at": "2026-01-16T10:40:02Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v4.57.6"
+    },
+    {
+      "tag": "v5.0.0",
+      "version": "5.0.0",
+      "type": "major",
+      "title": "Transformers v5",
+      "published_at": "2026-01-26T10:17:10Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v5.0.0"
+    },
+    {
+      "tag": "v5.1.0",
+      "version": "5.1.0",
+      "type": "minor",
+      "title": "v5.1.0: EXAONE-MoE, PP-DocLayoutV3, Youtu-LLM, GLM-OCR",
+      "published_at": "2026-02-05T15:44:54Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v5.1.0"
+    },
+    {
+      "tag": "v5.2.0",
+      "version": "5.2.0",
+      "type": "minor",
+      "title": "v5.2.0: GLM-5, Qwen3.5, Voxtral Realtime, VibeVoice Acoustic Tokenizer",
+      "published_at": "2026-02-16T18:55:53Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v5.2.0"
+    },
+    {
+      "tag": "v5.3.0",
+      "version": "5.3.0",
+      "type": "minor",
+      "title": "v5.3.0: EuroBERT, VibeVoice ASR, TimesFM2.5, PP-DocLayoutV2, OlmoHybrid, ModernVBert, Higgs Audio V2",
+      "published_at": "2026-03-04T17:42:16Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v5.3.0"
+    },
+    {
+      "tag": "v5.4.0",
+      "version": "5.4.0",
+      "type": "minor",
+      "title": "Release v5.4.0: PaddlePaddle models 🙌, Mistral 4, PI0, VidEoMT, UVDoc, SLANeXt, Jina Embeddings v3",
+      "published_at": "2026-03-27T00:33:02Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v5.4.0"
+    },
+    {
+      "tag": "v5.5.0",
+      "version": "5.5.0",
+      "type": "minor",
+      "title": "Release v5.5.0",
+      "published_at": "2026-04-02T16:15:33Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v5.5.0"
+    },
+    {
+      "tag": "v5.5.1",
+      "version": "5.5.1",
+      "type": "patch",
+      "title": "Patch release v5.5.1",
+      "published_at": "2026-04-09T05:53:03Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v5.5.1"
+    },
+    {
+      "tag": "v5.5.2",
+      "version": "5.5.2",
+      "type": "patch",
+      "title": "Patch release: v5.5.2",
+      "published_at": "2026-04-09T14:05:16Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v5.5.2"
+    },
+    {
+      "tag": "v5.5.3",
+      "version": "5.5.3",
+      "type": "patch",
+      "title": "Patch release: v5.5.3",
+      "published_at": "2026-04-09T15:53:11Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v5.5.3"
+    },
+    {
+      "tag": "v5.5.4",
+      "version": "5.5.4",
+      "type": "patch",
+      "title": "Patch release v5.5.4",
+      "published_at": "2026-04-13T16:58:06Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v5.5.4"
+    },
+    {
+      "tag": "v5.6.0",
+      "version": "5.6.0",
+      "type": "minor",
+      "title": "Release v5.6.0",
+      "published_at": "2026-04-22T15:52:30Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v5.6.0"
+    },
+    {
+      "tag": "v5.6.1",
+      "version": "5.6.1",
+      "type": "patch",
+      "title": "Patch release v5.6.1",
+      "published_at": "2026-04-23T08:20:03Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v5.6.1"
+    },
+    {
+      "tag": "v5.6.2",
+      "version": "5.6.2",
+      "type": "patch",
+      "title": "Patch release v5.6.2",
+      "published_at": "2026-04-23T18:36:03Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v5.6.2"
+    },
+    {
+      "tag": "v5.7.0",
+      "version": "5.7.0",
+      "type": "minor",
+      "title": "Release v5.7.0",
+      "published_at": "2026-04-28T18:32:50Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v5.7.0"
+    },
+    {
+      "tag": "v5.8.0",
+      "version": "5.8.0",
+      "type": "minor",
+      "title": "Release 5.8.0",
+      "published_at": "2026-05-05T16:52:21Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v5.8.0"
+    },
+    {
+      "tag": "v5.8.1",
+      "version": "5.8.1",
+      "type": "patch",
+      "title": "Patch release v5.8.1",
+      "published_at": "2026-05-13T03:21:23Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v5.8.1"
+    },
+    {
+      "tag": "v5.9.0",
+      "version": "5.9.0",
+      "type": "minor",
+      "title": "Release v5.9.0",
+      "published_at": "2026-05-20T14:12:54Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v5.9.0"
+    },
+    {
+      "tag": "v5.10.1",
+      "version": "5.10.1",
+      "type": "patch",
+      "title": "Release v5.10.1",
+      "published_at": "2026-06-03T15:37:41Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v5.10.1"
+    },
+    {
+      "tag": "v5.10.2",
+      "version": "5.10.2",
+      "type": "patch",
+      "title": "Patch release v5.10.2",
+      "published_at": "2026-06-04T18:43:06Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v5.10.2"
+    },
+    {
+      "tag": "v5.10.3",
+      "version": "5.10.3",
+      "type": "patch",
+      "title": "Patch release v5.10.4",
+      "published_at": "2026-06-15T17:29:39Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v5.10.3"
+    },
+    {
+      "tag": "v5.11.0",
+      "version": "5.11.0",
+      "type": "minor",
+      "title": "Release v5.11.0",
+      "published_at": "2026-06-10T16:32:44Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v5.11.0"
+    },
+    {
+      "tag": "v5.12.0",
+      "version": "5.12.0",
+      "type": "minor",
+      "title": "Release v5.12.0",
+      "published_at": "2026-06-12T14:39:40Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v5.12.0"
+    },
+    {
+      "tag": "v5.12.1",
+      "version": "5.12.1",
+      "type": "patch",
+      "title": "Patch release v5.12.1",
+      "published_at": "2026-06-15T17:29:59Z",
+      "url": "https://github.com/huggingface/transformers/releases/tag/v5.12.1"
+    }
+  ]
+}
