@@ -38,7 +38,7 @@ does this modelopt checkout actually work with?"
 ## Install
 
 ```bash
-pip install modelopt-ptq-transformers-doctor
+pip install git+https://github.com/joe0731/modelopt_ptq_transformers_doctor
 ```
 
 Or from a checkout:
