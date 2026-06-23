@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -37,8 +38,19 @@ class EnvRunner:
             if install.returncode != 0:
                 return {"status": ENV_ERROR, "installed": None, "statuses": {}}
 
+            # Copy the prober into the temp dir so its sys.path[0] becomes
+            # venv_dir (which has no bisect.py), not the package directory.
+            # This avoids the local bisect.py shadowing the stdlib bisect that
+            # huggingface_hub imports, on ALL Python versions (the -P flag that
+            # previously worked around this requires Python 3.11+).
+            if os.path.isfile(self.prober_path):
+                run_prober = os.path.join(venv_dir, "_prober.py")
+                shutil.copyfile(self.prober_path, run_prober)
+            else:
+                run_prober = self.prober_path
+
             payload = json.dumps({"records": records})
-            proc = self.runner([py, "-P", self.prober_path], input=payload,
+            proc = self.runner([py, run_prober], input=payload,
                                capture_output=True, text=True)
             if proc.returncode != 0:
                 return {"status": PROBE_ERROR, "installed": None, "statuses": {}}
