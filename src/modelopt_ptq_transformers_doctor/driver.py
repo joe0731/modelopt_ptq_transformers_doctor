@@ -9,6 +9,14 @@ from .models import OK, ContractRecord
 from .progress import NullProgress
 
 
+def _safe(fn, *args):
+    """Call a progress-reporter callback; never let it raise into the scan."""
+    try:
+        fn(*args)
+    except Exception:
+        pass
+
+
 def build_matrix(records: list[ContractRecord], versions: list[str], env_runner, reporter=None) -> dict:
     """Build a symbol × version compatibility matrix.
 
@@ -24,16 +32,16 @@ def build_matrix(records: list[ContractRecord], versions: list[str], env_runner,
     cache: dict[str, dict] = {}
     env_errors: dict[str, str] = {}
 
-    reporter.start(len(versions), len(static))
+    _safe(reporter.start, len(versions), len(static))
 
     def probe(version: str) -> dict:
         if version not in cache:
-            reporter.probe_start(version)
+            _safe(reporter.probe_start, version)
             res = env_runner.probe_version(version, record_dicts)
             cache[version] = res
             if res["status"] != "OK":
                 env_errors[version] = res["status"]
-            reporter.probe_done(version, res["status"])
+            _safe(reporter.probe_done, version, res["status"])
         return cache[version]
 
     matrix = {"versions_probed": [], "symbols": {}, "dynamic": [], "env_errors": env_errors}
@@ -61,5 +69,5 @@ def build_matrix(records: list[ContractRecord], versions: list[str], env_runner,
     matrix["dynamic"] = [{"file": r.file, "line": r.line, "note": r.symbol or "runtime-discovered"}
                          for r in dynamic]
     matrix["versions_probed"] = sorted(cache, key=Version)
-    reporter.finish()
+    _safe(reporter.finish)
     return matrix

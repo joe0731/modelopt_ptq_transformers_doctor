@@ -89,9 +89,12 @@ class SpyReporter:
         self.starts = []
         self.dones = []
         self.finished = False
+        self.start_calls = 0
+        self.finish_calls = 0
 
     def start(self, n_versions, n_symbols):
         self.started = (n_versions, n_symbols)
+        self.start_calls += 1
 
     def probe_start(self, version):
         self.starts.append(version)
@@ -101,6 +104,7 @@ class SpyReporter:
 
     def finish(self):
         self.finished = True
+        self.finish_calls += 1
 
 
 def test_reporter_fires_once_per_unique_version():
@@ -111,7 +115,8 @@ def test_reporter_fires_once_per_unique_version():
     assert spy.started == (len(VERSIONS), 2)
     assert sorted(set(spy.starts)) == sorted(spy.starts)   # no version started twice
     assert len(spy.starts) == len(spy.dones) == runner.calls
-    assert len(spy.starts) <= len(VERSIONS)
+    assert spy.start_calls == 1
+    assert spy.finish_calls == 1
     assert spy.finished is True
 
 
@@ -119,3 +124,25 @@ def test_build_matrix_without_reporter_still_works():
     runner = FakeRunner(present_from=50)
     m = build_matrix([_rec()], VERSIONS, runner)  # no reporter kwarg
     assert m["symbols"]  # unchanged behaviour
+
+
+class RaisingReporter:
+    """Reporter whose start and probe_done raise RuntimeError."""
+
+    def start(self, n_versions, n_symbols):
+        raise RuntimeError("start exploded")
+
+    def probe_start(self, version):
+        pass
+
+    def probe_done(self, version, status):
+        raise RuntimeError("probe_done exploded")
+
+    def finish(self):
+        pass
+
+
+def test_reporter_exception_does_not_abort_scan():
+    """Reporter exceptions must never propagate into the scan (design guarantee)."""
+    m = build_matrix([_rec()], VERSIONS, FakeRunner(present_from=50), reporter=RaisingReporter())
+    assert "symbols" in m

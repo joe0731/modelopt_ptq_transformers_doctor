@@ -104,6 +104,7 @@ def test_progress_on_by_default_uses_reporter(tmp_path, monkeypatch):
     monkeypatch.setattr(cli, "installed_modelopt_root", lambda: "/x")
     monkeypatch.setattr(cli, "extract_contract", lambda root: [])
     monkeypatch.setattr(cli, "fetch_available_versions", lambda: ["4.48.0"])
+    monkeypatch.setattr(cli, "select_versions", lambda available, mn, mx: ["4.48.0"])
     monkeypatch.setattr(cli, "EnvRunner", lambda *a, **k: object())
 
     seen = {}
