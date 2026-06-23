@@ -30,6 +30,73 @@ does the installed modelopt actually work with?"
 > third-party packages** (`transformers`, `torch`) to probe them. Importing a
 > package executes its code. Run it only against versions/sources you trust.
 
+## Workflow graph
+
+```mermaid
+flowchart TD
+    CLI["doctor scan&nbsp;(cli.py)"] --> LOC["Locate installed modelopt<br/>contract.installed_modelopt_root<br/><i>find_spec — never imports it</i>"]
+    LOC --> EXT["Extract dependency contract<br/>contract.extract_contract<br/><i>static AST scan of allowlisted PTQ files</i>"]
+    EXT --> DISC["Discover versions<br/>versions.fetch_available_versions<br/><i>stable releases from PyPI</i>"]
+    DISC --> SEL["Select search space<br/>versions.select_versions<br/><i>--min / --max / --pypi</i>"]
+    SEL --> BUILD["Orchestrate&nbsp;(driver.build_matrix)"]
+
+    BUILD --> BIS["For each symbol: binary search<br/>version_bisect.compatible_ranges"]
+
+    subgraph PROBE_LOOP["Lazy, cached probing"]
+      BIS -->|"is this symbol OK at version v?"| Q{"v in cache?"}
+      Q -->|hit| CACHE[("per-version cache")]
+      Q -->|miss| ENV["envman.probe_version<br/><i>uv venv + pip install transformers==v + torch</i>"]
+      ENV --> PRB["prober.py inside the child env<br/><i>stdlib only; import each symbol;<br/>records in / statuses out as JSON</i>"]
+      PRB --> CACHE
+      CACHE --> BIS
+    end
+
+    BIS --> REP["report.write_report<br/><i>matrix.json + REPORT.md</i>"]
+    BUILD -. "progress on stderr (fires once per cache miss)" .-> PROG["progress.ProgressReporter<br/><i>estimate · bar · ETA</i>"]
+```
+
+## Working principle
+
+The pipeline is built around one idea: **never import modelopt or transformers
+into the tool's own process** — locate and parse statically, then probe each
+`transformers` version inside a disposable child environment.
+
+1. **Locate without importing** (`contract.py`). `importlib.util.find_spec`
+   resolves where modelopt lives and returns its root directory. modelopt is
+   never imported, so the tool never pulls torch into its own process.
+2. **Static contract extraction** (`contract.py` + `allowlist.py`). Only the
+   allowlisted PTQ **quant** and **export** source files are parsed (never
+   executed). The AST visitor records three kinds of dependency:
+   - `from transformers[...] import X` and `transformers.Foo.Bar` attribute
+     chains (class-like names — first letter uppercase),
+   - imports wrapped in `try/except ImportError` are flagged **guarded**
+     (optional — failing is often acceptable),
+   - `register({var: ...})` calls with a variable key are flagged **dynamic**
+     (runtime-discovered, not statically checkable — listed, not probed).
+3. **Version discovery** (`versions.py`). The PyPI JSON API yields every stable
+   `transformers` release (pre/dev releases skipped); `--min`/`--max` filter the
+   range, or `--pypi` takes the whole list.
+4. **Isolated probing** (`envman.py` + `prober.py`). Each candidate version gets
+   a throwaway `uv` venv with `transformers==<v>` + `torch` installed. The
+   stdlib-only `prober.py` is copied into a neutral temp dir and run by **that
+   env's** Python: it receives the contract records as JSON on stdin, imports
+   each module, checks `hasattr` for each symbol, and returns per-symbol
+   statuses on stdout (`OK` / `MISSING_MODULE` / `MISSING_SYMBOL`; the env layer
+   adds `ENV_ERROR` / `PROBE_ERROR` for build/run failures).
+5. **Bisection + caching** (`driver.py` + `version_bisect.py`). Probing is
+   lazy: each symbol's compatible window is found by binary search (anchor
+   sampling + edge searches), assuming a single contiguous OK window. Every
+   probe result is **cached per version**, so a full scan installs each version
+   at most once — which is why the report's per-version columns are a *sample*
+   of the range, while the **compatible** column is the authoritative window.
+6. **Progress** (`progress.py`). The reporter fires once per *unique* install
+   (cache miss only), printing an up-front probe estimate then a live bar + ETA
+   to stderr. It is wrapped so a reporter/stream error can never abort a scan.
+7. **Report** (`report.py`). Results are written as `matrix.json` (full) and
+   `REPORT.md` (human-readable); guarded imports are marked 🛡, dynamic
+   registrations listed separately, and any `ENV_ERROR` versions are flagged as
+   caveats since ranges adjacent to them may be understated.
+
 ## Requirements
 
 - Python **>= 3.10**
@@ -139,6 +206,65 @@ modelopt 到底兼容哪些 `transformers` 版本"。
 
 > **信任边界:** 本工具会创建虚拟环境并**安装、导入第三方包**(`transformers`、
 > `torch`)来探测它们。导入一个包即会执行其代码。请仅对你信任的版本/来源运行。
+
+## 工作流程图
+
+```mermaid
+flowchart TD
+    CLI["doctor scan&nbsp;(cli.py)"] --> LOC["定位已安装的 modelopt<br/>contract.installed_modelopt_root<br/><i>find_spec —— 绝不导入</i>"]
+    LOC --> EXT["提取依赖契约<br/>contract.extract_contract<br/><i>对 allowlist 中的 PTQ 文件做静态 AST 扫描</i>"]
+    EXT --> DISC["发现版本<br/>versions.fetch_available_versions<br/><i>从 PyPI 拉取稳定版</i>"]
+    DISC --> SEL["选择搜索空间<br/>versions.select_versions<br/><i>--min / --max / --pypi</i>"]
+    SEL --> BUILD["编排&nbsp;(driver.build_matrix)"]
+
+    BUILD --> BIS["对每个符号做二分查找<br/>version_bisect.compatible_ranges"]
+
+    subgraph PROBE_LOOP["惰性 + 带缓存的探测"]
+      BIS -->|"该符号在版本 v 上是否 OK?"| Q{"v 已缓存?"}
+      Q -->|命中| CACHE[("按版本缓存")]
+      Q -->|未命中| ENV["envman.probe_version<br/><i>uv venv + pip install transformers==v + torch</i>"]
+      ENV --> PRB["子环境内运行 prober.py<br/><i>仅标准库;导入每个符号;<br/>records 入 / statuses 出,均为 JSON</i>"]
+      PRB --> CACHE
+      CACHE --> BIS
+    end
+
+    BIS --> REP["report.write_report<br/><i>matrix.json + REPORT.md</i>"]
+    BUILD -. "进度输出到 stderr(每次缓存未命中触发一次)" .-> PROG["progress.ProgressReporter<br/><i>预估 · 进度条 · ETA</i>"]
+```
+
+## 工作原理
+
+整条流水线围绕一个核心思想:**绝不把 modelopt 或 transformers 导入到工具自身的
+进程里** —— 先静态定位与解析,再在一次性的子环境中逐版本探测。
+
+1. **定位但不导入**(`contract.py`)。用 `importlib.util.find_spec` 解析 modelopt
+   的位置并返回其根目录,全程不导入 modelopt,因此不会把 torch 拉进工具自身进程。
+2. **静态契约提取**(`contract.py` + `allowlist.py`)。仅解析(而非执行)
+   allowlist 中的 PTQ **quant** 与 **export** 源文件。AST 访问器记录三类依赖:
+   - `from transformers[...] import X` 以及 `transformers.Foo.Bar` 属性链(类名
+     形态——首字母大写),
+   - 被 `try/except ImportError` 包裹的导入标记为 **guarded**(可选——失败通常可
+     接受),
+   - 键为变量的 `register({var: ...})` 调用标记为 **dynamic**(运行时发现,无法
+     静态检查——只列出,不探测)。
+3. **版本发现**(`versions.py`)。通过 PyPI JSON API 获取全部稳定版 `transformers`
+   发布(跳过 pre/dev);用 `--min`/`--max` 过滤区间,或用 `--pypi` 取整张列表。
+4. **隔离探测**(`envman.py` + `prober.py`)。每个候选版本都创建一次性的 `uv`
+   虚拟环境,安装 `transformers==<v>` + `torch`。仅依赖标准库的 `prober.py` 被复制
+   到中立临时目录,由**该环境的** Python 运行:它从 stdin 读入 JSON 形式的契约
+   记录,导入每个模块,对每个符号检查 `hasattr`,再把各符号状态以 JSON 写到
+   stdout(`OK` / `MISSING_MODULE` / `MISSING_SYMBOL`;环境层另加 `ENV_ERROR` /
+   `PROBE_ERROR` 表示构建/运行失败)。
+5. **二分 + 缓存**(`driver.py` + `version_bisect.py`)。探测是惰性的:每个符号的
+   兼容区间用二分查找定位(锚点采样 + 边界查找),并假设兼容区间是单段连续的。每个
+   探测结果都**按版本缓存**,因此一次完整扫描对每个版本最多只安装一次——这也是为什么
+   报告里的逐版本列只是区间的*采样*,而 **compatible** 列才是权威区间。
+6. **进度**(`progress.py`)。报告器在每次*唯一*安装(仅缓存未命中)时触发一次,先
+   打印探测次数预估,再向 stderr 输出实时进度条 + ETA。它被包裹保护,报告器/流的
+   异常绝不会中断扫描。
+7. **报告**(`report.py`)。结果写成 `matrix.json`(完整)与 `REPORT.md`(人类
+   可读);guarded 导入标 🛡,dynamic 注册单独列出,任何 `ENV_ERROR` 版本都会被标注
+   为注意事项,因为其相邻区间可能被低估。
 
 ## 环境要求
 
