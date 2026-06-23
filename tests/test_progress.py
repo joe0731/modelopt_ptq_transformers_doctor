@@ -1,6 +1,7 @@
 # tests/test_progress.py
 import math
 from modelopt_ptq_transformers_doctor import progress
+from modelopt_ptq_transformers_doctor.progress import ProgressReporter, NullProgress
 
 
 def test_estimate_probes_bounds():
@@ -33,9 +34,6 @@ def test_render_bar():
     assert progress.render_bar(5, 10) == "█████░░░░░"
     # total <= 0 renders a full bar (avoids div-by-zero)
     assert progress.render_bar(0, 0) == "█" * 10
-
-
-from modelopt_ptq_transformers_doctor.progress import ProgressReporter, NullProgress
 
 
 class FakeStream:
@@ -92,8 +90,8 @@ def test_non_tty_logs_one_line_per_probe():
     text = stream.text
     assert "search space: 2 versions" in text
     assert "est. binary-search probes:" in text
-    assert "transformers==4.50.0" in text and "OK" in text
-    assert "transformers==4.51.0" in text and "ENV_ERROR" in text
+    assert "transformers==4.50.0  OK" in text
+    assert "transformers==4.51.0  ENV_ERROR" in text
     assert "\r" not in text  # non-TTY never uses carriage returns
     assert "probed 2/2 versions" in text
 
@@ -105,9 +103,11 @@ def test_tty_draws_single_line_bar_with_eta():
     r.start(2, 1)
     r.probe_start("4.50.0")
     r.probe_done("4.50.0", "OK")
+    r.finish()
     text = stream.text
     assert "\r" in text                 # carriage-return redraw
     assert "transformers==4.50.0" in text
     assert "1/2" in text
     assert "ETA <=" in text
     assert "█" in text or "░" in text    # bar glyphs present
+    assert "probed 1/2 versions" in text
