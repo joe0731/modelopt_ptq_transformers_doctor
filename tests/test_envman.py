@@ -5,8 +5,10 @@ import types
 
 import pytest
 
+from modelopt_ptq_transformers_doctor import prober
 from modelopt_ptq_transformers_doctor.envman import EnvRunner
 
+PROBER = prober.__file__
 RECORDS = [{"module_path": "json", "symbol": "dumps", "dynamic": False}]
 
 
@@ -21,7 +23,7 @@ def _fake_run_factory(install_rc=0, probe_stdout=None, probe_rc=0):
 
 def test_successful_probe_returns_statuses():
     out = json.dumps({"transformers_version": "4.50.0", "statuses": {"json:dumps": "OK"}})
-    runner = EnvRunner("prober.py", runner=_fake_run_factory(probe_stdout=out))
+    runner = EnvRunner(PROBER, runner=_fake_run_factory(probe_stdout=out))
     res = runner.probe_version("4.50.0", RECORDS)
     assert res["status"] == "OK"
     assert res["installed"] == "4.50.0"
@@ -29,22 +31,30 @@ def test_successful_probe_returns_statuses():
 
 
 def test_install_failure_returns_env_error():
-    runner = EnvRunner("prober.py", runner=_fake_run_factory(install_rc=1))
+    runner = EnvRunner(PROBER, runner=_fake_run_factory(install_rc=1))
     res = runner.probe_version("9.9.9", RECORDS)
     assert res["status"] == "ENV_ERROR"
     assert res["statuses"] == {}
 
 
 def test_prober_bad_output_returns_probe_error():
-    runner = EnvRunner("prober.py", runner=_fake_run_factory(probe_stdout="not json"))
+    runner = EnvRunner(PROBER, runner=_fake_run_factory(probe_stdout="not json"))
     res = runner.probe_version("4.50.0", RECORDS)
     assert res["status"] == "PROBE_ERROR"
 
 
 def test_prober_nonzero_exit_returns_probe_error():
-    runner = EnvRunner("prober.py", runner=_fake_run_factory(probe_stdout="{}", probe_rc=1))
+    runner = EnvRunner(PROBER, runner=_fake_run_factory(probe_stdout="{}", probe_rc=1))
     res = runner.probe_version("4.50.0", RECORDS)
     assert res["status"] == "PROBE_ERROR"
+
+
+def test_copy_failure_returns_env_error():
+    out = json.dumps({"transformers_version": "4.50.0", "statuses": {}})
+    runner = EnvRunner("/no/such/prober/file.py", runner=_fake_run_factory(probe_stdout=out))
+    res = runner.probe_version("4.50.0", RECORDS)
+    assert res["status"] == "ENV_ERROR"
+    assert res["statuses"] == {}
 
 
 @pytest.mark.skipif(shutil.which("uv") is None, reason="uv not installed")

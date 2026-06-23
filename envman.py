@@ -43,11 +43,11 @@ class EnvRunner:
             # This avoids the local bisect.py shadowing the stdlib bisect that
             # huggingface_hub imports, on ALL Python versions (the -P flag that
             # previously worked around this requires Python 3.11+).
-            if os.path.isfile(self.prober_path):
-                run_prober = os.path.join(venv_dir, "_prober.py")
+            run_prober = os.path.join(venv_dir, "_prober.py")
+            try:
                 shutil.copyfile(self.prober_path, run_prober)
-            else:
-                run_prober = self.prober_path
+            except OSError:
+                return {"status": ENV_ERROR, "installed": None, "statuses": {}}
 
             payload = json.dumps({"records": records})
             proc = self.runner([py, run_prober], input=payload,
