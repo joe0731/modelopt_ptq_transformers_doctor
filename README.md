@@ -80,6 +80,13 @@ Options:
 | `--max VERSION` | maximum `transformers` version, inclusive |
 | `--pypi` | use the full stable PyPI release list (only when no `--min`/`--max`) |
 | `--out DIR` | output directory (default: `doctor-report`) |
+| `--no-progress` | disable the live progress bar / ETA (progress is on by default, printed to stderr) |
+
+During a scan, progress is printed to **stderr**: an up-front estimate of the
+number of binary-search probes (`~LOW-N`), then a live bar showing the
+`transformers` version under test, elapsed time, and an ETA. On a
+non-interactive stream (pipe / CI) it logs one line per probed version instead.
+Use `--no-progress` to silence it.
 
 Output:
 
