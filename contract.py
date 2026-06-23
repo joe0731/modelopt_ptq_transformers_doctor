@@ -63,6 +63,10 @@ class _Visitor(ast.NodeVisitor):
         for stmt in node.orelse + node.finalbody:
             self.visit(stmt)
 
+    # ast.TryStar (Python 3.11+ except* syntax) has the same body/handlers
+    # shape as ast.Try, so we reuse the same visitor.
+    visit_TryStar = visit_Try
+
     def visit_ImportFrom(self, node: ast.ImportFrom):
         if node.module and (node.module == "transformers"
                             or node.module.startswith("transformers.")):

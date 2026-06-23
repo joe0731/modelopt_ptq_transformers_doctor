@@ -25,6 +25,11 @@ def test_markdown_contains_symbol_versions_and_range():
     assert "| 4.49.0 |" in md or "4.49.0" in md
 
 
+def test_markdown_contains_authoritative_note():
+    md = render_markdown(MATRIX)
+    assert "compatible" in md and "authoritative" in md
+
+
 def test_write_report_creates_both_artifacts(tmp_path):
     json_path, md_path = write_report(MATRIX, str(tmp_path / "out"))
     assert Path(json_path).name == "matrix.json"

@@ -11,6 +11,7 @@ PYPI_URL = "https://pypi.org/pypi/transformers/json"
 
 
 def fetch_available_versions(opener=urllib.request.urlopen, url=PYPI_URL) -> list[str]:
+    """Return all stable (non-pre/dev-release) transformers versions from PyPI, sorted ascending."""
     with opener(url) as resp:
         data = json.load(resp)
     out = []
@@ -26,6 +27,7 @@ def fetch_available_versions(opener=urllib.request.urlopen, url=PYPI_URL) -> lis
 
 
 def select_versions(available, min_v: str | None, max_v: str | None) -> list[str]:
+    """Return the subset of *available* versions within [min_v, max_v], sorted ascending."""
     lo = Version(min_v) if min_v else None
     hi = Version(max_v) if max_v else None
     chosen = []

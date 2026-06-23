@@ -38,11 +38,11 @@ class EnvRunner:
             if install.returncode != 0:
                 return {"status": ENV_ERROR, "installed": None, "statuses": {}}
 
-            # Copy the prober into the temp dir so its sys.path[0] becomes
-            # venv_dir (which has no bisect.py), not the package directory.
-            # This avoids the local bisect.py shadowing the stdlib bisect that
-            # huggingface_hub imports, on ALL Python versions (the -P flag that
-            # previously worked around this requires Python 3.11+).
+            # Run the prober from a copy in a neutral temp dir so the package
+            # directory is never on sys.path[0]; otherwise a package module could
+            # shadow a stdlib module that transformers' deps import.
+            # (Defence-in-depth: the -P flag that previously worked around this
+            # requires Python 3.11+.)
             run_prober = os.path.join(venv_dir, "_prober.py")
             try:
                 shutil.copyfile(self.prober_path, run_prober)

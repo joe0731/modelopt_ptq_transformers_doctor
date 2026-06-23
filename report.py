@@ -19,9 +19,15 @@ def render_markdown(matrix: dict) -> str:
     versions = matrix["versions_probed"]
     lines = ["# modelopt PTQ ↔ transformers compatibility matrix", ""]
 
+    lines.append("> Version columns show only the versions the bisection actually probed "
+                 "(a sample, not every version in range). "
+                 "The **compatible** column is the authoritative result.")
+    lines.append("")
+
     if matrix.get("env_errors"):
         lines.append("> ⚠️ Some versions failed to build/probe and are unreliable: "
-                     + ", ".join(sorted(matrix["env_errors"])) + ".")
+                     + ", ".join(sorted(matrix["env_errors"]))
+                     + ". Compatible ranges adjacent to these versions may be understated.")
         lines.append("")
 
     header = "| symbol | role | compatible | " + " | ".join(versions) + " |"

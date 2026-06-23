@@ -48,9 +48,17 @@ def compatible_ranges(versions: Sequence[str],
         ok_idx = [i for i in range(n) if ok(i)]
         return _contiguous_ranges(versions, ok_idx) if ok_idx else []
 
+    # NOTE: This assumes a single contiguous OK window.  Non-contiguous OK-sets
+    # are collapsed to their outer envelope; the no-anchor branch above falls
+    # back to a full scan instead.
+
     # Left edge: first True in [0, anchor] (monotonic False...True up to anchor).
     left = _first_true(0, anchor, ok)
-    # Right edge: first False after anchor; window ends just before it.
-    first_false = _first_true(anchor, n - 1, lambda i: not ok(i))
-    right = first_false - 1
+    # Right edge: first False *after* anchor; window ends just before it.
+    # Guard: if anchor is already the last index the window extends to the end.
+    if anchor == n - 1:
+        right = n - 1
+    else:
+        first_false = _first_true(anchor + 1, n - 1, lambda i: not ok(i))
+        right = first_false - 1
     return [(versions[left], versions[right])]

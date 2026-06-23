@@ -82,3 +82,14 @@ def test_extract_contract_raises_for_missing_allowlist_file(tmp_path):
     with pytest.raises(FileNotFoundError) as exc:
         extract_contract(str(tmp_path))
     assert "modelopt/torch" in str(exc.value)
+
+
+def test_guarded_flag_set_for_module_not_found_error():
+    src = (
+        "try:\n"
+        "    from transformers.x import Y\n"
+        "except ModuleNotFoundError:\n"
+        "    pass\n"
+    )
+    r = _by_key(extract_from_source(src, "f.py", "quant"))["transformers.x:Y"]
+    assert r.guarded is True

@@ -4,11 +4,17 @@ from __future__ import annotations
 
 from packaging.version import Version
 
-from .bisect import compatible_ranges
+from .version_bisect import compatible_ranges
 from .models import OK, ContractRecord
 
 
 def build_matrix(records: list[ContractRecord], versions: list[str], env_runner) -> dict:
+    """Build a symbol × version compatibility matrix.
+
+    ``versions_probed`` in the returned dict contains only the bisection-probed
+    subset of *versions* (those actually installed and probed), not the full
+    input list.
+    """
     static = [r for r in records if not r.dynamic]
     dynamic = [r for r in records if r.dynamic]
     record_dicts = [r.to_dict() for r in static]

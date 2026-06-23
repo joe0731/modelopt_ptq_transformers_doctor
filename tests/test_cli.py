@@ -41,4 +41,4 @@ def test_main_returns_nonzero_when_extraction_fails(monkeypatch, tmp_path):
         raise FileNotFoundError("missing allowlist file")
     monkeypatch.setattr(cli, "extract_contract", boom)
     rc = cli.main(["scan", "--modelopt", "/x", "--out", str(tmp_path / "o")])
-    assert rc != 0
+    assert rc == 2

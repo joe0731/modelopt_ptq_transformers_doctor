@@ -1,4 +1,4 @@
-from modelopt_ptq_transformers_doctor.bisect import compatible_ranges
+from modelopt_ptq_transformers_doctor.version_bisect import compatible_ranges
 
 V = [f"4.{m}" for m in range(40, 60)]  # "4.40".."4.59", 20 versions
 
