@@ -6,7 +6,7 @@ import argparse
 import sys
 
 from . import prober
-from .contract import extract_contract
+from .contract import extract_contract, installed_modelopt_root
 from .driver import build_matrix
 from .envman import EnvRunner
 from .report import write_report
@@ -17,8 +17,8 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="doctor",
                                      description="modelopt PTQ ↔ transformers compatibility matrix")
     sub = parser.add_subparsers(dest="command", required=True)
-    scan = sub.add_parser("scan", help="scan a modelopt source tree across transformers versions")
-    scan.add_argument("--modelopt", required=True, help="path to the modelopt source checkout")
+    scan = sub.add_parser("scan",
+                          help="scan the installed modelopt across transformers versions")
     scan.add_argument("--min", default=None, help="minimum transformers version (inclusive)")
     scan.add_argument("--max", default=None, help="maximum transformers version (inclusive)")
     scan.add_argument("--pypi", action="store_true",
@@ -29,7 +29,12 @@ def build_arg_parser() -> argparse.ArgumentParser:
 
 def _run_scan(args) -> int:
     try:
-        records = extract_contract(args.modelopt)
+        modelopt_root = installed_modelopt_root()
+    except ModuleNotFoundError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+    try:
+        records = extract_contract(modelopt_root)
     except FileNotFoundError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2

@@ -5,7 +5,10 @@ description = "Compatibility matrix between modelopt PTQ and transformers versio
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
-dependencies = ["packaging>=21.0"]
+dependencies = [
+    "packaging>=21.0",
+    "nvidia-modelopt @ git+https://github.com/NVIDIA/Model-Optimizer.git",
+]
 
 [project.scripts]
 doctor = "modelopt_ptq_transformers_doctor.cli:main"

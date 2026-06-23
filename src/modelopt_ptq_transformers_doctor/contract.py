@@ -4,12 +4,31 @@ from __future__ import annotations
 
 import ast
 import glob
+import importlib.util
 import os
 
 from .allowlist import EXPORT_FILES, EXPORT_PLUGIN_GLOB, QUANT_FILES, ROLE_OF
 from .models import ContractRecord
 
 _IMPORT_EXCEPTIONS = {"ImportError", "ModuleNotFoundError"}
+
+
+def installed_modelopt_root() -> str:
+    """Locate the installed modelopt package and return the root directory that
+    contains it (i.e. the dir under which ``modelopt/torch/...`` resolves).
+
+    Uses ``find_spec`` so modelopt is *located* but never imported (importing it
+    would pull in torch and other heavy dependencies). Raises ModuleNotFoundError
+    if modelopt is not installed in the current runtime environment.
+    """
+    spec = importlib.util.find_spec("modelopt")
+    if spec is None or not spec.origin:
+        raise ModuleNotFoundError(
+            "modelopt is not installed in this environment. Install it with:\n"
+            "  pip install git+https://github.com/NVIDIA/Model-Optimizer.git"
+        )
+    # spec.origin -> <site-packages>/modelopt/__init__.py
+    return os.path.dirname(os.path.dirname(spec.origin))
 
 
 def _handler_catches_importerror(handler: ast.ExceptHandler) -> bool:
