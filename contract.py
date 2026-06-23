@@ -78,6 +78,7 @@ class _Visitor(ast.NodeVisitor):
             if symbol[:1].isupper():  # class-like; skip __version__, lowercase attrs
                 module_path = ".".join(parts[:-1])
                 self._add(module_path, symbol, node.lineno)
+                return  # maximal chain captured; deeper sub-chains are prefixes
         self.generic_visit(node)
 
     def visit_Call(self, node: ast.Call):

@@ -62,3 +62,23 @@ def test_detects_dynamic_registration():
     )
     dyn = [r for r in extract_from_source(src, "f.py", "quant") if r.dynamic]
     assert len(dyn) == 1 and dyn[0].symbol == "mod_type"
+
+
+def test_nested_capitalized_chain_not_double_counted():
+    src = "import transformers\nx = transformers.SomeCls.AnotherCls\n"
+    keys = [r.key for r in extract_from_source(src, "f.py", "quant")]
+    assert keys == ["transformers.SomeCls:AnotherCls"]
+
+
+def test_method_call_on_class_still_captures_class():
+    src = "import transformers\ntransformers.Foo.bar()\n"
+    keys = {r.key for r in extract_from_source(src, "f.py", "quant")}
+    assert "transformers:Foo" in keys
+
+
+def test_extract_contract_raises_for_missing_allowlist_file(tmp_path):
+    import pytest
+    from modelopt_ptq_transformers_doctor.contract import extract_contract
+    with pytest.raises(FileNotFoundError) as exc:
+        extract_contract(str(tmp_path))
+    assert "modelopt/torch" in str(exc.value)
