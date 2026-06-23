@@ -112,26 +112,17 @@ flowchart TD
 per-version cache, so each version is installed at most once across the scan.*
 
 ```mermaid
-sequenceDiagram
-    participant driver as driver.build_matrix
-    participant bisect as version_bisect
-    participant cache as per-version cache
-    participant env as envman + prober
-    driver->>bisect: compatible_ranges(versions, is_ok)
-    loop binary search selects a version v
-        bisect->>driver: is_ok(v)?
-        driver->>cache: probe(v) cached?
-        alt hit
-            cache-->>driver: cached statuses
-        else miss (fires progress)
-            driver->>env: probe_version(v)
-            env-->>driver: statuses (installs v once)
-            driver->>cache: store
-        end
-        driver-->>bisect: OK / not OK
-    end
-    bisect-->>driver: compatible window [lo, hi]
-    Note over driver,cache: REPORT.md version columns are the probed sample, while compatible is the authoritative window
+flowchart TD
+    drive["driver.build_matrix<br/>for each symbol"] --> search["version_bisect.compatible_ranges<br/><i>binary search picks a version v</i>"]
+    search --> ask{"is_ok(v) → probe(v)<br/>v already in per-version cache?"}
+    ask -->|hit| reuse["reuse cached statuses<br/><i>no install</i>"]
+    ask -->|miss| install["envman.probe_version(v)<br/><i>install v once · fires progress</i>"]
+    install --> store["store statuses in cache"]
+    store --> verdict["return OK / not-OK to the search"]
+    reuse --> verdict
+    verdict -->|search continues| search
+    verdict -->|window found| window["compatible window [lo, hi]"]
+    window --> note["REPORT.md per-version columns = probed sample;<br/>compatible column = authoritative window"]
 ```
 
 > The report (`report.py`) writes `matrix.json` (full) + `REPORT.md`. Guarded
@@ -328,26 +319,17 @@ flowchart TD
 因此整次扫描中每个版本最多只安装一次。*
 
 ```mermaid
-sequenceDiagram
-    participant driver as driver.build_matrix
-    participant bisect as version_bisect
-    participant cache as 按版本缓存
-    participant env as envman + prober
-    driver->>bisect: compatible_ranges(versions, is_ok)
-    loop 二分查找选中某版本 v
-        bisect->>driver: is_ok(v)?
-        driver->>cache: probe(v) 已缓存?
-        alt 命中
-            cache-->>driver: 缓存的 statuses
-        else 未命中(触发进度)
-            driver->>env: probe_version(v)
-            env-->>driver: statuses(只安装一次 v)
-            driver->>cache: 写入缓存
-        end
-        driver-->>bisect: OK / 非 OK
-    end
-    bisect-->>driver: 兼容区间 [lo, hi]
-    Note over driver,cache: REPORT.md 的逐版本列是被探测的采样,compatible 列才是权威区间
+flowchart TD
+    drive["driver.build_matrix<br/>对每个符号"] --> search["version_bisect.compatible_ranges<br/><i>二分查找选中某版本 v</i>"]
+    search --> ask{"is_ok(v) → probe(v)<br/>v 是否已在按版本缓存中?"}
+    ask -->|命中| reuse["复用缓存的 statuses<br/><i>不安装</i>"]
+    ask -->|未命中| install["envman.probe_version(v)<br/><i>只安装一次 v · 触发进度</i>"]
+    install --> store["把 statuses 写入缓存"]
+    store --> verdict["把 OK / 非 OK 返回给查找"]
+    reuse --> verdict
+    verdict -->|查找继续| search
+    verdict -->|找到区间| window["兼容区间 [lo, hi]"]
+    window --> note["REPORT.md 逐版本列 = 被探测的采样;<br/>compatible 列 = 权威区间"]
 ```
 
 > 报告(`report.py`)写出 `matrix.json`(完整)与 `REPORT.md`。guarded 导入标
