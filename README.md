@@ -131,7 +131,7 @@ sequenceDiagram
         driver-->>bisect: OK / not OK
     end
     bisect-->>driver: compatible window [lo, hi]
-    Note over driver,cache: version columns in REPORT.md = the probed sample;<br/>the "compatible" column is the authoritative window
+    Note over driver,cache: version columns in REPORT.md = the probed sample;<br/>the compatible column is the authoritative window
 ```
 
 > The report (`report.py`) writes `matrix.json` (full) + `REPORT.md`. Guarded
@@ -347,7 +347,7 @@ sequenceDiagram
         driver-->>bisect: OK / 非 OK
     end
     bisect-->>driver: 兼容区间 [lo, hi]
-    Note over driver,cache: REPORT.md 的逐版本列 = 被探测的采样;<br/>"compatible" 列才是权威区间
+    Note over driver,cache: REPORT.md 的逐版本列 = 被探测的采样;<br/>compatible 列才是权威区间
 ```
 
 > 报告(`report.py`)写出 `matrix.json`(完整)与 `REPORT.md`。guarded 导入标
