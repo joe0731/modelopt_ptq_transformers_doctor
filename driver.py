@@ -33,16 +33,18 @@ def build_matrix(records: list[ContractRecord], versions: list[str], env_runner)
                 return False
             return res["statuses"].get(key) == OK
 
-        ranges = compatible_ranges(versions, is_ok)
-        statuses = {}
-        for v in cache:
-            res = cache[v]
-            statuses[v] = res["statuses"].get(r.key, res["status"]) if res["status"] == "OK" \
-                else res["status"]
         matrix["symbols"][r.key] = {
             "file": r.file, "line": r.line, "guarded": r.guarded, "role": r.role,
-            "compatible_ranges": ranges, "statuses": statuses,
+            "compatible_ranges": compatible_ranges(versions, is_ok), "statuses": {},
         }
+
+    # Second pass: cache is now complete, so every symbol's statuses covers the same probed versions.
+    for r in static:
+        info = matrix["symbols"][r.key]
+        for v, res in cache.items():
+            info["statuses"][v] = (
+                res["statuses"].get(r.key, res["status"]) if res["status"] == OK else res["status"]
+            )
 
     matrix["dynamic"] = [{"file": r.file, "line": r.line, "note": r.symbol or "runtime-discovered"}
                          for r in dynamic]

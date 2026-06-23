@@ -58,3 +58,26 @@ def test_env_error_version_is_recorded_and_treated_as_not_ok():
                                  ("OK" if minor >= 48 else "MISSING_SYMBOL") for r in records}}
     m = build_matrix([_rec()], VERSIONS, ErrRunner())
     assert m["env_errors"].get("4.50.0") == "ENV_ERROR"
+
+
+def test_statuses_cover_same_versions_for_all_symbols():
+    class TwoSymRunner:
+        def __init__(self):
+            self.calls = 0
+        def probe_version(self, version, records):
+            self.calls += 1
+            minor = int(version.split(".")[1])
+            statuses = {}
+            for rec in records:
+                k = f"{rec['module_path']}:{rec['symbol']}"
+                present_from = 49 if rec["symbol"] == "A" else 51
+                statuses[k] = "OK" if minor >= present_from else "MISSING_SYMBOL"
+            return {"status": "OK", "installed": version, "statuses": statuses}
+
+    recs = [
+        ContractRecord("m", "A", "f.py", 1, guarded=False, dynamic=False, role="quant"),
+        ContractRecord("m", "B", "f.py", 2, guarded=False, dynamic=False, role="quant"),
+    ]
+    m = build_matrix(recs, VERSIONS, TwoSymRunner())
+    keysets = [set(info["statuses"]) for info in m["symbols"].values()]
+    assert keysets[0] == keysets[1]  # every symbol covers the same probed versions
