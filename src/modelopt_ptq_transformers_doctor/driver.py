@@ -6,15 +6,25 @@ from packaging.version import Version
 
 from .version_bisect import compatible_ranges
 from .models import OK, ContractRecord
+from .progress import NullProgress
 
 
-def build_matrix(records: list[ContractRecord], versions: list[str], env_runner) -> dict:
+def _safe(fn, *args):
+    """Call a progress-reporter callback; never let it raise into the scan."""
+    try:
+        fn(*args)
+    except Exception:
+        pass
+
+
+def build_matrix(records: list[ContractRecord], versions: list[str], env_runner, reporter=None) -> dict:
     """Build a symbol × version compatibility matrix.
 
     ``versions_probed`` in the returned dict contains only the bisection-probed
     subset of *versions* (those actually installed and probed), not the full
     input list.
     """
+    reporter = reporter or NullProgress()
     static = [r for r in records if not r.dynamic]
     dynamic = [r for r in records if r.dynamic]
     record_dicts = [r.to_dict() for r in static]
@@ -22,12 +32,16 @@ def build_matrix(records: list[ContractRecord], versions: list[str], env_runner)
     cache: dict[str, dict] = {}
     env_errors: dict[str, str] = {}
 
+    _safe(reporter.start, len(versions), len(static))
+
     def probe(version: str) -> dict:
         if version not in cache:
+            _safe(reporter.probe_start, version)
             res = env_runner.probe_version(version, record_dicts)
             cache[version] = res
             if res["status"] != "OK":
                 env_errors[version] = res["status"]
+            _safe(reporter.probe_done, version, res["status"])
         return cache[version]
 
     matrix = {"versions_probed": [], "symbols": {}, "dynamic": [], "env_errors": env_errors}
@@ -55,4 +69,5 @@ def build_matrix(records: list[ContractRecord], versions: list[str], env_runner)
     matrix["dynamic"] = [{"file": r.file, "line": r.line, "note": r.symbol or "runtime-discovered"}
                          for r in dynamic]
     matrix["versions_probed"] = sorted(cache, key=Version)
+    _safe(reporter.finish)
     return matrix
