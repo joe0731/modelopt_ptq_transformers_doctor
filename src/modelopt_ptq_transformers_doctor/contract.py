@@ -58,9 +58,10 @@ def _dotted_name(node: ast.AST) -> list[str] | None:
 
 
 class _Visitor(ast.NodeVisitor):
-    def __init__(self, file: str, role: str):
+    def __init__(self, file: str, role: str, import_roots=("transformers",)):
         self.file = file
         self.role = role
+        self.import_roots = tuple(import_roots)
         self.records: list[ContractRecord] = []
         self._guarded = False
 
@@ -87,8 +88,7 @@ class _Visitor(ast.NodeVisitor):
     visit_TryStar = visit_Try
 
     def visit_ImportFrom(self, node: ast.ImportFrom):
-        if node.module and (node.module == "transformers"
-                            or node.module.startswith("transformers.")):
+        if node.module and any(node.module == r or node.module.startswith(r + ".") for r in self.import_roots):
             for alias in node.names:
                 if alias.name == "*":
                     continue
@@ -96,7 +96,7 @@ class _Visitor(ast.NodeVisitor):
 
     def visit_Attribute(self, node: ast.Attribute):
         parts = _dotted_name(node)
-        if parts and parts[0] == "transformers" and len(parts) >= 2:
+        if parts and parts[0] in self.import_roots and len(parts) >= 2:
             symbol = parts[-1]
             middle = parts[1:-1]
             is_class_like = symbol[:1].isupper()
@@ -121,23 +121,28 @@ class _Visitor(ast.NodeVisitor):
         self.generic_visit(node)
 
 
-def extract_from_source(source: str, file: str, role: str) -> list[ContractRecord]:
+def extract_from_source(source: str, file: str, role: str, import_roots=("transformers",)) -> list[ContractRecord]:
     tree = ast.parse(source)
-    v = _Visitor(file, role)
+    v = _Visitor(file, role, import_roots=import_roots)
     v.visit(tree)
     return v.records
 
 
-def extract_contract(modelopt_root: str) -> list[ContractRecord]:
-    records: list[ContractRecord] = []
-    for rel in QUANT_FILES + EXPORT_FILES:
+def extract_contract(modelopt_root: str, target=None) -> list[ContractRecord]:
+    from .targets import TARGETS
+    target = target or TARGETS["transformers"]
+    records = []
+    for rel in target.files:
         path = os.path.join(modelopt_root, rel)
         if not os.path.isfile(path):
-            raise FileNotFoundError(f"expected modelopt allowlist file missing: {rel}")
+            continue  # absent in this modelopt version — skip gracefully
         with open(path, encoding="utf-8") as fh:
-            records += extract_from_source(fh.read(), rel, ROLE_OF[rel])
-    for path in sorted(glob.glob(os.path.join(modelopt_root, EXPORT_PLUGIN_GLOB))):
-        rel = os.path.relpath(path, modelopt_root)
-        with open(path, encoding="utf-8") as fh:
-            records += extract_from_source(fh.read(), rel, "export")
+            records += extract_from_source(fh.read(), rel, target.role_of(rel),
+                                           import_roots=target.import_roots)
+    if target.export_plugin_glob:
+        for path in sorted(glob.glob(os.path.join(modelopt_root, target.export_plugin_glob))):
+            rel = os.path.relpath(path, modelopt_root)
+            with open(path, encoding="utf-8") as fh:
+                records += extract_from_source(fh.read(), rel, "export",
+                                               import_roots=target.import_roots)
     return records
