@@ -98,7 +98,13 @@ class _Visitor(ast.NodeVisitor):
         parts = _dotted_name(node)
         if parts and parts[0] == "transformers" and len(parts) >= 2:
             symbol = parts[-1]
-            if symbol[:1].isupper():  # class-like; skip __version__, lowercase attrs
+            middle = parts[1:-1]
+            is_class_like = symbol[:1].isupper()
+            is_module_level = (
+                not symbol.startswith("__")
+                and all(p[:1].islower() for p in middle)
+            )
+            if is_class_like or is_module_level:
                 module_path = ".".join(parts[:-1])
                 self._add(module_path, symbol, node.lineno)
                 return  # maximal chain captured; deeper sub-chains are prefixes
