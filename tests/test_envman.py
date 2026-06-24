@@ -63,3 +63,20 @@ def test_integration_real_uv_probes_stdlib_symbol(tmp_path):
     runner = EnvRunner(prober.__file__, extra_deps=())
     res = runner.probe_version("4.46.0", RECORDS)
     assert res["status"] in {"OK", "ENV_ERROR"}  # OK unless offline / version pull fails
+
+
+def test_probe_installs_target_pkg_and_pinned_deps():
+    cmds = []
+    def fake_run(cmd, **kw):
+        cmds.append(cmd)
+        import types, json as _j
+        is_probe = any("prober" in str(c) for c in cmd)
+        if is_probe:
+            return types.SimpleNamespace(returncode=0, stdout=_j.dumps(
+                {"transformers_version": None, "statuses": {}, "signatures": {}}), stderr="")
+        return types.SimpleNamespace(returncode=0, stdout="", stderr="")
+    from modelopt_ptq_transformers_doctor.envman import EnvRunner
+    r = EnvRunner(PROBER, pkg="vllm", extra_deps=("transformers==4.56.0",), runner=fake_run)
+    r.probe_version("0.9.0", RECORDS)
+    install = next(c for c in cmds if "install" in c)
+    assert "vllm==0.9.0" in install and "transformers==4.56.0" in install

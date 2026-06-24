@@ -13,8 +13,9 @@ from .models import ENV_ERROR, PROBE_ERROR
 
 
 class EnvRunner:
-    def __init__(self, prober_path, extra_deps=("torch",), uv="uv", runner=subprocess.run):
+    def __init__(self, prober_path, pkg="transformers", extra_deps=("torch",), uv="uv", runner=subprocess.run):
         self.prober_path = prober_path
+        self.pkg = pkg
         self.extra_deps = tuple(extra_deps)
         self.uv = uv
         self.runner = runner
@@ -32,7 +33,7 @@ class EnvRunner:
                 return {"status": ENV_ERROR, "installed": None, "statuses": {}}
 
             py = self._python_path(venv_dir)
-            pkgs = [f"transformers=={version}", *self.extra_deps]
+            pkgs = [f"{self.pkg}=={version}", *self.extra_deps]
             install = self.runner([self.uv, "pip", "install", "--python", py, *pkgs],
                                   capture_output=True, text=True)
             if install.returncode != 0:
