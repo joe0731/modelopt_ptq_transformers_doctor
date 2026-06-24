@@ -74,6 +74,28 @@ def cell_for(info: dict, version: str, probed: set) -> tuple[str, str, str]:
     return STATUS.get(info["statuses"].get(version, ""), NA)
 
 
+def minor_status(info: dict, mn: str, all_versions: list[str], probed: set) -> tuple[str, str]:
+    """Aggregate one feature (minor) version into (css_class, tooltip).
+
+    green=all probed patches OK, red=all module-missing, amber=mixed/symbol-
+    missing, na=no patch in this minor was probed.
+    """
+    patches = [v for v in all_versions if minor(v) == mn]
+    probed_patches = [v for v in patches if v in probed]
+    if not probed_patches:
+        return "na", f"{mn}: N/A — not probed ({len(patches)} release(s) in range)"
+    sts = [info["statuses"].get(v, "") for v in probed_patches]
+    ok = sum(1 for x in sts if x == "OK")
+    detail = ", ".join(f"{v} {STATUS.get(info['statuses'].get(v, ''), NA)[2]}" for v in probed_patches)
+    if ok == len(sts):
+        cls = "ok"
+    elif ok == 0:
+        cls = "bad" if all(x == "MISSING_MODULE" for x in sts) else "warn"
+    else:
+        cls = "warn"
+    return cls, f"{mn}: {detail}"
+
+
 def summary(matrix: dict) -> dict:
     syms = matrix["symbols"]
     return {
@@ -126,16 +148,18 @@ def build_html(matrix: dict, modelopt_version: str, generated: str, all_versions
             f"<td class='supcell'>{support_bar(support_frac(info, probed))}</td></tr>"
         )
 
-    # full grid
+    # grid: one column per feature (minor) version, coloured by compatibility
+    minors = sorted({minor(v) for v in all_versions}, key=Version)
+    probed_minors = {minor(v) for v in probed}
     head = "".join(
-        f"<th class='vh{' na' if v not in probed_set else ''}'>{esc(v)}</th>" for v in all_versions
+        f"<th class='vh{' na' if mn not in probed_minors else ''}'>{esc(mn)}</th>" for mn in minors
     )
     grid_rows = []
     for key, info in sorted(matrix["symbols"].items()):
         cells = []
-        for v in all_versions:
-            emoji, cls, label = cell_for(info, v, probed_set)
-            cells.append(f"<td class='{cls}' title='{esc(v)}: {esc(label)}'></td>")
+        for mn in minors:
+            cls, tip = minor_status(info, mn, all_versions, probed_set)
+            cells.append(f"<td class='{cls}' title='{esc(tip)}'></td>")
         grid_rows.append(
             f"<tr><th class='rsym'><code>{esc(short(key))}</code></th>" + "".join(cells) + "</tr>"
         )
@@ -246,7 +270,7 @@ def build_html(matrix: dict, modelopt_version: str, generated: str, all_versions
     <tbody>{''.join(sym_rows)}</tbody>
   </table>
 
-  <h2>Support grid <small>(symbol × version — each cell is one probed release)</small></h2>
+  <h2>Support grid <small>(symbol × feature version — colour = compatibility; hover for patch detail)</small></h2>
   <div class="grid-wrap"><table>
     <tr><th class="rsym">symbol</th>{head}</tr>
     {''.join(grid_rows)}
