@@ -18,12 +18,12 @@ from .versions import fetch_available_versions, select_versions
 
 def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="doctor",
-                                     description="modelopt PTQ ↔ transformers compatibility matrix")
+                                     description="modelopt PTQ ↔ library compatibility matrix")
     sub = parser.add_subparsers(dest="command", required=True)
     scan = sub.add_parser("scan",
-                          help="scan the installed modelopt across transformers versions")
-    scan.add_argument("--min", default=None, help="minimum transformers version (inclusive)")
-    scan.add_argument("--max", default=None, help="maximum transformers version (inclusive)")
+                          help="scan the installed modelopt across a target library's versions")
+    scan.add_argument("--min", default=None, help="minimum target version (inclusive)")
+    scan.add_argument("--max", default=None, help="maximum target version (inclusive)")
     scan.add_argument("--pypi", action="store_true",
                       help="use the full stable PyPI release list as the search space")
     scan.add_argument("--out", default=None, help="output directory (default: doctor-report/<target>)")

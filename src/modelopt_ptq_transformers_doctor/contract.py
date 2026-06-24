@@ -1,4 +1,4 @@
-"""Static AST extraction of modelopt PTQ's transformers dependency contract."""
+"""Static AST extraction of modelopt PTQ's dependency contract for a target library."""
 
 from __future__ import annotations
 
@@ -7,7 +7,6 @@ import glob
 import importlib.util
 import os
 
-from .allowlist import EXPORT_FILES, EXPORT_PLUGIN_GLOB, QUANT_FILES, ROLE_OF
 from .models import ContractRecord
 
 _IMPORT_EXCEPTIONS = {"ImportError", "ModuleNotFoundError"}
