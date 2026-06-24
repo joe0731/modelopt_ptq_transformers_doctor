@@ -1,6 +1,6 @@
 [project]
 name = "modelopt-ptq-transformers-doctor"
-version = "0.1.0"
+version = "0.2.0"
 description = "Compatibility matrix between modelopt PTQ and transformers versions"
 readme = "README.md"
 requires-python = ">=3.10"
