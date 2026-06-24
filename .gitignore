@@ -10,3 +10,7 @@ dist/
 
 # Tool output (default --out directory)
 doctor-report/
+
+# Vendored third-party design skill — install with: uipro init --ai claude|codex
+.claude/skills/ui-ux-pro-max/
+.codex/skills/ui-ux-pro-max/

@@ -212,6 +212,24 @@ pip install pytest
 pytest
 ```
 
+## Agent skills
+
+This repo ships an agent skill for Claude Code and Codex:
+
+- **`compat-report`** (`.claude/skills/`, `.codex/skills/`) — the end-to-end
+  workflow to scan one `nvidia-modelopt` version and render the styled
+  compatibility report (`report/render_compat.py`). Tracked in git.
+
+The report styling was designed with the third-party **`ui-ux-pro-max`** design
+skill, which is **not** committed (it's vendored). The reports render fully
+without it (the CSS is baked into `render_compat.py`); to get the design skill
+back for further UI work, install it:
+
+```bash
+npm install -g uipro-cli
+uipro init --ai claude    # and: uipro init --ai codex
+```
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
@@ -416,6 +434,23 @@ doctor scan --pypi --out doctor-report
 pip install -e .
 pip install pytest
 pytest
+```
+
+## Agent 技能
+
+本仓库内置一个面向 Claude Code 与 Codex 的 agent skill:
+
+- **`compat-report`**(`.claude/skills/`、`.codex/skills/`)—— 对某个
+  `nvidia-modelopt` 版本做扫描并渲染带样式的兼容性报告(`report/render_compat.py`)
+  的端到端工作流。已纳入 git。
+
+报告样式借助第三方设计技能 **`ui-ux-pro-max`** 设计完成,但**未提交**(为 vendored
+依赖)。没有它报告也能正常渲染(CSS 已内联进 `render_compat.py`);如需该设计技能做
+进一步 UI 工作,可安装:
+
+```bash
+npm install -g uipro-cli
+uipro init --ai claude    # 以及:uipro init --ai codex
 ```
 
 ## 许可证
