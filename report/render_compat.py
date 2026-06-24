@@ -154,12 +154,13 @@ def build_html(matrix: dict, modelopt_version: str, generated: str, all_versions
     head = "".join(
         f"<th class='vh{' na' if mn not in probed_minors else ''}'>{esc(mn)}</th>" for mn in minors
     )
+    glyph = {"ok": "✓", "warn": "~", "bad": "✗", "env": "!", "na": "–"}
     grid_rows = []
     for key, info in sorted(matrix["symbols"].items()):
         cells = []
         for mn in minors:
             cls, tip = minor_status(info, mn, all_versions, probed_set)
-            cells.append(f"<td class='{cls}' title='{esc(tip)}'></td>")
+            cells.append(f"<td class='{cls}' title='{esc(tip)}'>{glyph[cls]}</td>")
         grid_rows.append(
             f"<tr><th class='rsym'><code>{esc(short(key))}</code></th>" + "".join(cells) + "</tr>"
         )
@@ -192,7 +193,18 @@ def build_html(matrix: dict, modelopt_version: str, generated: str, all_versions
                     f"({len(matrix['dynamic'])}) — runtime-discovered, not statically checkable</summary>"
                     f"<ul class='dyn'>{items}</ul></details>")
 
-    na_count = len([v for v in all_versions if v not in probed_set])
+    na_versions = [v for v in all_versions if v not in probed_set]
+    na_count = len(na_versions)
+    probed_chips = " ".join(f"<span class='chip'>{esc(v)}</span>" for v in probed)
+    na_chips = " ".join(f"<span class='chip na'>{esc(v)}</span>" for v in na_versions)
+    probed_block = (
+        f"<details open class='probed'><summary><b>{len(probed)}</b> of {len(all_versions)} "
+        "in-range releases were <b>actually probed</b> — the rest are <b>N/A</b> "
+        "(inferred from the window, not tested)</summary>"
+        f"<div class='chips'><b>✓ probed ({len(probed)}):</b> {probed_chips}</div>"
+        + (f"<div class='chips'><b>– N/A, not tested ({na_count}):</b> {na_chips}</div>" if na_versions else "")
+        + "</details>"
+    )
     coverage = (f"All <b>{len(probed)}</b> stable releases in range were probed directly "
                 "(yes/no determined by test; no inferred cells)." if na_count == 0 else
                 f"<b>{len(probed)}</b> of {len(all_versions)} in-range releases were probed; "
@@ -236,14 +248,18 @@ def build_html(matrix: dict, modelopt_version: str, generated: str, all_versions
   th.vh {{ writing-mode:vertical-rl; transform:rotate(180deg); font-weight:500; padding:.4rem .15rem; white-space:nowrap; }}
   th.vh.na {{ color:var(--na); }}
   th.rsym {{ position:sticky; left:0; background:#fff; white-space:nowrap; z-index:1; border-right:1px solid var(--line); }}
-  .grid-wrap td {{ width:18px; min-width:18px; padding:0; height:22px; }}
+  .grid-wrap td {{ min-width:26px; padding:0; height:24px; text-align:center; color:#fff; font-size:.74rem; font-weight:700; }}
   td.ok{{background:var(--ok)}} td.warn{{background:var(--warn)}} td.bad{{background:var(--bad)}}
-  td.env{{background:var(--env)}} td.na{{background:repeating-linear-gradient(45deg,#fff,#fff 3px,#eaeef2 3px,#eaeef2 6px)}}
+  td.env{{background:var(--env)}} td.na{{color:#8c959f;background:repeating-linear-gradient(45deg,#fff,#fff 3px,#eaeef2 3px,#eaeef2 6px)}}
   ul.drift {{ list-style:none; padding:0; }} ul.drift>li {{ background:#fff; border:1px solid var(--line); border-radius:8px; padding:.6rem .9rem; margin-bottom:.6rem; }}
   .step {{ margin:.25rem 0 0 1rem; }} .step .v {{ display:inline-block; min-width:60px; color:var(--bad); font-weight:600; }}
   .never-list code, .dyn code {{ color:#1f2328; }} .loc {{ color:var(--muted); font-size:.8em; }}
   details {{ margin-top:1.2rem; }} summary {{ cursor:pointer; color:var(--muted); }}
   ul.dyn {{ columns:2; font-size:.85rem; }}
+  details.probed {{ background:#fff; border:1px solid var(--line); border-radius:8px; padding:.6rem .9rem; margin:1.2rem 0; }}
+  .chips {{ margin:.4rem 0; font-size:.8rem; line-height:2; }}
+  .chip {{ background:#e6ffec; border:1px solid #b7f0c2; border-radius:10px; padding:.06rem .45rem; margin:.1rem; white-space:nowrap; }}
+  .chip.na {{ background:#f6f8fa; border-color:#d0d7de; color:#8c959f; }}
   .legend {{ margin-top:1.8rem; font-size:.85rem; color:var(--muted); display:flex; gap:1rem; flex-wrap:wrap; align-items:center; }}
   .sw {{ display:inline-block; width:12px; height:12px; border-radius:3px; vertical-align:middle; margin-right:.25rem; }}
 </style></head>
@@ -264,9 +280,11 @@ def build_html(matrix: dict, modelopt_version: str, generated: str, all_versions
     <div class="card"><b>{s['env_errors']}</b><span>env errors</span></div>
   </div>
 
-  <h2>Per-symbol compatibility</h2>
+  {probed_block}
+
+  <h2>Per-symbol compatibility <small>(window is inferred from the probed sample)</small></h2>
   <table>
-    <thead><tr><th>symbol</th><th>role</th><th>compatible window</th><th>support</th></tr></thead>
+    <thead><tr><th>symbol</th><th>role</th><th>compatible window <small>(inferred)</small></th><th>support</th></tr></thead>
     <tbody>{''.join(sym_rows)}</tbody>
   </table>
 
@@ -281,11 +299,11 @@ def build_html(matrix: dict, modelopt_version: str, generated: str, all_versions
   {dyn_html}
 
   <div class="legend">
-    <span><span class="sw" style="background:var(--ok)"></span>yes (imports OK)</span>
-    <span><span class="sw" style="background:var(--warn)"></span>no · symbol missing</span>
-    <span><span class="sw" style="background:var(--bad)"></span>no · module missing</span>
-    <span><span class="sw" style="background:var(--env)"></span>env/probe error</span>
-    <span><span class="sw" style="background:#d0d7de"></span>N/A (not tested)</span>
+    <span><span class="sw" style="background:var(--ok)"></span>✓ yes (imports OK)</span>
+    <span><span class="sw" style="background:var(--warn)"></span>~ partial / symbol missing</span>
+    <span><span class="sw" style="background:var(--bad)"></span>✗ no · module missing</span>
+    <span><span class="sw" style="background:var(--env)"></span>! env/probe error</span>
+    <span><span class="sw" style="background:#d0d7de"></span>– N/A (not tested)</span>
     <span>🛡 guarded import · ⚇ signature drift</span>
   </div>
 </main>
@@ -329,8 +347,10 @@ def build_ipynb(matrix: dict, modelopt_version: str, generated: str, all_version
                 f"**{len(probed)}** of {len(all_versions)} in-range releases were probed directly; "
                 f"the other **{na_count}** are N/A (not tested).")
 
+    na_versions = [v for v in all_versions if v not in probed_set]
+
     # per-symbol table
-    tbl = ["| symbol | role | compatible window | support | |",
+    tbl = ["| symbol | role | compatible window (inferred) | support | |",
            "|---|---|---|:--:|:--:|"]
     for key, info in sorted(matrix["symbols"].items()):
         win = range_str(info["compatible_ranges"])
@@ -378,6 +398,15 @@ def build_ipynb(matrix: dict, modelopt_version: str, generated: str, all_version
             f"|:--:|:--:|:--:|:--:|:--:|:--:|",
             f"| **{s['symbols']}** | {s['with_window']} | {s['never']} | {s['drift']} | "
             f"{s['dynamic']} | {s['env_errors']} |"),
+        _md("## Versions actually probed",
+            f"Bisection directly tested **{len(probed)}** of **{len(all_versions)}** stable "
+            f"releases in `{lo}`–`{hi}`. The compatible window is **inferred** from these "
+            "samples — versions marked N/A below were **not** tested.",
+            "",
+            "**✓ probed:** " + ", ".join(f"`{v}`" for v in probed),
+            "",
+            ("**– N/A (not tested):** " + ", ".join(f"`{v}`" for v in na_versions))
+            if na_versions else "_All in-range releases were probed._"),
         _md("## Per-symbol compatibility",
             "",
             "The **compatible window** is the authoritative result; **support** is "
