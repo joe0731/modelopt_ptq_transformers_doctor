@@ -59,4 +59,5 @@ class EnvRunner:
             except json.JSONDecodeError:
                 return {"status": PROBE_ERROR, "installed": None, "statuses": {}}
             return {"status": "OK", "installed": out.get("transformers_version"),
-                    "statuses": out.get("statuses", {})}
+                    "statuses": out.get("statuses", {}),
+                    "signatures": out.get("signatures", {})}

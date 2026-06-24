@@ -93,3 +93,24 @@ def test_guarded_flag_set_for_module_not_found_error():
     )
     r = _by_key(extract_from_source(src, "f.py", "quant"))["transformers.x:Y"]
     assert r.guarded is True
+
+
+def _keys(src):
+    return {r.key for r in extract_from_source(src, "f.py", "quant")}
+
+
+def test_captures_lowercase_module_level_function():
+    src = "import transformers\nx = transformers.models.llama.modeling_llama.eager_attention_forward\n"
+    assert "transformers.models.llama.modeling_llama:eager_attention_forward" in _keys(src)
+
+
+def test_does_not_capture_class_method_but_keeps_class():
+    src = "import transformers\ny = transformers.AutoModelForCausalLM.from_pretrained\n"
+    keys = _keys(src)
+    assert "transformers:AutoModelForCausalLM" in keys
+    assert "transformers.AutoModelForCausalLM:from_pretrained" not in keys
+
+
+def test_skips_dunder_leaf():
+    src = "import transformers\nv = transformers.__version__\n"
+    assert not any(r.symbol == "__version__" for r in extract_from_source(src, "f.py", "quant"))

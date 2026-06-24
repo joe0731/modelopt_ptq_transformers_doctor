@@ -44,3 +44,39 @@ def test_compatible_ranges_round_trip_as_lists(tmp_path):
     ranges = loaded["symbols"]["transformers.models.x.modeling_x:XAttn"]["compatible_ranges"]
     # JSON has no tuple type: ranges come back as lists of [lo, hi] with values preserved.
     assert ranges == [["4.50.0", "4.51.0"]]
+
+
+DRIFT_MATRIX = {
+    "versions_probed": ["4.48.0", "4.50.0"],
+    "symbols": {
+        "transformers.m:Foo": {
+            "file": "hf.py", "line": 1, "guarded": False, "role": "quant",
+            "compatible_ranges": [("4.48.0", "4.50.0")],
+            "statuses": {"4.48.0": "OK", "4.50.0": "OK"},
+            "signatures": {"4.48.0": "(a)", "4.50.0": "(a, b)"},
+            "signature_drift": [["4.48.0", "(a)"], ["4.50.0", "(a, b)"]],
+        },
+    },
+    "dynamic": [],
+    "env_errors": {},
+}
+
+
+def test_drift_marker_and_section_render():
+    md = render_markdown(DRIFT_MATRIX)
+    assert "⚇" in md
+    assert "## Signature changes" in md
+    assert "4.48.0 `(a)`" in md and "4.50.0 `(a, b)`" in md
+    # Verify marker appears on the drifting symbol's row, not just the legend
+    symbol_line = next(line for line in md.split("\n") if "transformers.m:Foo" in line)
+    assert "⚇" in symbol_line
+
+
+def test_no_drift_marker_when_absent():
+    md = render_markdown(MATRIX)  # MATRIX symbol has no signature_drift
+    # Check that the marker is not on the symbol row (not in the table)
+    lines = md.split("\n")
+    for line in lines:
+        if "XAttn" in line:
+            assert "⚇" not in line, "Marker should not appear in symbol row"
+    assert "## Signature changes" not in md

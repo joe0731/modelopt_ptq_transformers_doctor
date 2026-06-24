@@ -36,7 +36,8 @@ def render_markdown(matrix: dict) -> str:
     for key, info in sorted(matrix["symbols"].items()):
         cells = [_MARK.get(info["statuses"].get(v, ""), "·") for v in versions]
         guard = " 🛡" if info["guarded"] else ""
-        lines.append(f"| `{key}`{guard} | {info['role']} | "
+        drift = " ⚇" if info.get("signature_drift") else ""
+        lines.append(f"| `{key}`{guard}{drift} | {info['role']} | "
                      f"{_range_str(info['compatible_ranges'])} | " + " | ".join(cells) + " |")
 
     dyn = matrix.get("dynamic", [])
@@ -45,8 +46,17 @@ def render_markdown(matrix: dict) -> str:
         for d in dyn:
             lines.append(f"- `{d['note']}` — {d['file']}:{d['line']}")
 
+    drifts = [(k, info) for k, info in sorted(matrix["symbols"].items())
+              if info.get("signature_drift")]
+    if drifts:
+        lines += ["", "## Signature changes (within compatible window)", ""]
+        for k, info in drifts:
+            trail = " → ".join(f"{v} `{fp}`" for v, fp in info["signature_drift"])
+            lines.append(f"- `{k}`: {trail}")
+
     lines += ["", "Legend: ✅ OK · ⚠️ symbol missing · ❌ module missing · "
-              "🛠 env error · 💥 probe error · 🛡 import is try/except-guarded", ""]
+              "🛠 env error · 💥 probe error · 🛡 import is try/except-guarded · "
+              "⚇ signature changed within compatible window", ""]
     return "\n".join(lines)
 
 
