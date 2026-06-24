@@ -308,58 +308,79 @@ def build_html(matrix: dict, modelopt_version: str, generated: str, all_versions
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>modelopt {esc(modelopt_version)} ↔ transformers compatibility</title>
 <style>
-  :root {{ --line:#d8dee4; --muted:#636c76; --ok:#2da44e; --warn:#d4a72c; --bad:#cf222e; --env:#0969da; --na:#d0d7de; }}
-  * {{ box-sizing: border-box; }}
-  body {{ font-family: ui-sans-serif,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-         margin:0; color:#1f2328; background:#f6f8fa; line-height:1.5; }}
-  header {{ background:linear-gradient(135deg,#0b3d2e,#10684c); color:#eafff5; padding:2rem 2.2rem; }}
-  header h1 {{ margin:0 0 .4rem; font-size:1.45rem; font-weight:650; }}
-  header .meta {{ opacity:.9; font-size:.9rem; }} header .meta b {{ color:#fff; }}
-  main {{ max-width:1180px; margin:0 auto; padding:1.5rem 2.2rem 4rem; }}
-  .note {{ background:#fff; border:1px solid var(--line); border-left:4px solid var(--ok);
-          border-radius:8px; padding:.7rem 1rem; margin:1.2rem 0; font-size:.9rem; }}
-  .cards {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:.8rem; margin:1.2rem 0 1.8rem; }}
-  .card {{ background:#fff; border:1px solid var(--line); border-radius:10px; padding:.8rem 1rem; }}
-  .card b {{ display:block; font-size:1.7rem; font-weight:680; line-height:1.1; }}
-  .card span {{ font-size:.78rem; color:var(--muted); }}
-  h2 {{ margin:2.2rem 0 .8rem; font-size:1.15rem; }} h2 small {{ color:var(--muted); font-weight:400; font-size:.8rem; }}
-  table {{ border-collapse:collapse; background:#fff; font-size:.86rem; width:100%; border:1px solid var(--line); border-radius:10px; overflow:hidden; }}
-  th,td {{ padding:.45rem .6rem; text-align:left; border-bottom:1px solid var(--line); }}
-  thead th, table tr:first-child th {{ background:#f6f8fa; color:var(--muted); font-weight:600; }}
+  @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@300;400;500;600;700&display=swap');
+  :root {{
+    --bg:#f1f5f9; --surface:#fff; --line:#e2e8f0; --text:#0f172a; --muted:#475569;
+    --primary:#1e40af; --primary2:#3b82f6; --accent:#f59e0b;
+    --ok:#15803d; --warn:#b45309; --bad:#b91c1c; --env:#1d4ed8; --na:#cbd5e1;
+    --ok-bg:#dcfce7; --warn-bg:#fef3c7; --bad-bg:#fee2e2; --env-bg:#dbeafe;
+    --shadow:0 1px 3px rgba(15,23,42,.06),0 1px 2px rgba(15,23,42,.04); --radius:12px;
+  }}
+  * {{ box-sizing:border-box; }}
+  body {{ font-family:'Fira Sans',ui-sans-serif,-apple-system,Segoe UI,Roboto,sans-serif;
+         margin:0; color:var(--text); background:var(--bg); line-height:1.6; font-size:15px;
+         -webkit-font-smoothing:antialiased; }}
+  code,.mono {{ font-family:'Fira Code',ui-monospace,SFMono-Regular,Menlo,monospace; }}
+  a {{ color:var(--primary); }}
+  :focus-visible {{ outline:2px solid var(--accent); outline-offset:2px; border-radius:4px; }}
+  header {{ background:linear-gradient(135deg,var(--primary),var(--primary2)); color:#fff; padding:2.4rem 2.2rem; }}
+  header h1 {{ margin:0 0 .5rem; font-size:1.5rem; font-weight:600; letter-spacing:-.01em; }}
+  header .meta {{ color:rgba(255,255,255,.9); font-size:.92rem; }} header .meta b {{ color:#fff; font-weight:600; }}
+  main {{ max-width:1160px; margin:0 auto; padding:1.8rem 2.2rem 5rem; }}
+  .note {{ background:var(--surface); border:1px solid var(--line); border-left:4px solid var(--primary);
+          border-radius:var(--radius); padding:.8rem 1.1rem; margin:1.4rem 0; font-size:.92rem; box-shadow:var(--shadow); }}
+  .cards {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:1rem; margin:1.4rem 0 2rem; }}
+  .card {{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:1rem 1.1rem; box-shadow:var(--shadow); }}
+  .card b {{ display:block; font-size:1.9rem; font-weight:700; line-height:1.1; color:var(--primary); font-variant-numeric:tabular-nums; }}
+  .card span {{ font-size:.8rem; color:var(--muted); }}
+  h2 {{ margin:2.6rem 0 .9rem; font-size:1.2rem; font-weight:600; letter-spacing:-.01em; }}
+  h2 small {{ color:var(--muted); font-weight:400; font-size:.82rem; }}
+  table {{ border-collapse:separate; border-spacing:0; background:var(--surface); font-size:.88rem; width:100%;
+          border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); }}
+  th,td {{ padding:.55rem .7rem; text-align:left; border-bottom:1px solid var(--line); }}
+  tbody tr:last-child td {{ border-bottom:0; }}
+  thead th, table tr:first-child th {{ background:#f8fafc; color:var(--muted); font-weight:600;
+          font-size:.76rem; text-transform:uppercase; letter-spacing:.03em; }}
+  tbody tr {{ transition:background .15s ease; }} tbody tr:hover {{ background:#f8fafc; }}
   td.sym {{ white-space:nowrap; }}
-  code {{ background:#eff1f3; padding:.08rem .35rem; border-radius:5px; font-size:.85em; }}
-  .tag {{ font-size:.72rem; padding:.05rem .35rem; border-radius:10px; margin-left:.25rem; white-space:nowrap; }}
-  .tag.drift {{ background:#fff1e5; color:#bc4c00; border:1px solid #ffd8b5; }}
-  .tag.guard {{ background:#eef; }}
+  code {{ background:#f1f5f9; padding:.1rem .4rem; border-radius:5px; font-size:.84em; color:#0f172a; }}
+  .tag {{ font-size:.72rem; padding:.08rem .4rem; border-radius:999px; margin-left:.3rem; white-space:nowrap; font-weight:500; }}
+  .tag.drift {{ background:var(--warn-bg); color:#92400e; border:1px solid #fde68a; }}
+  .tag.guard {{ background:#e0e7ff; color:#3730a3; }}
   .never {{ color:var(--bad); font-weight:600; }}
-  .supcell {{ width:140px; }}
-  .bar {{ display:inline-block; width:100px; height:8px; background:#eaeef2; border-radius:5px; overflow:hidden; vertical-align:middle; }}
-  .bar span {{ display:block; height:100%; }} .supcell small {{ margin-left:.4rem; color:var(--muted); }}
-  .grid-wrap {{ overflow-x:auto; border:1px solid var(--line); border-radius:10px; background:#fff; }}
-  .grid-wrap table {{ border:0; border-radius:0; font-size:.8rem; }}
-  .grid-wrap th, .grid-wrap td {{ border-bottom:1px solid #eaeef2; }}
-  th.vh {{ writing-mode:vertical-rl; transform:rotate(180deg); font-weight:500; padding:.4rem .15rem; white-space:nowrap; }}
-  th.vh.na {{ color:var(--na); }}
-  th.rsym {{ position:sticky; left:0; background:#fff; white-space:nowrap; z-index:1; border-right:1px solid var(--line); }}
-  .grid-wrap td {{ min-width:26px; padding:0; height:24px; text-align:center; color:#fff; font-size:.74rem; font-weight:700; }}
+  .supcell {{ width:150px; white-space:nowrap; }}
+  .bar {{ display:inline-block; width:104px; height:9px; background:#e2e8f0; border-radius:999px; overflow:hidden; vertical-align:middle; }}
+  .bar span {{ display:block; height:100%; border-radius:999px; }} .supcell small {{ margin-left:.45rem; color:var(--muted); font-variant-numeric:tabular-nums; }}
+  .grid-wrap {{ overflow-x:auto; border:1px solid var(--line); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); }}
+  .grid-wrap table {{ border:0; border-radius:0; box-shadow:none; font-size:.8rem; }}
+  .grid-wrap th, .grid-wrap td {{ border-bottom:1px solid #eef2f7; }}
+  th.vh {{ writing-mode:vertical-rl; transform:rotate(180deg); font-weight:500; padding:.5rem .2rem; white-space:nowrap; text-transform:none; letter-spacing:0; background:#f8fafc; }}
+  th.vh.na {{ color:#94a3b8; }}
+  th.rsym {{ position:sticky; left:0; background:var(--surface); white-space:nowrap; z-index:1; border-right:1px solid var(--line); font-weight:500; }}
+  .grid-wrap tbody tr:hover th.rsym {{ background:#f8fafc; }}
+  .grid-wrap td {{ min-width:30px; padding:0; height:26px; text-align:center; color:#fff; font-size:.78rem; font-weight:700; font-family:'Fira Code',monospace; }}
   td.ok{{background:var(--ok)}} td.warn{{background:var(--warn)}} td.bad{{background:var(--bad)}}
-  td.env{{background:var(--env)}} td.na{{color:#8c959f;background:repeating-linear-gradient(45deg,#fff,#fff 3px,#eaeef2 3px,#eaeef2 6px)}}
-  ul.drift {{ list-style:none; padding:0; }} ul.drift>li {{ background:#fff; border:1px solid var(--line); border-radius:8px; padding:.6rem .9rem; margin-bottom:.6rem; }}
-  .step {{ margin:.5rem 0 0; padding-left:.8rem; border-left:2px solid #eaeef2; }}
-  .step .v {{ display:inline-block; color:#0969da; font-weight:650; font-size:.82rem; margin-bottom:.2rem; }}
-  .cz {{ font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.78rem; padding:.1rem .2rem; margin:.1rem 0; border-radius:4px; }}
-  .cz.add {{ color:#1a7f37; background:#e6ffec; }} .cz.del {{ color:#cf222e; background:#ffebe9; }}
-  .cz.mod {{ color:#9a6700; background:#fff8c5; }} .cz.ret {{ color:#0550ae; background:#ddf4ff; }}
+  td.env{{background:var(--env)}} td.na{{color:#94a3b8;background:repeating-linear-gradient(45deg,#fff,#fff 4px,#eef2f7 4px,#eef2f7 8px)}}
+  ul.drift {{ list-style:none; padding:0; }} ul.drift>li {{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:.8rem 1.1rem; margin-bottom:.7rem; box-shadow:var(--shadow); }}
+  ul.drift>li>code:first-child {{ font-weight:600; }}
+  .step {{ margin:.6rem 0 0; padding-left:.9rem; border-left:3px solid #e2e8f0; }}
+  .step .v {{ display:inline-block; color:var(--primary); font-weight:600; font-size:.84rem; margin-bottom:.25rem; }}
+  .cz {{ font-family:'Fira Code',monospace; font-size:.78rem; padding:.12rem .4rem; margin:.12rem .25rem .12rem 0; border-radius:5px; display:inline-block; }}
+  .cz.add {{ color:#166534; background:var(--ok-bg); }} .cz.del {{ color:#991b1b; background:var(--bad-bg); }}
+  .cz.mod {{ color:#92400e; background:var(--warn-bg); }} .cz.ret {{ color:#1e40af; background:var(--env-bg); }}
   .arr {{ color:var(--muted); }}
-  .never-list code, .dyn code {{ color:#1f2328; }} .loc {{ color:var(--muted); font-size:.8em; }}
-  details {{ margin-top:1.2rem; }} summary {{ cursor:pointer; color:var(--muted); }}
+  .never-list code, .dyn code {{ color:var(--text); }} .loc {{ color:var(--muted); font-size:.8em; }}
+  details {{ margin-top:1.2rem; }} summary {{ cursor:pointer; color:var(--muted); padding:.2rem 0; }}
+  summary:hover {{ color:var(--primary); }}
   ul.dyn {{ columns:2; font-size:.85rem; }}
-  details.probed {{ background:#fff; border:1px solid var(--line); border-radius:8px; padding:.6rem .9rem; margin:1.2rem 0; }}
-  .chips {{ margin:.4rem 0; font-size:.8rem; line-height:2; }}
-  .chip {{ background:#e6ffec; border:1px solid #b7f0c2; border-radius:10px; padding:.06rem .45rem; margin:.1rem; white-space:nowrap; }}
-  .chip.na {{ background:#f6f8fa; border-color:#d0d7de; color:#8c959f; }}
-  .legend {{ margin-top:1.8rem; font-size:.85rem; color:var(--muted); display:flex; gap:1rem; flex-wrap:wrap; align-items:center; }}
-  .sw {{ display:inline-block; width:12px; height:12px; border-radius:3px; vertical-align:middle; margin-right:.25rem; }}
+  details.probed {{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:.8rem 1.1rem; margin:1.4rem 0; box-shadow:var(--shadow); }}
+  .chips {{ margin:.5rem 0; font-size:.8rem; line-height:2.1; }}
+  .chip {{ background:var(--ok-bg); border:1px solid #bbf7d0; color:#166534; border-radius:999px; padding:.08rem .5rem; margin:.12rem; white-space:nowrap; font-family:'Fira Code',monospace; font-size:.74rem; }}
+  .chip.na {{ background:#f1f5f9; border-color:#e2e8f0; color:#94a3b8; }}
+  .legend {{ margin-top:2rem; font-size:.85rem; color:var(--muted); display:flex; gap:1.2rem; flex-wrap:wrap; align-items:center; }}
+  .sw {{ display:inline-block; width:13px; height:13px; border-radius:4px; vertical-align:middle; margin-right:.3rem; }}
+  @media (max-width:640px) {{ main {{ padding:1.2rem 1.1rem 3rem; }} header {{ padding:1.6rem 1.2rem; }} .cards {{ grid-template-columns:repeat(2,1fr); }} }}
+  @media (prefers-reduced-motion:reduce) {{ * {{ transition:none !important; }} }}
 </style></head>
 <body>
 <header>
