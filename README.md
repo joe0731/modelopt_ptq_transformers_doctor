@@ -10,6 +10,10 @@ For every dependency symbol it reports the contiguous version window in which
 that symbol imports cleanly, so you can answer "which `transformers` versions
 does the installed modelopt actually work with?"
 
+It also records each symbol's **signature** per version and flags **signature
+drift** — a symbol that still imports but whose signature changed across the
+window (the common "imports fine, breaks at runtime" failure mode).
+
 ## How it works
 
 1. **Locate** — find the modelopt installed in the current environment (via
@@ -88,7 +92,8 @@ flowchart TD
 ### 3. Probing one version — isolation & status
 
 *`envman.probe_version` builds a throwaway env and runs the stdlib-only
-`prober.py` under that env's Python; every outcome maps to one status.*
+`prober.py` under that env's Python; every outcome maps to one status, and each
+OK symbol also gets a signature fingerprint.*
 
 ```mermaid
 flowchart TD
@@ -104,6 +109,7 @@ flowchart TD
     import_check -->|ok| hasattr_check{"hasattr(mod, symbol)?"}
     hasattr_check -->|no| missing_symbol["⚠️ MISSING_SYMBOL"]
     hasattr_check -->|yes| status_ok["✅ OK"]
+    status_ok --> fingerprint["capture signature fingerprint<br/><i>inspect.signature, else type name</i>"]
 ```
 
 ### 4. Bisection & caching — which versions actually get installed
@@ -126,8 +132,10 @@ flowchart TD
 ```
 
 > The report (`report.py`) writes `matrix.json` (full) + `REPORT.md`. Guarded
-> imports are marked 🛡, dynamic registrations listed separately, and any
-> `ENV_ERROR` version is flagged as a caveat (adjacent ranges may be understated).
+> imports are marked 🛡, dynamic registrations listed separately, symbols whose
+> signature changed across the window are marked ⚇ (detailed in a **Signature
+> changes** section), and any `ENV_ERROR` version is flagged as a caveat
+> (adjacent ranges may be understated).
 
 ## Requirements
 
@@ -189,9 +197,12 @@ Use `--no-progress` to silence it.
 
 Output:
 
-- `doctor-report/matrix.json` — machine-readable matrix
+- `doctor-report/matrix.json` — machine-readable matrix (each symbol also
+  carries `signatures` per version and a `signature_drift` list)
 - `doctor-report/REPORT.md` — human-readable matrix; the **compatible** column
-  is the authoritative per-symbol version window
+  is the authoritative per-symbol version window. A `⚇` marks symbols whose
+  signature changed across that window, with the transitions listed in a
+  **Signature changes** section.
 
 ## Development
 
@@ -220,6 +231,9 @@ MIT — see [LICENSE](LICENSE).
 
 对每个依赖符号,工具会报告它能干净导入的**连续版本区间**,从而回答"当前安装的
 modelopt 到底兼容哪些 `transformers` 版本"。
+
+工具还会逐版本记录每个符号的**签名**,并标记**签名漂移**——符号仍能导入、但签名
+在区间内发生了变化(典型的"能导入、运行时却崩"的失败模式)。
 
 ## 工作原理
 
@@ -295,7 +309,7 @@ flowchart TD
 ### 3. 探测单个版本 —— 隔离与状态判定
 
 *`envman.probe_version` 建一次性环境,用该环境的 Python 运行仅标准库的
-`prober.py`;每种结果映射到一个状态。*
+`prober.py`;每种结果映射到一个状态,OK 的符号还会采集签名指纹。*
 
 ```mermaid
 flowchart TD
@@ -311,6 +325,7 @@ flowchart TD
     import_check -->|成功| hasattr_check{"hasattr(mod, symbol)?"}
     hasattr_check -->|否| missing_symbol["⚠️ MISSING_SYMBOL"]
     hasattr_check -->|是| status_ok["✅ OK"]
+    status_ok --> fingerprint["采集签名指纹<br/><i>inspect.signature,否则取类型名</i>"]
 ```
 
 ### 4. 二分与缓存 —— 实际会安装哪些版本
@@ -333,7 +348,8 @@ flowchart TD
 ```
 
 > 报告(`report.py`)写出 `matrix.json`(完整)与 `REPORT.md`。guarded 导入标
-> 🛡,dynamic 注册单独列出,任何 `ENV_ERROR` 版本都会被标注为注意事项(其相邻区间
+> 🛡,dynamic 注册单独列出,签名在区间内变化的符号标 ⚇(并在 **Signature
+> changes** 小节列出),任何 `ENV_ERROR` 版本都会被标注为注意事项(其相邻区间
 > 可能被低估)。
 
 ## 环境要求
@@ -388,9 +404,11 @@ doctor scan --pypi --out doctor-report
 
 输出:
 
-- `doctor-report/matrix.json` —— 机器可读矩阵
+- `doctor-report/matrix.json` —— 机器可读矩阵(每个符号还带逐版本 `signatures`
+  与 `signature_drift` 列表)
 - `doctor-report/REPORT.md` —— 人类可读矩阵;**compatible** 列是每个符号权威的
-  版本区间
+  版本区间。签名在该区间内变化的符号会标 `⚇`,并在 **Signature changes** 小节
+  列出其变化过程。
 
 ## 开发
 
