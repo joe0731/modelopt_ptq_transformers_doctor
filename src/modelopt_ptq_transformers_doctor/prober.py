@@ -51,10 +51,10 @@ def probe_signatures(records):
             continue
         try:
             mod = importlib.import_module(module_path)
+            obj = mod if symbol is None else getattr(mod, symbol)
+            sigs["{}:{}".format(module_path, symbol)] = fingerprint(obj)
         except Exception:
             continue
-        obj = mod if symbol is None else getattr(mod, symbol)
-        sigs["{}:{}".format(module_path, symbol)] = fingerprint(obj)
     return sigs
 
 
