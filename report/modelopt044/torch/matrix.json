@@ -1,0 +1,2801 @@
+{
+  "versions_probed": [
+    "2.1.0",
+    "2.1.1",
+    "2.1.2",
+    "2.2.0",
+    "2.2.1",
+    "2.2.2",
+    "2.3.0",
+    "2.3.1",
+    "2.4.0",
+    "2.4.1",
+    "2.5.0",
+    "2.5.1",
+    "2.6.0",
+    "2.7.0",
+    "2.7.1",
+    "2.8.0"
+  ],
+  "symbols": {
+    "torch:Tensor": {
+      "file": "modelopt/torch/export/layer_utils.py",
+      "line": 1776,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch.nn.functional:linear": {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 877,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch.distributed.tensor:Shard": {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 49,
+      "guarded": true,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.5.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "MISSING_SYMBOL",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "MISSING_SYMBOL",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "MISSING_SYMBOL",
+        "2.6.0": "OK",
+        "2.3.0": "MISSING_SYMBOL",
+        "2.4.1": "MISSING_SYMBOL",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "MISSING_SYMBOL",
+        "2.3.1": "MISSING_SYMBOL"
+      },
+      "signatures": {
+        "2.5.0": "(dim: int) -> None",
+        "2.7.0": "(dim: int) -> None",
+        "2.7.1": "(dim: int) -> None",
+        "2.8.0": "(dim: int) -> None",
+        "2.6.0": "(dim: int) -> None",
+        "2.5.1": "(dim: int) -> None"
+      },
+      "signature_drift": null
+    },
+    "torch:cat": {
+      "file": "modelopt/torch/export/layer_utils.py",
+      "line": 1397,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch:empty": {
+      "file": "modelopt/torch/quantization/nn/modules/tensor_quantizer.py",
+      "line": 1218,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch:_matmul": {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 259,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "MISSING_SYMBOL",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "MISSING_SYMBOL",
+        "2.5.0": "MISSING_SYMBOL",
+        "2.7.0": "MISSING_SYMBOL",
+        "2.7.1": "MISSING_SYMBOL",
+        "2.8.0": "MISSING_SYMBOL",
+        "2.4.0": "MISSING_SYMBOL",
+        "2.6.0": "MISSING_SYMBOL",
+        "2.3.0": "MISSING_SYMBOL",
+        "2.4.1": "MISSING_SYMBOL",
+        "2.5.1": "MISSING_SYMBOL",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "MISSING_SYMBOL",
+        "2.3.1": "MISSING_SYMBOL"
+      },
+      "signatures": {},
+      "signature_drift": null
+    },
+    "torch.nn:Linear": {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 371,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
+        "2.2.0": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
+        "2.5.0": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
+        "2.7.0": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
+        "2.7.1": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
+        "2.8.0": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
+        "2.4.0": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
+        "2.6.0": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
+        "2.3.0": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
+        "2.4.1": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
+        "2.5.1": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
+        "2.2.2": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
+        "2.3.1": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None"
+      },
+      "signature_drift": null
+    },
+    "torch.distributed.tensor:DTensor": {
+      "file": "modelopt/torch/quantization/nn/modules/tensor_quantizer.py",
+      "line": 28,
+      "guarded": true,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.5.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "MISSING_SYMBOL",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "MISSING_SYMBOL",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "MISSING_SYMBOL",
+        "2.6.0": "OK",
+        "2.3.0": "MISSING_SYMBOL",
+        "2.4.1": "MISSING_SYMBOL",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "MISSING_SYMBOL",
+        "2.3.1": "MISSING_SYMBOL"
+      },
+      "signatures": {
+        "2.5.0": "(local_tensor: torch.Tensor, spec: torch.distributed.tensor._dtensor_spec.DTensorSpec, *, requires_grad: bool) -> 'DTensor'",
+        "2.7.0": "(local_tensor: torch.Tensor, spec: torch.distributed.tensor._dtensor_spec.DTensorSpec, *, requires_grad: bool) -> 'DTensor'",
+        "2.7.1": "(local_tensor: torch.Tensor, spec: torch.distributed.tensor._dtensor_spec.DTensorSpec, *, requires_grad: bool) -> 'DTensor'",
+        "2.8.0": "(local_tensor: torch.Tensor, spec: torch.distributed.tensor._dtensor_spec.DTensorSpec, *, requires_grad: bool) -> 'DTensor'",
+        "2.6.0": "(local_tensor: torch.Tensor, spec: torch.distributed.tensor._dtensor_spec.DTensorSpec, *, requires_grad: bool) -> 'DTensor'",
+        "2.5.1": "(local_tensor: torch.Tensor, spec: torch.distributed.tensor._dtensor_spec.DTensorSpec, *, requires_grad: bool) -> 'DTensor'"
+      },
+      "signature_drift": null
+    },
+    "torch.nn:functional": {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 896,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "module",
+        "2.2.0": "module",
+        "2.5.0": "module",
+        "2.7.0": "module",
+        "2.7.1": "module",
+        "2.8.0": "module",
+        "2.4.0": "module",
+        "2.6.0": "module",
+        "2.3.0": "module",
+        "2.4.1": "module",
+        "2.5.1": "module",
+        "2.2.2": "module",
+        "2.3.1": "module"
+      },
+      "signature_drift": null
+    },
+    "torch:no_grad": {
+      "file": "modelopt/torch/export/unified_export_hf.py",
+      "line": 226,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "() -> None",
+        "2.2.0": "() -> None",
+        "2.5.0": "() -> None",
+        "2.7.0": "() -> None",
+        "2.7.1": "() -> None",
+        "2.8.0": "() -> None",
+        "2.4.0": "() -> None",
+        "2.6.0": "() -> None",
+        "2.3.0": "() -> None",
+        "2.4.1": "() -> None",
+        "2.5.1": "() -> None",
+        "2.2.2": "() -> None",
+        "2.3.1": "() -> None"
+      },
+      "signature_drift": null
+    },
+    "torch.autograd:Function": {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 453,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "(*args, **kwargs)",
+        "2.2.0": "(*args, **kwargs)",
+        "2.5.0": "(*args, **kwargs)",
+        "2.7.0": "(*args, **kwargs)",
+        "2.7.1": "(*args, **kwargs)",
+        "2.8.0": "(*args, **kwargs)",
+        "2.4.0": "(*args, **kwargs)",
+        "2.6.0": "(*args, **kwargs)",
+        "2.3.0": "(*args, **kwargs)",
+        "2.4.1": "(*args, **kwargs)",
+        "2.5.1": "(*args, **kwargs)",
+        "2.2.2": "(*args, **kwargs)",
+        "2.3.1": "(*args, **kwargs)"
+      },
+      "signature_drift": null
+    },
+    "torch:zeros": {
+      "file": "modelopt/torch/export/layer_utils.py",
+      "line": 659,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch:long": {
+      "file": "modelopt/torch/export/unified_export_hf.py",
+      "line": 353,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "dtype",
+        "2.2.0": "dtype",
+        "2.5.0": "dtype",
+        "2.7.0": "dtype",
+        "2.7.1": "dtype",
+        "2.8.0": "dtype",
+        "2.4.0": "dtype",
+        "2.6.0": "dtype",
+        "2.3.0": "dtype",
+        "2.4.1": "dtype",
+        "2.5.1": "dtype",
+        "2.2.2": "dtype",
+        "2.3.1": "dtype"
+      },
+      "signature_drift": null
+    },
+    "torch:topk": {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 533,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch:bincount": {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 534,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch:bmm": {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 618,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch:LongTensor": {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 635,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch:zeros_like": {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 788,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch:where": {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 795,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch.nn.functional:one_hot": {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 790,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch:greater": {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 792,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch:int32": {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 1096,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "dtype",
+        "2.2.0": "dtype",
+        "2.5.0": "dtype",
+        "2.7.0": "dtype",
+        "2.7.1": "dtype",
+        "2.8.0": "dtype",
+        "2.4.0": "dtype",
+        "2.6.0": "dtype",
+        "2.3.0": "dtype",
+        "2.4.1": "dtype",
+        "2.5.1": "dtype",
+        "2.2.2": "dtype",
+        "2.3.1": "dtype"
+      },
+      "signature_drift": null
+    },
+    "torch.cuda:device": {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 1162,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "(device: Any)",
+        "2.2.0": "(device: Any)",
+        "2.5.0": "(device: Any)",
+        "2.7.0": "(device: Any)",
+        "2.7.1": "(device: Any)",
+        "2.8.0": "(device: Any)",
+        "2.4.0": "(device: Any)",
+        "2.6.0": "(device: Any)",
+        "2.3.0": "(device: Any)",
+        "2.4.1": "(device: Any)",
+        "2.5.1": "(device: Any)",
+        "2.2.2": "(device: Any)",
+        "2.3.1": "(device: Any)"
+      },
+      "signature_drift": null
+    },
+    "torch:get_default_dtype": {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 1165,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch.ops.aten:bmm": {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 1278,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "MISSING_MODULE",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "MISSING_MODULE",
+        "2.5.0": "MISSING_MODULE",
+        "2.7.0": "MISSING_MODULE",
+        "2.7.1": "MISSING_MODULE",
+        "2.8.0": "MISSING_MODULE",
+        "2.4.0": "MISSING_MODULE",
+        "2.6.0": "MISSING_MODULE",
+        "2.3.0": "MISSING_MODULE",
+        "2.4.1": "MISSING_MODULE",
+        "2.5.1": "MISSING_MODULE",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "MISSING_MODULE",
+        "2.3.1": "MISSING_MODULE"
+      },
+      "signatures": {},
+      "signature_drift": null
+    },
+    "torch.ops.aten:matmul": {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 1279,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "MISSING_MODULE",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "MISSING_MODULE",
+        "2.5.0": "MISSING_MODULE",
+        "2.7.0": "MISSING_MODULE",
+        "2.7.1": "MISSING_MODULE",
+        "2.8.0": "MISSING_MODULE",
+        "2.4.0": "MISSING_MODULE",
+        "2.6.0": "MISSING_MODULE",
+        "2.3.0": "MISSING_MODULE",
+        "2.4.1": "MISSING_MODULE",
+        "2.5.1": "MISSING_MODULE",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "MISSING_MODULE",
+        "2.3.1": "MISSING_MODULE"
+      },
+      "signatures": {},
+      "signature_drift": null
+    },
+    "torch.ops.aten.bmm:out": {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 1285,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "MISSING_MODULE",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "MISSING_MODULE",
+        "2.5.0": "MISSING_MODULE",
+        "2.7.0": "MISSING_MODULE",
+        "2.7.1": "MISSING_MODULE",
+        "2.8.0": "MISSING_MODULE",
+        "2.4.0": "MISSING_MODULE",
+        "2.6.0": "MISSING_MODULE",
+        "2.3.0": "MISSING_MODULE",
+        "2.4.1": "MISSING_MODULE",
+        "2.5.1": "MISSING_MODULE",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "MISSING_MODULE",
+        "2.3.1": "MISSING_MODULE"
+      },
+      "signatures": {},
+      "signature_drift": null
+    },
+    "torch:stack": {
+      "file": "modelopt/torch/export/layer_utils.py",
+      "line": 1902,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch:onnx": {
+      "file": "modelopt/torch/quantization/nn/modules/tensor_quantizer.py",
+      "line": 32,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "module",
+        "2.2.0": "module",
+        "2.5.0": "module",
+        "2.7.0": "module",
+        "2.7.1": "module",
+        "2.8.0": "module",
+        "2.4.0": "module",
+        "2.6.0": "module",
+        "2.3.0": "module",
+        "2.4.1": "module",
+        "2.5.1": "module",
+        "2.2.2": "module",
+        "2.3.1": "module"
+      },
+      "signature_drift": null
+    },
+    "torch.onnx._globals:GLOBALS": {
+      "file": "modelopt/torch/quantization/nn/modules/tensor_quantizer.py",
+      "line": 33,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "_InternalGlobals",
+        "2.2.0": "_InternalGlobals",
+        "2.5.0": "_InternalGlobals",
+        "2.7.0": "_InternalGlobals",
+        "2.7.1": "_InternalGlobals",
+        "2.8.0": "_InternalGlobals",
+        "2.4.0": "_InternalGlobals",
+        "2.6.0": "_InternalGlobals",
+        "2.3.0": "_InternalGlobals",
+        "2.4.1": "_InternalGlobals",
+        "2.5.1": "_InternalGlobals",
+        "2.2.2": "_InternalGlobals",
+        "2.3.1": "_InternalGlobals"
+      },
+      "signature_drift": null
+    },
+    "torch.onnx._internal.torchscript_exporter._globals:GLOBALS": {
+      "file": "modelopt/torch/quantization/nn/modules/tensor_quantizer.py",
+      "line": 35,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "MISSING_MODULE",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "MISSING_MODULE",
+        "2.5.0": "MISSING_MODULE",
+        "2.7.0": "MISSING_MODULE",
+        "2.7.1": "MISSING_MODULE",
+        "2.8.0": "MISSING_MODULE",
+        "2.4.0": "MISSING_MODULE",
+        "2.6.0": "MISSING_MODULE",
+        "2.3.0": "MISSING_MODULE",
+        "2.4.1": "MISSING_MODULE",
+        "2.5.1": "MISSING_MODULE",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "MISSING_MODULE",
+        "2.3.1": "MISSING_MODULE"
+      },
+      "signatures": {},
+      "signature_drift": null
+    },
+    "torch:nn": {
+      "file": "modelopt/torch/quantization/nn/modules/tensor_quantizer.py",
+      "line": 38,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "module",
+        "2.2.0": "module",
+        "2.5.0": "module",
+        "2.7.0": "module",
+        "2.7.1": "module",
+        "2.8.0": "module",
+        "2.4.0": "module",
+        "2.6.0": "module",
+        "2.3.0": "module",
+        "2.4.1": "module",
+        "2.5.1": "module",
+        "2.2.2": "module",
+        "2.3.1": "module"
+      },
+      "signature_drift": null
+    },
+    "torch:tensor": {
+      "file": "modelopt/torch/export/layer_utils.py",
+      "line": 1148,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch:finfo": {
+      "file": "modelopt/torch/quantization/nn/modules/tensor_quantizer.py",
+      "line": 999,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch:float8_e4m3fn": {
+      "file": "modelopt/torch/export/layer_utils.py",
+      "line": 942,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "dtype",
+        "2.2.0": "dtype",
+        "2.5.0": "dtype",
+        "2.7.0": "dtype",
+        "2.7.1": "dtype",
+        "2.8.0": "dtype",
+        "2.4.0": "dtype",
+        "2.6.0": "dtype",
+        "2.3.0": "dtype",
+        "2.4.1": "dtype",
+        "2.5.1": "dtype",
+        "2.2.2": "dtype",
+        "2.3.1": "dtype"
+      },
+      "signature_drift": null
+    },
+    "torch:all": {
+      "file": "modelopt/torch/export/layer_utils.py",
+      "line": 1137,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch:any": {
+      "file": "modelopt/torch/quantization/nn/modules/tensor_quantizer.py",
+      "line": 667,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch:isinf": {
+      "file": "modelopt/torch/quantization/nn/modules/tensor_quantizer.py",
+      "line": 666,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch:isnan": {
+      "file": "modelopt/torch/quantization/nn/modules/tensor_quantizer.py",
+      "line": 667,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch:Size": {
+      "file": "modelopt/torch/quantization/nn/modules/tensor_quantizer.py",
+      "line": 887,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "(iterable=(), /)",
+        "2.2.0": "(iterable=(), /)",
+        "2.5.0": "(iterable=(), /)",
+        "2.7.0": "(iterable=(), /)",
+        "2.7.1": "(iterable=(), /)",
+        "2.8.0": "(iterable=(), /)",
+        "2.4.0": "(iterable=(), /)",
+        "2.6.0": "(iterable=(), /)",
+        "2.3.0": "(iterable=(), /)",
+        "2.4.1": "(iterable=(), /)",
+        "2.5.1": "(iterable=(), /)",
+        "2.2.2": "(iterable=(), /)",
+        "2.3.1": "(iterable=(), /)"
+      },
+      "signature_drift": null
+    },
+    "torch:nan_to_num": {
+      "file": "modelopt/torch/quantization/nn/modules/tensor_quantizer.py",
+      "line": 998,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch.compiler:is_compiling": {
+      "file": "modelopt/torch/quantization/nn/modules/tensor_quantizer.py",
+      "line": 1061,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "2.3.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "MISSING_SYMBOL",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "MISSING_SYMBOL",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "MISSING_SYMBOL",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.5.0": "() -> bool",
+        "2.7.0": "() -> bool",
+        "2.7.1": "() -> bool",
+        "2.8.0": "() -> bool",
+        "2.4.0": "() -> bool",
+        "2.6.0": "() -> bool",
+        "2.3.0": "() -> bool",
+        "2.4.1": "() -> bool",
+        "2.5.1": "() -> bool",
+        "2.3.1": "() -> bool"
+      },
+      "signature_drift": null
+    },
+    "torch.distributed.fsdp:FSDPModule": {
+      "file": "modelopt/torch/export/unified_export_hf.py",
+      "line": 52,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.6.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "MISSING_SYMBOL",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "MISSING_SYMBOL",
+        "2.5.0": "MISSING_SYMBOL",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "MISSING_SYMBOL",
+        "2.6.0": "OK",
+        "2.3.0": "MISSING_SYMBOL",
+        "2.4.1": "MISSING_SYMBOL",
+        "2.5.1": "MISSING_SYMBOL",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "MISSING_SYMBOL",
+        "2.3.1": "MISSING_SYMBOL"
+      },
+      "signatures": {
+        "2.7.0": "(*args, **kwargs)",
+        "2.7.1": "(*args, **kwargs)",
+        "2.8.0": "(*args, **kwargs)",
+        "2.6.0": "(*args, **kwargs)"
+      },
+      "signature_drift": null
+    },
+    "torch.nn:Module": {
+      "file": "modelopt/torch/export/layer_utils.py",
+      "line": 1917,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "(*args, **kwargs) -> None",
+        "2.2.0": "(*args, **kwargs) -> None",
+        "2.5.0": "(*args, **kwargs) -> None",
+        "2.7.0": "(*args, **kwargs) -> None",
+        "2.7.1": "(*args, **kwargs) -> None",
+        "2.8.0": "(*args, **kwargs) -> None",
+        "2.4.0": "(*args, **kwargs) -> None",
+        "2.6.0": "(*args, **kwargs) -> None",
+        "2.3.0": "(*args, **kwargs) -> None",
+        "2.4.1": "(*args, **kwargs) -> None",
+        "2.5.1": "(*args, **kwargs) -> None",
+        "2.2.2": "(*args, **kwargs) -> None",
+        "2.3.1": "(*args, **kwargs) -> None"
+      },
+      "signature_drift": null
+    },
+    "torch:ones": {
+      "file": "modelopt/torch/export/unified_export_hf.py",
+      "line": 364,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch:dtype": {
+      "file": "modelopt/torch/export/unified_export_hf.py",
+      "line": 1147,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "()",
+        "2.2.0": "()",
+        "2.5.0": "()",
+        "2.7.0": "()",
+        "2.7.1": "()",
+        "2.8.0": "()",
+        "2.4.0": "()",
+        "2.6.0": "()",
+        "2.3.0": "()",
+        "2.4.1": "()",
+        "2.5.1": "()",
+        "2.2.2": "()",
+        "2.3.1": "()"
+      },
+      "signature_drift": null
+    },
+    "torch:float32": {
+      "file": "modelopt/torch/export/layer_utils.py",
+      "line": 1148,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "dtype",
+        "2.2.0": "dtype",
+        "2.5.0": "dtype",
+        "2.7.0": "dtype",
+        "2.7.1": "dtype",
+        "2.8.0": "dtype",
+        "2.4.0": "dtype",
+        "2.6.0": "dtype",
+        "2.3.0": "dtype",
+        "2.4.1": "dtype",
+        "2.5.1": "dtype",
+        "2.2.2": "dtype",
+        "2.3.1": "dtype"
+      },
+      "signature_drift": null
+    },
+    "torch.cuda:empty_cache": {
+      "file": "modelopt/torch/export/unified_export_hf.py",
+      "line": 613,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "() -> None",
+        "2.2.0": "() -> None",
+        "2.5.0": "() -> None",
+        "2.7.0": "() -> None",
+        "2.7.1": "() -> None",
+        "2.8.0": "() -> None",
+        "2.4.0": "() -> None",
+        "2.6.0": "() -> None",
+        "2.3.0": "() -> None",
+        "2.4.1": "() -> None",
+        "2.5.1": "() -> None",
+        "2.2.2": "() -> None",
+        "2.3.1": "() -> None"
+      },
+      "signature_drift": null
+    },
+    "torch:is_floating_point": {
+      "file": "modelopt/torch/export/layer_utils.py",
+      "line": 128,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch:chunk": {
+      "file": "modelopt/torch/export/layer_utils.py",
+      "line": 839,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch.nn.functional:normalize": {
+      "file": "modelopt/torch/export/layer_utils.py",
+      "line": 563,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "(input: torch.Tensor, p: float = 2.0, dim: int = 1, eps: float = 1e-12, out: Optional[torch.Tensor] = None) -> torch.Tensor",
+        "2.2.0": "(input: torch.Tensor, p: float = 2.0, dim: int = 1, eps: float = 1e-12, out: Optional[torch.Tensor] = None) -> torch.Tensor",
+        "2.5.0": "(input: torch.Tensor, p: float = 2.0, dim: int = 1, eps: float = 1e-12, out: Optional[torch.Tensor] = None) -> torch.Tensor",
+        "2.7.0": "(input: torch.Tensor, p: float = 2.0, dim: int = 1, eps: float = 1e-12, out: Optional[torch.Tensor] = None) -> torch.Tensor",
+        "2.7.1": "(input: torch.Tensor, p: float = 2.0, dim: int = 1, eps: float = 1e-12, out: Optional[torch.Tensor] = None) -> torch.Tensor",
+        "2.8.0": "(input: torch.Tensor, p: float = 2.0, dim: int = 1, eps: float = 1e-12, out: Optional[torch.Tensor] = None) -> torch.Tensor",
+        "2.4.0": "(input: torch.Tensor, p: float = 2.0, dim: int = 1, eps: float = 1e-12, out: Optional[torch.Tensor] = None) -> torch.Tensor",
+        "2.6.0": "(input: torch.Tensor, p: float = 2.0, dim: int = 1, eps: float = 1e-12, out: Optional[torch.Tensor] = None) -> torch.Tensor",
+        "2.3.0": "(input: torch.Tensor, p: float = 2.0, dim: int = 1, eps: float = 1e-12, out: Optional[torch.Tensor] = None) -> torch.Tensor",
+        "2.4.1": "(input: torch.Tensor, p: float = 2.0, dim: int = 1, eps: float = 1e-12, out: Optional[torch.Tensor] = None) -> torch.Tensor",
+        "2.5.1": "(input: torch.Tensor, p: float = 2.0, dim: int = 1, eps: float = 1e-12, out: Optional[torch.Tensor] = None) -> torch.Tensor",
+        "2.2.2": "(input: torch.Tensor, p: float = 2.0, dim: int = 1, eps: float = 1e-12, out: Optional[torch.Tensor] = None) -> torch.Tensor",
+        "2.3.1": "(input: torch.Tensor, p: float = 2.0, dim: int = 1, eps: float = 1e-12, out: Optional[torch.Tensor] = None) -> torch.Tensor"
+      },
+      "signature_drift": null
+    },
+    "torch.nn:Parameter": {
+      "file": "modelopt/torch/export/layer_utils.py",
+      "line": 658,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "(data=None, requires_grad=True)",
+        "2.2.0": "(data=None, requires_grad=True)",
+        "2.5.0": "(data=None, requires_grad=True)",
+        "2.7.0": "(data=None, requires_grad=True)",
+        "2.7.1": "(data=None, requires_grad=True)",
+        "2.8.0": "(data=None, requires_grad=True)",
+        "2.4.0": "(data=None, requires_grad=True)",
+        "2.6.0": "(data=None, requires_grad=True)",
+        "2.3.0": "(data=None, requires_grad=True)",
+        "2.4.1": "(data=None, requires_grad=True)",
+        "2.5.1": "(data=None, requires_grad=True)",
+        "2.2.2": "(data=None, requires_grad=True)",
+        "2.3.1": "(data=None, requires_grad=True)"
+      },
+      "signature_drift": null
+    },
+    "torch:uint8": {
+      "file": "modelopt/torch/export/layer_utils.py",
+      "line": 941,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "dtype",
+        "2.2.0": "dtype",
+        "2.5.0": "dtype",
+        "2.7.0": "dtype",
+        "2.7.1": "dtype",
+        "2.8.0": "dtype",
+        "2.4.0": "dtype",
+        "2.6.0": "dtype",
+        "2.3.0": "dtype",
+        "2.4.1": "dtype",
+        "2.5.1": "dtype",
+        "2.2.2": "dtype",
+        "2.3.1": "dtype"
+      },
+      "signature_drift": null
+    },
+    "torch:device": {
+      "file": "modelopt/torch/export/layer_utils.py",
+      "line": 1062,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch:max": {
+      "file": "modelopt/torch/export/layer_utils.py",
+      "line": 1224,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch:abs": {
+      "file": "modelopt/torch/export/layer_utils.py",
+      "line": 1116,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch:equal": {
+      "file": "modelopt/torch/export/layer_utils.py",
+      "line": 1323,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch:concat": {
+      "file": "modelopt/torch/export/layer_utils.py",
+      "line": 1302,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    },
+    "torch:float": {
+      "file": "modelopt/torch/export/layer_utils.py",
+      "line": 1381,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "dtype",
+        "2.2.0": "dtype",
+        "2.5.0": "dtype",
+        "2.7.0": "dtype",
+        "2.7.1": "dtype",
+        "2.8.0": "dtype",
+        "2.4.0": "dtype",
+        "2.6.0": "dtype",
+        "2.3.0": "dtype",
+        "2.4.1": "dtype",
+        "2.5.1": "dtype",
+        "2.2.2": "dtype",
+        "2.3.1": "dtype"
+      },
+      "signature_drift": null
+    },
+    "torch.nn:Sequential": {
+      "file": "modelopt/torch/export/layer_utils.py",
+      "line": 1751,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "(*args)",
+        "2.2.0": "(*args)",
+        "2.5.0": "(*args)",
+        "2.7.0": "(*args)",
+        "2.7.1": "(*args)",
+        "2.8.0": "(*args)",
+        "2.4.0": "(*args)",
+        "2.6.0": "(*args)",
+        "2.3.0": "(*args)",
+        "2.4.1": "(*args)",
+        "2.5.1": "(*args)",
+        "2.2.2": "(*args)",
+        "2.3.1": "(*args)"
+      },
+      "signature_drift": null
+    },
+    "torch:mean": {
+      "file": "modelopt/torch/export/layer_utils.py",
+      "line": 1901,
+      "guarded": false,
+      "role": "export",
+      "compatible_ranges": [
+        [
+          "2.2.0",
+          "2.8.0"
+        ]
+      ],
+      "statuses": {
+        "2.1.0": "ENV_ERROR",
+        "2.2.1": "OK",
+        "2.1.2": "ENV_ERROR",
+        "2.2.0": "OK",
+        "2.5.0": "OK",
+        "2.7.0": "OK",
+        "2.7.1": "OK",
+        "2.8.0": "OK",
+        "2.4.0": "OK",
+        "2.6.0": "OK",
+        "2.3.0": "OK",
+        "2.4.1": "OK",
+        "2.5.1": "OK",
+        "2.1.1": "ENV_ERROR",
+        "2.2.2": "OK",
+        "2.3.1": "OK"
+      },
+      "signatures": {
+        "2.2.1": "<no-signature>",
+        "2.2.0": "<no-signature>",
+        "2.5.0": "<no-signature>",
+        "2.7.0": "<no-signature>",
+        "2.7.1": "<no-signature>",
+        "2.8.0": "<no-signature>",
+        "2.4.0": "<no-signature>",
+        "2.6.0": "<no-signature>",
+        "2.3.0": "<no-signature>",
+        "2.4.1": "<no-signature>",
+        "2.5.1": "<no-signature>",
+        "2.2.2": "<no-signature>",
+        "2.3.1": "<no-signature>"
+      },
+      "signature_drift": null
+    }
+  },
+  "dynamic": [
+    {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 414,
+      "note": "HFColumnParallelLinear"
+    },
+    {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 419,
+      "note": "HFRowParallelLinear"
+    },
+    {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 1176,
+      "note": "Llama4TextExperts"
+    },
+    {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 1186,
+      "note": "DbrxExperts"
+    },
+    {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 1189,
+      "note": "DbrxExpertGLU"
+    },
+    {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 1192,
+      "note": "DbrxFFN"
+    },
+    {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 1200,
+      "note": "FalconLinear"
+    },
+    {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 1208,
+      "note": "CompressedLinear"
+    },
+    {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 1218,
+      "note": "Qwen3VLMoeTextExperts"
+    },
+    {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 1228,
+      "note": "FP8Linear"
+    },
+    {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 1323,
+      "note": "GptOssExperts"
+    },
+    {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 1337,
+      "note": "moe_type"
+    },
+    {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 1350,
+      "note": "linear_type"
+    },
+    {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 1413,
+      "note": "mod_type"
+    },
+    {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 1465,
+      "note": "mod_type"
+    },
+    {
+      "file": "modelopt/torch/quantization/plugins/huggingface.py",
+      "line": 1673,
+      "note": "moe_linear_type"
+    },
+    {
+      "file": "modelopt/torch/quantization/conversion.py",
+      "line": 616,
+      "note": "original_cls"
+    }
+  ],
+  "env_errors": {
+    "2.1.0": "ENV_ERROR",
+    "2.1.2": "ENV_ERROR",
+    "2.1.1": "ENV_ERROR"
+  },
+  "target": "torch",
+  "pypi": "torch"
+}
