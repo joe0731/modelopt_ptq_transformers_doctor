@@ -32,13 +32,14 @@ def _load_targets(report_dir: str) -> list[tuple[str, dict]]:
     return results
 
 
-def _all_versions_for(matrix: dict) -> list[str]:
+def _all_versions_for(matrix: dict, target_name: str = "transformers") -> list[str]:
     """Fetch full version range or fall back to probed list."""
     probed = matrix["versions_probed"]
     if not probed:
         return []
+    pkg = matrix.get("pypi", target_name)
     try:
-        return R.fetch_full_range(probed[0], probed[-1], probed)
+        return R.fetch_full_range(probed[0], probed[-1], probed, pkg=pkg)
     except Exception:
         return sorted(probed, key=Version)
 
@@ -119,7 +120,7 @@ def build_combined(report_dir: str, modelopt_version: str, generated: str, outdi
     # Gather data for each target
     targets_data = []
     for target, matrix in targets_raw:
-        all_versions = _all_versions_for(matrix)
+        all_versions = _all_versions_for(matrix, target_name=target)
         s = R.summary(matrix)
         targets_data.append((target, matrix, s, all_versions))
 
@@ -204,26 +205,13 @@ def build_combined(report_dir: str, modelopt_version: str, generated: str, outdi
             emoji = "🟩" if frac == 1 else ("🟥" if frac == 0 else "🟨")
             sym_rows.append(f"| `{key}` | {info['role']} | {win} | {emoji} |")
 
-        # Support grid
-        def _nb_minor_cell(info, mn):
-            sts = {info["statuses"].get(v) for v in probed if R.minor(v) == mn}
-            if not sts:
-                return "⬜"
-            if sts == {"OK"}:
-                return "🟩"
-            if "OK" in sts:
-                return "🟨"
-            if sts <= {"MISSING_MODULE"}:
-                return "🟥"
-            return "🟨"
-
         grid_rows = [
             "| symbol | " + " | ".join(minors) + " |",
             "|---|" + "|".join([":--:"] * len(minors)) + "|",
         ]
         for key, info in symbols:
             grid_rows.append(
-                f"| `{key}` | " + " | ".join(_nb_minor_cell(info, mn) for mn in minors) + " |"
+                f"| `{key}` | " + " | ".join(R._nb_minor_cell(info, mn, probed) for mn in minors) + " |"
             )
 
         cells.append(R._md(

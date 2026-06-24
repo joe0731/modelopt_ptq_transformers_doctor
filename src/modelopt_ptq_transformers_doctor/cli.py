@@ -60,6 +60,8 @@ def _run_scan(args) -> int:
     runner = EnvRunner(prober.__file__, pkg=target.pypi, extra_deps=target.pinned_deps)
     reporter = NullProgress() if args.no_progress else ProgressReporter(stream=sys.stderr)
     matrix = build_matrix(records, versions, runner, reporter=reporter)
+    matrix["target"] = target.name
+    matrix["pypi"] = target.pypi
 
     out_dir = args.out if args.out is not None else os.path.join("doctor-report", target.name)
     json_path, md_path = write_report(matrix, out_dir)

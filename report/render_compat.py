@@ -174,11 +174,11 @@ def drift_steps(seq):
 
 # ============================================================ version discovery
 
-def fetch_full_range(lo: str, hi: str, probed: list[str]) -> list[str]:
-    """All stable transformers releases in [lo, hi]; falls back to *probed*."""
+def fetch_full_range(lo: str, hi: str, probed: list[str], pkg: str = "transformers") -> list[str]:
+    """All stable releases of *pkg* in [lo, hi]; falls back to *probed*."""
     try:
-        with urllib.request.urlopen("https://pypi.org/pypi/transformers/json", timeout=30) as r:
-            data = json.load(r)
+        with urllib.request.urlopen(f"https://pypi.org/pypi/{pkg}/json", timeout=30) as r:
+            data = json.loads(r.read())
         lov, hiv = Version(lo), Version(hi)
         out = []
         for raw in data.get("releases", {}):
@@ -344,6 +344,7 @@ def build_html(matrix: dict, modelopt_version: str, generated: str, all_versions
     minors = sorted({minor(v) for v in all_versions}, key=Version)
     lo, hi = (all_versions[0], all_versions[-1]) if all_versions else ("?", "?")
     s = summary(matrix)
+    target_label = matrix.get("target", "transformers")
 
     body = "\n  ".join([
         _probed_block(probed, all_versions),
@@ -358,14 +359,14 @@ def build_html(matrix: dict, modelopt_version: str, generated: str, all_versions
     return f"""<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>modelopt {esc(modelopt_version)} ↔ transformers compatibility</title>
+<title>modelopt {esc(modelopt_version)} ↔ {esc(target_label)} compatibility</title>
 <style>
 {_css()}
 </style></head>
 <body>
 <header>
-  <h1>modelopt PTQ ↔ transformers compatibility</h1>
-  <div class="meta">modelopt <b>{esc(modelopt_version)}</b> &nbsp;·&nbsp; transformers <b>{esc(lo)} – {esc(hi)}</b>
+  <h1>modelopt PTQ ↔ {esc(target_label)} compatibility</h1>
+  <div class="meta">modelopt <b>{esc(modelopt_version)}</b> &nbsp;·&nbsp; {esc(target_label)} <b>{esc(lo)} – {esc(hi)}</b>
    &nbsp;·&nbsp; {len(probed)} versions probed &nbsp;·&nbsp; generated {esc(generated)}</div>
 </header>
 <main>
@@ -409,6 +410,7 @@ def build_ipynb(matrix: dict, modelopt_version: str, generated: str, all_version
     lo, hi = (all_versions[0], all_versions[-1]) if all_versions else ("?", "?")
     s = summary(matrix)
     na = [v for v in all_versions if v not in probed_set]
+    target_label = matrix.get("target", "transformers")
 
     coverage = (f"All **{len(probed)}** stable releases in `{lo}`–`{hi}` were probed directly "
                 "— yes/no determined by test, no inferred (N/A) cells." if not na else
@@ -457,8 +459,8 @@ def build_ipynb(matrix: dict, modelopt_version: str, generated: str, all_version
     dyn_lines += ["", "</details>"]
 
     cells = [
-        _md("# modelopt PTQ ↔ transformers compatibility", "",
-            f"**modelopt** `{modelopt_version}`  ·  **transformers** `{lo}`–`{hi}`  ·  "
+        _md(f"# modelopt PTQ ↔ {target_label} compatibility", "",
+            f"**modelopt** `{modelopt_version}`  ·  **{target_label}** `{lo}`–`{hi}`  ·  "
             f"**{len(probed)}** versions probed  ·  generated {generated}", "",
             coverage, "",
             "| symbols | compatible | never | signature drift ⚇ | dynamic | env errors |",
@@ -505,7 +507,8 @@ def main():
     with open(args.matrix, encoding="utf-8") as fh:
         matrix = json.load(fh)
     probed = matrix["versions_probed"]
-    all_versions = fetch_full_range(probed[0], probed[-1], probed) if probed else []
+    pkg = matrix.get("pypi", "transformers")
+    all_versions = fetch_full_range(probed[0], probed[-1], probed, pkg=pkg) if probed else []
 
     os.makedirs(args.outdir, exist_ok=True)
     html_path = os.path.join(args.outdir, "compatibility.html")
