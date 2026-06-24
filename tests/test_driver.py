@@ -146,3 +146,41 @@ def test_reporter_exception_does_not_abort_scan():
     """Reporter exceptions must never propagate into the scan (design guarantee)."""
     m = build_matrix([_rec()], VERSIONS, FakeRunner(present_from=50), reporter=RaisingReporter())
     assert "symbols" in m
+
+
+class SigRunner:
+    """OK on every version; returns a fingerprint per version (by minor)."""
+
+    def __init__(self, sig_by_minor):
+        self.sig_by_minor = sig_by_minor
+
+    def probe_version(self, version, records):
+        minor = int(version.split(".")[1])
+        keys = [f"{r['module_path']}:{r['symbol']}" for r in records]
+        return {
+            "status": "OK", "installed": version,
+            "statuses": {k: "OK" for k in keys},
+            "signatures": {k: self.sig_by_minor[minor] for k in keys},
+        }
+
+
+def test_signatures_collected_and_no_drift_when_stable():
+    runner = SigRunner({m: "(a)" for m in range(48, 53)})
+    m = build_matrix([_rec()], VERSIONS, runner)
+    info = m["symbols"]["transformers.models.x.modeling_x:XAttn"]
+    assert info["signatures"]["4.48.0"] == "(a)"
+    assert info["signature_drift"] is None
+
+
+def test_signature_drift_detected_when_fingerprint_changes():
+    runner = SigRunner({48: "(a)", 49: "(a)", 50: "(a, b)", 51: "(a, b)", 52: "(a, b)"})
+    m = build_matrix([_rec()], VERSIONS, runner)
+    info = m["symbols"]["transformers.models.x.modeling_x:XAttn"]
+    assert info["signature_drift"] == [["4.48.0", "(a)"], ["4.50.0", "(a, b)"]]
+
+
+def test_missing_signatures_key_defaults_empty():
+    # FakeRunner returns no "signatures" key -> no crash, empty map, no drift.
+    m = build_matrix([_rec()], VERSIONS, FakeRunner(present_from=48))
+    info = m["symbols"]["transformers.models.x.modeling_x:XAttn"]
+    assert info["signatures"] == {} and info["signature_drift"] is None

@@ -17,6 +17,19 @@ def _safe(fn, *args):
         pass
 
 
+def _signature_drift(sigs: dict) -> list | None:
+    """Transition points [[version, fingerprint], ...] when >1 distinct
+    fingerprints appear across the version->fingerprint map; else None."""
+    transitions: list = []
+    prev = object()
+    for v in sorted(sigs, key=Version):
+        fp = sigs[v]
+        if fp != prev:
+            transitions.append([v, fp])
+            prev = fp
+    return transitions if len(transitions) > 1 else None
+
+
 def build_matrix(records: list[ContractRecord], versions: list[str], env_runner, reporter=None) -> dict:
     """Build a symbol × version compatibility matrix.
 
@@ -65,6 +78,18 @@ def build_matrix(records: list[ContractRecord], versions: list[str], env_runner,
             info["statuses"][v] = (
                 res["statuses"].get(r.key, res["status"]) if res["status"] == OK else res["status"]
             )
+
+    # Signatures pass: collect signatures from OK versions and detect drift.
+    for r in static:
+        info = matrix["symbols"][r.key]
+        sigs = {}
+        for v, res in cache.items():
+            if res["status"] == OK:
+                fp = res.get("signatures", {}).get(r.key)
+                if fp is not None:
+                    sigs[v] = fp
+        info["signatures"] = sigs
+        info["signature_drift"] = _signature_drift(sigs)
 
     matrix["dynamic"] = [{"file": r.file, "line": r.line, "note": r.symbol or "runtime-discovered"}
                          for r in dynamic]
