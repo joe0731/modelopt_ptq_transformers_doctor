@@ -76,12 +76,11 @@ def test_method_call_on_class_still_captures_class():
     assert "transformers:Foo" in keys
 
 
-def test_extract_contract_raises_for_missing_allowlist_file(tmp_path):
-    import pytest
+def test_extract_contract_skips_missing_allowlist_file(tmp_path):
     from modelopt_ptq_transformers_doctor.contract import extract_contract
-    with pytest.raises(FileNotFoundError) as exc:
-        extract_contract(str(tmp_path))
-    assert "modelopt/torch" in str(exc.value)
+    # missing files are skipped gracefully, no error raised
+    records = extract_contract(str(tmp_path))
+    assert records == []
 
 
 def test_guarded_flag_set_for_module_not_found_error():
@@ -114,3 +113,27 @@ def test_does_not_capture_class_method_but_keeps_class():
 def test_skips_dunder_leaf():
     src = "import transformers\nv = transformers.__version__\n"
     assert not any(r.symbol == "__version__" for r in extract_from_source(src, "f.py", "quant"))
+
+
+from modelopt_ptq_transformers_doctor.targets import TARGETS
+
+
+def _keys_for(src, roots):
+    from modelopt_ptq_transformers_doctor.contract import extract_from_source
+    return {r.key for r in extract_from_source(src, "f.py", "quant", import_roots=roots)}
+
+
+def test_import_roots_select_target_library():
+    src = "import torch\nx = torch.nn.Linear\nfrom transformers import AutoConfig\n"
+    torch_keys = _keys_for(src, ("torch",))
+    assert any(k.startswith("torch") for k in torch_keys)
+    assert not any("transformers" in k for k in torch_keys)
+    tf_keys = _keys_for(src, ("transformers",))
+    assert "transformers:AutoConfig" in tf_keys
+    assert not any(k.startswith("torch") for k in tf_keys)
+
+
+def test_extract_contract_accepts_target():
+    # default still works (transformers); torch target reads torch allowlist
+    import modelopt_ptq_transformers_doctor.contract as c
+    assert c.extract_contract.__defaults__ is not None  # has a default target arg

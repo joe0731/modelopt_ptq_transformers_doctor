@@ -1,18 +1,19 @@
 ---
 name: compat-report
-description: Use when asked for a modelopt↔transformers compatibility report for a specific nvidia-modelopt version — e.g. "which transformers releases does modelopt 0.45 PTQ support", "scan modelopt X", or (re)generating the styled HTML / notebook / matrix under report/. For the modelopt_ptq_transformers_doctor repo.
+description: Use when asked for a modelopt compatibility report against a library — transformers, torch, vllm, or accelerate — e.g. "which transformers/torch/vllm releases does modelopt PTQ support", "scan modelopt X", a multi-library / combined compatibility report, or (re)generating the styled HTML / notebook / matrix under report/. For the modelopt_ptq_transformers_doctor repo.
 ---
 
 # compat-report
 
 ## Overview
 
-Produce the modelopt PTQ ↔ transformers compatibility report for ONE
-`nvidia-modelopt` version. The `doctor` tool **statically AST-scans the
-installed modelopt — it never imports it** — and probes each transformers
-release in a throwaway `uv` virtualenv. So the target modelopt only needs its
-source on disk (no torch), but real `transformers`+`torch` installs happen
-per probed version.
+Produce the modelopt PTQ compatibility report against a chosen library — one of
+`transformers` (default), `torch`, `vllm`, `accelerate` — selected with
+`--target`. The `doctor` tool **statically AST-scans the installed modelopt — it
+never imports it** — and probes each release of the target library in a
+throwaway `uv` virtualenv. So the target modelopt only needs its source on disk
+(no torch), but real installs of the target library happen per probed version.
+**SGLang is unsupported** (modelopt has no sglang integration — nothing to probe).
 
 ## Prerequisites
 
@@ -36,25 +37,40 @@ per probed version.
    "$PY" -c "from modelopt_ptq_transformers_doctor.contract import installed_modelopt_root, extract_contract as e; print(len(e(installed_modelopt_root())), 'symbols')"
    ```
 
-3. **Scan up to the newest transformers so the upper bound is real.** The
+3. **Scan each target up to its newest release so the upper bound is real.** The
    compatible window is **clamped to the scanned range**, so a low `--max`
-   understates it. Put `--min` near/below the expected window and `--max` at the
-   latest release:
+   understates it. Use `--target` (default `transformers`) and route each target
+   to its own subdir `report/modelopt<XX>/<target>/`:
    ```bash
-   /tmp/doctor-<ver>/bin/doctor scan --min 4.46.0 --max 5.12.1 --out report/modelopt<XX>/
+   DR=/tmp/doctor-<ver>/bin/doctor
+   $DR scan --target transformers --min 4.46.0 --max 5.12.1 --out report/modelopt<XX>/transformers
+   $DR scan --target accelerate   --min 1.0.0  --max 1.10.0 --out report/modelopt<XX>/accelerate
+   $DR scan --target torch        --min 2.1.0  --max 2.8.0  --out report/modelopt<XX>/torch
+   $DR scan --target vllm         --min 0.6.0  --max 0.11.0 --out report/modelopt<XX>/vllm
    ```
-   Output dir convention: `report/modelopt<major><minor>/` (e.g. `report/modelopt045/`).
-   Writes `matrix.json` + `REPORT.md`. It is slow (per-version installs); run in
-   the background and poll the log.
+   Each writes `matrix.json` + `REPORT.md`. Slow (per-version installs) — run in
+   the background and poll the log; vLLM is heaviest and will produce some
+   `ENV_ERROR` cells (acceptable, shown honestly). When probing one target the
+   **other libraries are pinned to fixed versions** for isolation (best-effort;
+   vLLM dictates its own torch).
 
-4. **Render the styled artifacts** (system `python3` is fine — it has
-   `packaging`; this step also fetches the full in-range PyPI list to mark
-   N/A versions):
+4. **Render each target's styled artifacts** (system `python3` is fine — it has
+   `packaging`; uses the target package recorded in `matrix.json` to mark N/A):
    ```bash
-   python3 report/render_compat.py report/modelopt<XX>/matrix.json \
-     --modelopt-version <ver> --outdir report/modelopt<XX>/ --generated <YYYY-MM-DD>
+   for t in transformers accelerate torch vllm; do
+     python3 report/render_compat.py report/modelopt<XX>/$t/matrix.json \
+       --modelopt-version <ver> --outdir report/modelopt<XX>/$t --generated <YYYY-MM-DD>
+   done
    ```
-   Produces `compatibility.html` (styled) and `compatibility.ipynb` (results-only).
+   Produces per-target `compatibility.html` + `compatibility.ipynb`.
+
+5. **Combine into one report** organized by library:
+   ```bash
+   python3 report/render_combined.py report/modelopt<XX> \
+     --modelopt-version <ver> --generated <YYYY-MM-DD>
+   ```
+   Writes `report/modelopt<XX>/index.html` + `index.ipynb` (overview + a section
+   per library).
 
 ## Report invariants (keep when editing `report/render_compat.py`)
 

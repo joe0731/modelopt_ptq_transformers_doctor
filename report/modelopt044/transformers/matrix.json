@@ -23,11 +23,9 @@
     "5.6.1",
     "5.8.1",
     "5.10.0",
+    "5.10.1",
     "5.10.2",
-    "5.10.4",
-    "5.11.0",
-    "5.12.0",
-    "5.12.1"
+    "5.10.4"
   ],
   "symbols": {
     "transformers.models.t5.modeling_t5:T5Attention": {
@@ -38,7 +36,7 @@
       "compatible_ranges": [
         [
           "4.46.0",
-          "5.12.1"
+          "5.10.0"
         ]
       ],
       "statuses": {
@@ -46,10 +44,9 @@
         "4.55.4": "OK",
         "5.5.1": "OK",
         "5.8.1": "OK",
-        "5.10.2": "OK",
-        "5.11.0": "OK",
-        "5.12.0": "OK",
-        "5.12.1": "OK",
+        "5.10.2": "PROBE_ERROR",
+        "5.10.0": "OK",
+        "5.10.1": "PROBE_ERROR",
         "4.51.2": "OK",
         "4.48.2": "OK",
         "4.50.2": "OK",
@@ -57,8 +54,7 @@
         "4.50.3": "OK",
         "4.57.5": "OK",
         "5.6.1": "OK",
-        "5.10.0": "OK",
-        "5.10.4": "OK",
+        "5.10.4": "PROBE_ERROR",
         "4.53.1": "OK",
         "4.57.0": "OK",
         "4.55.1": "OK",
@@ -76,10 +72,7 @@
         "4.55.4": "(config: transformers.models.t5.configuration_t5.T5Config, has_relative_attention_bias=False, layer_idx: Optional[int] = None)",
         "5.5.1": "(config: transformers.models.t5.configuration_t5.T5Config, has_relative_attention_bias=False, layer_idx: int | None = None)",
         "5.8.1": "(config: transformers.models.t5.configuration_t5.T5Config, has_relative_attention_bias=False, layer_idx: int | None = None)",
-        "5.10.2": "(config: transformers.models.t5.configuration_t5.T5Config, has_relative_attention_bias=False, layer_idx: int | None = None)",
-        "5.11.0": "(config: transformers.models.t5.configuration_t5.T5Config, has_relative_attention_bias=False, layer_idx: int | None = None)",
-        "5.12.0": "(config: transformers.models.t5.configuration_t5.T5Config, has_relative_attention_bias=False, layer_idx: int | None = None)",
-        "5.12.1": "(config: transformers.models.t5.configuration_t5.T5Config, has_relative_attention_bias=False, layer_idx: int | None = None)",
+        "5.10.0": "(config: transformers.models.t5.configuration_t5.T5Config, has_relative_attention_bias=False, layer_idx: int | None = None)",
         "4.51.2": "(config: transformers.models.t5.configuration_t5.T5Config, has_relative_attention_bias=False, layer_idx: Optional[int] = None)",
         "4.48.2": "(config: transformers.models.t5.configuration_t5.T5Config, has_relative_attention_bias=False, layer_idx: Optional[int] = None)",
         "4.50.2": "(config: transformers.models.t5.configuration_t5.T5Config, has_relative_attention_bias=False, layer_idx: Optional[int] = None)",
@@ -87,8 +80,6 @@
         "4.50.3": "(config: transformers.models.t5.configuration_t5.T5Config, has_relative_attention_bias=False, layer_idx: Optional[int] = None)",
         "4.57.5": "(config: transformers.models.t5.configuration_t5.T5Config, has_relative_attention_bias=False, layer_idx: Optional[int] = None)",
         "5.6.1": "(config: transformers.models.t5.configuration_t5.T5Config, has_relative_attention_bias=False, layer_idx: int | None = None)",
-        "5.10.0": "(config: transformers.models.t5.configuration_t5.T5Config, has_relative_attention_bias=False, layer_idx: int | None = None)",
-        "5.10.4": "(config: transformers.models.t5.configuration_t5.T5Config, has_relative_attention_bias=False, layer_idx: int | None = None)",
         "4.53.1": "(config: transformers.models.t5.configuration_t5.T5Config, has_relative_attention_bias=False, layer_idx: Optional[int] = None)",
         "4.57.0": "(config: transformers.models.t5.configuration_t5.T5Config, has_relative_attention_bias=False, layer_idx: Optional[int] = None)",
         "4.55.1": "(config: transformers.models.t5.configuration_t5.T5Config, has_relative_attention_bias=False, layer_idx: Optional[int] = None)",
@@ -120,7 +111,7 @@
       "compatible_ranges": [
         [
           "4.46.0",
-          "5.12.1"
+          "5.10.0"
         ]
       ],
       "statuses": {
@@ -128,10 +119,9 @@
         "4.55.4": "OK",
         "5.5.1": "OK",
         "5.8.1": "OK",
-        "5.10.2": "OK",
-        "5.11.0": "OK",
-        "5.12.0": "OK",
-        "5.12.1": "OK",
+        "5.10.2": "PROBE_ERROR",
+        "5.10.0": "OK",
+        "5.10.1": "PROBE_ERROR",
         "4.51.2": "OK",
         "4.48.2": "OK",
         "4.50.2": "OK",
@@ -139,8 +129,7 @@
         "4.50.3": "OK",
         "4.57.5": "OK",
         "5.6.1": "OK",
-        "5.10.0": "OK",
-        "5.10.4": "OK",
+        "5.10.4": "PROBE_ERROR",
         "4.53.1": "OK",
         "4.57.0": "OK",
         "4.55.1": "OK",
@@ -158,10 +147,7 @@
         "4.55.4": "(nf, nx)",
         "5.5.1": "(nf, nx)",
         "5.8.1": "(nf, nx)",
-        "5.10.2": "(nf, nx)",
-        "5.11.0": "(nf, nx)",
-        "5.12.0": "(nf, nx)",
-        "5.12.1": "(nf, nx)",
+        "5.10.0": "(nf, nx)",
         "4.51.2": "(nf, nx)",
         "4.48.2": "(nf, nx)",
         "4.50.2": "(nf, nx)",
@@ -169,8 +155,6 @@
         "4.50.3": "(nf, nx)",
         "4.57.5": "(nf, nx)",
         "5.6.1": "(nf, nx)",
-        "5.10.0": "(nf, nx)",
-        "5.10.4": "(nf, nx)",
         "4.53.1": "(nf, nx)",
         "4.57.0": "(nf, nx)",
         "4.55.1": "(nf, nx)",
@@ -193,7 +177,7 @@
       "compatible_ranges": [
         [
           "4.51.0",
-          "5.12.1"
+          "5.10.0"
         ]
       ],
       "statuses": {
@@ -201,10 +185,9 @@
         "4.55.4": "OK",
         "5.5.1": "OK",
         "5.8.1": "OK",
-        "5.10.2": "OK",
-        "5.11.0": "OK",
-        "5.12.0": "OK",
-        "5.12.1": "OK",
+        "5.10.2": "PROBE_ERROR",
+        "5.10.0": "OK",
+        "5.10.1": "PROBE_ERROR",
         "4.51.2": "OK",
         "4.48.2": "MISSING_MODULE",
         "4.50.2": "MISSING_MODULE",
@@ -212,8 +195,7 @@
         "4.50.3": "MISSING_MODULE",
         "4.57.5": "OK",
         "5.6.1": "OK",
-        "5.10.0": "OK",
-        "5.10.4": "OK",
+        "5.10.4": "PROBE_ERROR",
         "4.53.1": "OK",
         "4.57.0": "OK",
         "4.55.1": "OK",
@@ -230,16 +212,11 @@
         "4.55.4": "(config: transformers.models.llama4.configuration_llama4.Llama4TextConfig)",
         "5.5.1": "(config: transformers.models.llama4.configuration_llama4.Llama4TextConfig)",
         "5.8.1": "(config: transformers.models.llama4.configuration_llama4.Llama4TextConfig)",
-        "5.10.2": "(config: transformers.models.llama4.configuration_llama4.Llama4TextConfig)",
-        "5.11.0": "(config: transformers.models.llama4.configuration_llama4.Llama4TextConfig)",
-        "5.12.0": "(config: transformers.models.llama4.configuration_llama4.Llama4TextConfig)",
-        "5.12.1": "(config: transformers.models.llama4.configuration_llama4.Llama4TextConfig)",
+        "5.10.0": "(config: transformers.models.llama4.configuration_llama4.Llama4TextConfig)",
         "4.51.2": "(config: transformers.models.llama4.configuration_llama4.Llama4Config)",
         "4.51.0": "(config: transformers.models.llama4.configuration_llama4.Llama4Config)",
         "4.57.5": "(config: transformers.models.llama4.configuration_llama4.Llama4TextConfig)",
         "5.6.1": "(config: transformers.models.llama4.configuration_llama4.Llama4TextConfig)",
-        "5.10.0": "(config: transformers.models.llama4.configuration_llama4.Llama4TextConfig)",
-        "5.10.4": "(config: transformers.models.llama4.configuration_llama4.Llama4TextConfig)",
         "4.53.1": "(config: transformers.models.llama4.configuration_llama4.Llama4TextConfig)",
         "4.57.0": "(config: transformers.models.llama4.configuration_llama4.Llama4TextConfig)",
         "4.55.1": "(config: transformers.models.llama4.configuration_llama4.Llama4TextConfig)",
@@ -269,7 +246,7 @@
       "compatible_ranges": [
         [
           "4.46.0",
-          "5.12.1"
+          "5.10.0"
         ]
       ],
       "statuses": {
@@ -277,10 +254,9 @@
         "4.55.4": "OK",
         "5.5.1": "OK",
         "5.8.1": "OK",
-        "5.10.2": "OK",
-        "5.11.0": "OK",
-        "5.12.0": "OK",
-        "5.12.1": "OK",
+        "5.10.2": "PROBE_ERROR",
+        "5.10.0": "OK",
+        "5.10.1": "PROBE_ERROR",
         "4.51.2": "OK",
         "4.48.2": "OK",
         "4.50.2": "OK",
@@ -288,8 +264,7 @@
         "4.50.3": "OK",
         "4.57.5": "OK",
         "5.6.1": "OK",
-        "5.10.0": "OK",
-        "5.10.4": "OK",
+        "5.10.4": "PROBE_ERROR",
         "4.53.1": "OK",
         "4.57.0": "OK",
         "4.55.1": "OK",
@@ -307,10 +282,7 @@
         "4.55.4": "(hidden_size: int, ffn_hidden_size: int, moe_num_experts: int, ffn_act_fn: dict)",
         "5.5.1": "(config)",
         "5.8.1": "(config)",
-        "5.10.2": "(config)",
-        "5.11.0": "(config)",
-        "5.12.0": "(config)",
-        "5.12.1": "(config)",
+        "5.10.0": "(config)",
         "4.51.2": "(hidden_size: int, ffn_hidden_size: int, moe_num_experts: int, ffn_act_fn: dict)",
         "4.48.2": "(hidden_size: int, ffn_hidden_size: int, moe_num_experts: int, ffn_act_fn: dict)",
         "4.50.2": "(hidden_size: int, ffn_hidden_size: int, moe_num_experts: int, ffn_act_fn: dict)",
@@ -318,8 +290,6 @@
         "4.50.3": "(hidden_size: int, ffn_hidden_size: int, moe_num_experts: int, ffn_act_fn: dict)",
         "4.57.5": "(hidden_size: int, ffn_hidden_size: int, moe_num_experts: int, ffn_act_fn: dict)",
         "5.6.1": "(config)",
-        "5.10.0": "(config)",
-        "5.10.4": "(config)",
         "4.53.1": "(hidden_size: int, ffn_hidden_size: int, moe_num_experts: int, ffn_act_fn: dict)",
         "4.57.0": "(hidden_size: int, ffn_hidden_size: int, moe_num_experts: int, ffn_act_fn: dict)",
         "4.55.1": "(hidden_size: int, ffn_hidden_size: int, moe_num_experts: int, ffn_act_fn: dict)",
@@ -351,7 +321,7 @@
       "compatible_ranges": [
         [
           "4.46.0",
-          "5.12.1"
+          "5.10.0"
         ]
       ],
       "statuses": {
@@ -359,10 +329,9 @@
         "4.55.4": "OK",
         "5.5.1": "OK",
         "5.8.1": "OK",
-        "5.10.2": "OK",
-        "5.11.0": "OK",
-        "5.12.0": "OK",
-        "5.12.1": "OK",
+        "5.10.2": "PROBE_ERROR",
+        "5.10.0": "OK",
+        "5.10.1": "PROBE_ERROR",
         "4.51.2": "OK",
         "4.48.2": "OK",
         "4.50.2": "OK",
@@ -370,8 +339,7 @@
         "4.50.3": "OK",
         "4.57.5": "OK",
         "5.6.1": "OK",
-        "5.10.0": "OK",
-        "5.10.4": "OK",
+        "5.10.4": "PROBE_ERROR",
         "4.53.1": "OK",
         "4.57.0": "OK",
         "4.55.1": "OK",
@@ -389,10 +357,7 @@
         "4.55.4": "(hidden_size: int, ffn_hidden_size: int, moe_num_experts: int, ffn_act_fn: dict)",
         "5.5.1": "(config)",
         "5.8.1": "(config)",
-        "5.10.2": "(config)",
-        "5.11.0": "(config)",
-        "5.12.0": "(config)",
-        "5.12.1": "(config)",
+        "5.10.0": "(config)",
         "4.51.2": "(hidden_size: int, ffn_hidden_size: int, moe_num_experts: int, ffn_act_fn: dict)",
         "4.48.2": "(hidden_size: int, ffn_hidden_size: int, moe_num_experts: int, ffn_act_fn: dict)",
         "4.50.2": "(hidden_size: int, ffn_hidden_size: int, moe_num_experts: int, ffn_act_fn: dict)",
@@ -400,8 +365,6 @@
         "4.50.3": "(hidden_size: int, ffn_hidden_size: int, moe_num_experts: int, ffn_act_fn: dict)",
         "4.57.5": "(hidden_size: int, ffn_hidden_size: int, moe_num_experts: int, ffn_act_fn: dict)",
         "5.6.1": "(config)",
-        "5.10.0": "(config)",
-        "5.10.4": "(config)",
         "4.53.1": "(hidden_size: int, ffn_hidden_size: int, moe_num_experts: int, ffn_act_fn: dict)",
         "4.57.0": "(hidden_size: int, ffn_hidden_size: int, moe_num_experts: int, ffn_act_fn: dict)",
         "4.55.1": "(hidden_size: int, ffn_hidden_size: int, moe_num_experts: int, ffn_act_fn: dict)",
@@ -433,7 +396,7 @@
       "compatible_ranges": [
         [
           "4.46.0",
-          "5.12.1"
+          "5.10.0"
         ]
       ],
       "statuses": {
@@ -441,10 +404,9 @@
         "4.55.4": "OK",
         "5.5.1": "OK",
         "5.8.1": "OK",
-        "5.10.2": "OK",
-        "5.11.0": "OK",
-        "5.12.0": "OK",
-        "5.12.1": "OK",
+        "5.10.2": "PROBE_ERROR",
+        "5.10.0": "OK",
+        "5.10.1": "PROBE_ERROR",
         "4.51.2": "OK",
         "4.48.2": "OK",
         "4.50.2": "OK",
@@ -452,8 +414,7 @@
         "4.50.3": "OK",
         "4.57.5": "OK",
         "5.6.1": "OK",
-        "5.10.0": "OK",
-        "5.10.4": "OK",
+        "5.10.4": "PROBE_ERROR",
         "4.53.1": "OK",
         "4.57.0": "OK",
         "4.55.1": "OK",
@@ -471,10 +432,7 @@
         "4.55.4": "(config: transformers.models.dbrx.configuration_dbrx.DbrxConfig)",
         "5.5.1": "(config, **kwargs)",
         "5.8.1": "(config, **kwargs)",
-        "5.10.2": "(config, **kwargs)",
-        "5.11.0": "(config, **kwargs)",
-        "5.12.0": "(config, **kwargs)",
-        "5.12.1": "(config, **kwargs)",
+        "5.10.0": "(config, **kwargs)",
         "4.51.2": "(config: transformers.models.dbrx.configuration_dbrx.DbrxConfig)",
         "4.48.2": "(config: transformers.models.dbrx.configuration_dbrx.DbrxConfig)",
         "4.50.2": "(config: transformers.models.dbrx.configuration_dbrx.DbrxConfig)",
@@ -482,8 +440,6 @@
         "4.50.3": "(config: transformers.models.dbrx.configuration_dbrx.DbrxConfig)",
         "4.57.5": "(config: transformers.models.dbrx.configuration_dbrx.DbrxConfig)",
         "5.6.1": "(config, **kwargs)",
-        "5.10.0": "(config, **kwargs)",
-        "5.10.4": "(config, **kwargs)",
         "4.53.1": "(config: transformers.models.dbrx.configuration_dbrx.DbrxConfig)",
         "4.57.0": "(config: transformers.models.dbrx.configuration_dbrx.DbrxConfig)",
         "4.55.1": "(config: transformers.models.dbrx.configuration_dbrx.DbrxConfig)",
@@ -515,7 +471,7 @@
       "compatible_ranges": [
         [
           "4.46.0",
-          "5.12.1"
+          "5.10.0"
         ]
       ],
       "statuses": {
@@ -523,10 +479,9 @@
         "4.55.4": "OK",
         "5.5.1": "OK",
         "5.8.1": "OK",
-        "5.10.2": "OK",
-        "5.11.0": "OK",
-        "5.12.0": "OK",
-        "5.12.1": "OK",
+        "5.10.2": "PROBE_ERROR",
+        "5.10.0": "OK",
+        "5.10.1": "PROBE_ERROR",
         "4.51.2": "OK",
         "4.48.2": "OK",
         "4.50.2": "OK",
@@ -534,8 +489,7 @@
         "4.50.3": "OK",
         "4.57.5": "OK",
         "5.6.1": "OK",
-        "5.10.0": "OK",
-        "5.10.4": "OK",
+        "5.10.4": "PROBE_ERROR",
         "4.53.1": "OK",
         "4.57.0": "OK",
         "4.55.1": "OK",
@@ -553,10 +507,7 @@
         "4.55.4": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
         "5.5.1": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
         "5.8.1": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
-        "5.10.2": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
-        "5.11.0": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
-        "5.12.0": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
-        "5.12.1": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
+        "5.10.0": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
         "4.51.2": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
         "4.48.2": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
         "4.50.2": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
@@ -564,8 +515,6 @@
         "4.50.3": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
         "4.57.5": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
         "5.6.1": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
-        "5.10.0": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
-        "5.10.4": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
         "4.53.1": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
         "4.57.0": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
         "4.55.1": "(in_features: int, out_features: int, bias: bool = True, device=None, dtype=None) -> None",
@@ -588,7 +537,7 @@
       "compatible_ranges": [
         [
           "4.57.0",
-          "5.12.1"
+          "5.10.0"
         ]
       ],
       "statuses": {
@@ -596,10 +545,9 @@
         "4.55.4": "MISSING_MODULE",
         "5.5.1": "OK",
         "5.8.1": "OK",
-        "5.10.2": "OK",
-        "5.11.0": "OK",
-        "5.12.0": "OK",
-        "5.12.1": "OK",
+        "5.10.2": "PROBE_ERROR",
+        "5.10.0": "OK",
+        "5.10.1": "PROBE_ERROR",
         "4.51.2": "MISSING_MODULE",
         "4.48.2": "MISSING_MODULE",
         "4.50.2": "MISSING_MODULE",
@@ -607,8 +555,7 @@
         "4.50.3": "MISSING_MODULE",
         "4.57.5": "OK",
         "5.6.1": "OK",
-        "5.10.0": "OK",
-        "5.10.4": "OK",
+        "5.10.4": "PROBE_ERROR",
         "4.53.1": "MISSING_MODULE",
         "4.57.0": "OK",
         "4.55.1": "MISSING_MODULE",
@@ -624,14 +571,9 @@
       "signatures": {
         "5.5.1": "(config)",
         "5.8.1": "(config)",
-        "5.10.2": "(config)",
-        "5.11.0": "(config)",
-        "5.12.0": "(config)",
-        "5.12.1": "(config)",
+        "5.10.0": "(config)",
         "4.57.5": "(config)",
         "5.6.1": "(config)",
-        "5.10.0": "(config)",
-        "5.10.4": "(config)",
         "4.57.0": "(config)"
       },
       "signature_drift": null
@@ -644,7 +586,7 @@
       "compatible_ranges": [
         [
           "4.49.0",
-          "5.12.1"
+          "5.10.0"
         ]
       ],
       "statuses": {
@@ -652,10 +594,9 @@
         "4.55.4": "OK",
         "5.5.1": "OK",
         "5.8.1": "OK",
-        "5.10.2": "OK",
-        "5.11.0": "OK",
-        "5.12.0": "OK",
-        "5.12.1": "OK",
+        "5.10.2": "PROBE_ERROR",
+        "5.10.0": "OK",
+        "5.10.1": "PROBE_ERROR",
         "4.51.2": "OK",
         "4.48.2": "MISSING_MODULE",
         "4.50.2": "OK",
@@ -663,8 +604,7 @@
         "4.50.3": "OK",
         "4.57.5": "OK",
         "5.6.1": "OK",
-        "5.10.0": "OK",
-        "5.10.4": "OK",
+        "5.10.4": "PROBE_ERROR",
         "4.53.1": "OK",
         "4.57.0": "OK",
         "4.55.1": "OK",
@@ -681,18 +621,13 @@
         "4.55.4": "(in_features: int, out_features: int, bias: bool = False, dtype=None, block_size: Optional[tuple[int, int]] = None, device=None, activation_scheme='dynamic')",
         "5.5.1": "(in_features: int, out_features: int, block_size: tuple[int, int] | None = None, activation_scheme: str = 'dynamic', has_bias: bool = False, dtype=torch.float8_e4m3fn)",
         "5.8.1": "(in_features: 'int', out_features: 'int', block_size: 'tuple[int, int] | None' = None, activation_scheme: 'str' = 'dynamic', has_bias: 'bool' = False, dtype=torch.float8_e4m3fn)",
-        "5.10.2": "(in_features: 'int', out_features: 'int', block_size: 'tuple[int, int] | None' = None, activation_scheme: 'str' = 'dynamic', scale_fmt: 'str' = 'float', has_bias: 'bool' = False)",
-        "5.11.0": "(in_features: 'int', out_features: 'int', block_size: 'tuple[int, int] | None' = None, activation_scheme: 'str' = 'dynamic', scale_fmt: 'str' = 'float', has_bias: 'bool' = False)",
-        "5.12.0": "(in_features: 'int', out_features: 'int', block_size: 'tuple[int, int] | None' = None, activation_scheme: 'str' = 'dynamic', scale_fmt: 'str' = 'float', has_bias: 'bool' = False)",
-        "5.12.1": "(in_features: 'int', out_features: 'int', block_size: 'tuple[int, int] | None' = None, activation_scheme: 'str' = 'dynamic', scale_fmt: 'str' = 'float', has_bias: 'bool' = False)",
+        "5.10.0": "(in_features: 'int', out_features: 'int', block_size: 'tuple[int, int] | None' = None, activation_scheme: 'str' = 'dynamic', has_bias: 'bool' = False, dtype=torch.float8_e4m3fn)",
         "4.51.2": "(in_features: int, out_features: int, bias: bool = False, dtype=None, block_size: Optional[Tuple[int, int]] = None, device=None, activation_scheme='dynamic')",
         "4.50.2": "(in_features: int, out_features: int, bias: bool = False, dtype=None, block_size: Optional[Tuple[int, int]] = None, device=None, activation_scheme='dynamic')",
         "4.51.0": "(in_features: int, out_features: int, bias: bool = False, dtype=None, block_size: Optional[Tuple[int, int]] = None, device=None, activation_scheme='dynamic')",
         "4.50.3": "(in_features: int, out_features: int, bias: bool = False, dtype=None, block_size: Optional[Tuple[int, int]] = None, device=None, activation_scheme='dynamic')",
         "4.57.5": "(in_features: int, out_features: int, bias: bool = False, dtype=None, block_size: Optional[tuple[int, int]] = None, device=None, activation_scheme='dynamic')",
         "5.6.1": "(in_features: int, out_features: int, block_size: tuple[int, int] | None = None, activation_scheme: str = 'dynamic', has_bias: bool = False, dtype=torch.float8_e4m3fn)",
-        "5.10.0": "(in_features: 'int', out_features: 'int', block_size: 'tuple[int, int] | None' = None, activation_scheme: 'str' = 'dynamic', has_bias: 'bool' = False, dtype=torch.float8_e4m3fn)",
-        "5.10.4": "(in_features: 'int', out_features: 'int', block_size: 'tuple[int, int] | None' = None, activation_scheme: 'str' = 'dynamic', scale_fmt: 'str' = 'float', has_bias: 'bool' = False)",
         "4.53.1": "(in_features: int, out_features: int, bias: bool = False, dtype=None, block_size: Optional[tuple[int, int]] = None, device=None, activation_scheme='dynamic')",
         "4.57.0": "(in_features: int, out_features: int, bias: bool = False, dtype=None, block_size: Optional[tuple[int, int]] = None, device=None, activation_scheme='dynamic')",
         "4.55.1": "(in_features: int, out_features: int, bias: bool = False, dtype=None, block_size: Optional[tuple[int, int]] = None, device=None, activation_scheme='dynamic')",
@@ -720,10 +655,6 @@
         [
           "5.8.1",
           "(in_features: 'int', out_features: 'int', block_size: 'tuple[int, int] | None' = None, activation_scheme: 'str' = 'dynamic', has_bias: 'bool' = False, dtype=torch.float8_e4m3fn)"
-        ],
-        [
-          "5.10.2",
-          "(in_features: 'int', out_features: 'int', block_size: 'tuple[int, int] | None' = None, activation_scheme: 'str' = 'dynamic', scale_fmt: 'str' = 'float', has_bias: 'bool' = False)"
         ]
       ]
     },
@@ -735,7 +666,7 @@
       "compatible_ranges": [
         [
           "4.55.0",
-          "5.12.1"
+          "5.10.0"
         ]
       ],
       "statuses": {
@@ -743,10 +674,9 @@
         "4.55.4": "OK",
         "5.5.1": "OK",
         "5.8.1": "OK",
-        "5.10.2": "OK",
-        "5.11.0": "OK",
-        "5.12.0": "OK",
-        "5.12.1": "OK",
+        "5.10.2": "PROBE_ERROR",
+        "5.10.0": "OK",
+        "5.10.1": "PROBE_ERROR",
         "4.51.2": "MISSING_MODULE",
         "4.48.2": "MISSING_MODULE",
         "4.50.2": "MISSING_MODULE",
@@ -754,8 +684,7 @@
         "4.50.3": "MISSING_MODULE",
         "4.57.5": "OK",
         "5.6.1": "OK",
-        "5.10.0": "OK",
-        "5.10.4": "OK",
+        "5.10.4": "PROBE_ERROR",
         "4.53.1": "MISSING_MODULE",
         "4.57.0": "OK",
         "4.55.1": "OK",
@@ -772,14 +701,9 @@
         "4.55.4": "(config)",
         "5.5.1": "(config)",
         "5.8.1": "(config)",
-        "5.10.2": "(config)",
-        "5.11.0": "(config)",
-        "5.12.0": "(config)",
-        "5.12.1": "(config)",
+        "5.10.0": "(config)",
         "4.57.5": "(config)",
         "5.6.1": "(config)",
-        "5.10.0": "(config)",
-        "5.10.4": "(config)",
         "4.57.0": "(config)",
         "4.55.1": "(config)",
         "4.56.1": "(config)",
@@ -796,7 +720,7 @@
       "compatible_ranges": [
         [
           "4.46.0",
-          "5.12.1"
+          "5.10.0"
         ]
       ],
       "statuses": {
@@ -804,10 +728,9 @@
         "4.55.4": "OK",
         "5.5.1": "OK",
         "5.8.1": "OK",
-        "5.10.2": "OK",
-        "5.11.0": "OK",
-        "5.12.0": "OK",
-        "5.12.1": "OK",
+        "5.10.2": "PROBE_ERROR",
+        "5.10.0": "OK",
+        "5.10.1": "PROBE_ERROR",
         "4.51.2": "OK",
         "4.48.2": "OK",
         "4.50.2": "OK",
@@ -815,8 +738,7 @@
         "4.50.3": "OK",
         "4.57.5": "OK",
         "5.6.1": "OK",
-        "5.10.0": "OK",
-        "5.10.4": "OK",
+        "5.10.4": "PROBE_ERROR",
         "4.53.1": "OK",
         "4.57.0": "OK",
         "4.55.1": "OK",
@@ -834,10 +756,7 @@
         "4.55.4": "(config: transformers.configuration_utils.PretrainedConfig, *inputs, **kwargs)",
         "5.5.1": "(config: transformers.configuration_utils.PreTrainedConfig, *inputs, **kwargs)",
         "5.8.1": "(config: transformers.configuration_utils.PreTrainedConfig, *inputs, **kwargs)",
-        "5.10.2": "(config: transformers.configuration_utils.PreTrainedConfig, *inputs, **kwargs)",
-        "5.11.0": "(config: transformers.configuration_utils.PreTrainedConfig, *inputs, **kwargs)",
-        "5.12.0": "(config: transformers.configuration_utils.PreTrainedConfig, *inputs, **kwargs)",
-        "5.12.1": "(config: transformers.configuration_utils.PreTrainedConfig, *inputs, **kwargs)",
+        "5.10.0": "(config: transformers.configuration_utils.PreTrainedConfig, *inputs, **kwargs)",
         "4.51.2": "(config: transformers.configuration_utils.PretrainedConfig, *inputs, **kwargs)",
         "4.48.2": "(config: transformers.configuration_utils.PretrainedConfig, *inputs, **kwargs)",
         "4.50.2": "(config: transformers.configuration_utils.PretrainedConfig, *inputs, **kwargs)",
@@ -845,8 +764,6 @@
         "4.50.3": "(config: transformers.configuration_utils.PretrainedConfig, *inputs, **kwargs)",
         "4.57.5": "(config: transformers.configuration_utils.PretrainedConfig, *inputs, **kwargs)",
         "5.6.1": "(config: transformers.configuration_utils.PreTrainedConfig, *inputs, **kwargs)",
-        "5.10.0": "(config: transformers.configuration_utils.PreTrainedConfig, *inputs, **kwargs)",
-        "5.10.4": "(config: transformers.configuration_utils.PreTrainedConfig, *inputs, **kwargs)",
         "4.53.1": "(config: transformers.configuration_utils.PretrainedConfig, *inputs, **kwargs)",
         "4.57.0": "(config: transformers.configuration_utils.PretrainedConfig, *inputs, **kwargs)",
         "4.55.1": "(config: transformers.configuration_utils.PretrainedConfig, *inputs, **kwargs)",
@@ -878,7 +795,7 @@
       "compatible_ranges": [
         [
           "4.46.0",
-          "5.12.1"
+          "5.10.0"
         ]
       ],
       "statuses": {
@@ -886,10 +803,9 @@
         "4.55.4": "OK",
         "5.5.1": "OK",
         "5.8.1": "OK",
-        "5.10.2": "OK",
-        "5.11.0": "OK",
-        "5.12.0": "OK",
-        "5.12.1": "OK",
+        "5.10.2": "PROBE_ERROR",
+        "5.10.0": "OK",
+        "5.10.1": "PROBE_ERROR",
         "4.51.2": "OK",
         "4.48.2": "OK",
         "4.50.2": "OK",
@@ -897,8 +813,7 @@
         "4.50.3": "OK",
         "4.57.5": "OK",
         "5.6.1": "OK",
-        "5.10.0": "OK",
-        "5.10.4": "OK",
+        "5.10.4": "PROBE_ERROR",
         "4.53.1": "OK",
         "4.57.0": "OK",
         "4.55.1": "OK",
@@ -916,10 +831,7 @@
         "4.55.4": "()",
         "5.5.1": "()",
         "5.8.1": "()",
-        "5.10.2": "()",
-        "5.11.0": "()",
-        "5.12.0": "()",
-        "5.12.1": "()",
+        "5.10.0": "()",
         "4.51.2": "()",
         "4.48.2": "()",
         "4.50.2": "()",
@@ -927,8 +839,6 @@
         "4.50.3": "()",
         "4.57.5": "()",
         "5.6.1": "()",
-        "5.10.0": "()",
-        "5.10.4": "()",
         "4.53.1": "()",
         "4.57.0": "()",
         "4.55.1": "()",
@@ -951,7 +861,7 @@
       "compatible_ranges": [
         [
           "4.46.0",
-          "5.12.1"
+          "5.10.0"
         ]
       ],
       "statuses": {
@@ -959,10 +869,9 @@
         "4.55.4": "OK",
         "5.5.1": "OK",
         "5.8.1": "OK",
-        "5.10.2": "OK",
-        "5.11.0": "OK",
-        "5.12.0": "OK",
-        "5.12.1": "OK",
+        "5.10.2": "PROBE_ERROR",
+        "5.10.0": "OK",
+        "5.10.1": "PROBE_ERROR",
         "4.51.2": "OK",
         "4.48.2": "OK",
         "4.50.2": "OK",
@@ -970,8 +879,7 @@
         "4.50.3": "OK",
         "4.57.5": "OK",
         "5.6.1": "OK",
-        "5.10.0": "OK",
-        "5.10.4": "OK",
+        "5.10.4": "PROBE_ERROR",
         "4.53.1": "OK",
         "4.57.0": "OK",
         "4.55.1": "OK",
@@ -989,10 +897,7 @@
         "4.55.4": "ClassInstantier",
         "5.5.1": "ClassInstantier",
         "5.8.1": "ClassInstantier",
-        "5.10.2": "ClassInstantier",
-        "5.11.0": "ClassInstantier",
-        "5.12.0": "ClassInstantier",
-        "5.12.1": "ClassInstantier",
+        "5.10.0": "ClassInstantier",
         "4.51.2": "ClassInstantier",
         "4.48.2": "ClassInstantier",
         "4.50.2": "ClassInstantier",
@@ -1000,8 +905,6 @@
         "4.50.3": "ClassInstantier",
         "4.57.5": "ClassInstantier",
         "5.6.1": "ClassInstantier",
-        "5.10.0": "ClassInstantier",
-        "5.10.4": "ClassInstantier",
         "4.53.1": "ClassInstantier",
         "4.57.0": "ClassInstantier",
         "4.55.1": "ClassInstantier",
@@ -1024,7 +927,7 @@
       "compatible_ranges": [
         [
           "4.46.0",
-          "5.12.1"
+          "5.10.0"
         ]
       ],
       "statuses": {
@@ -1032,10 +935,9 @@
         "4.55.4": "OK",
         "5.5.1": "OK",
         "5.8.1": "OK",
-        "5.10.2": "OK",
-        "5.11.0": "OK",
-        "5.12.0": "OK",
-        "5.12.1": "OK",
+        "5.10.2": "PROBE_ERROR",
+        "5.10.0": "OK",
+        "5.10.1": "PROBE_ERROR",
         "4.51.2": "OK",
         "4.48.2": "OK",
         "4.50.2": "OK",
@@ -1043,8 +945,7 @@
         "4.50.3": "OK",
         "4.57.5": "OK",
         "5.6.1": "OK",
-        "5.10.0": "OK",
-        "5.10.4": "OK",
+        "5.10.4": "PROBE_ERROR",
         "4.53.1": "OK",
         "4.57.0": "OK",
         "4.55.1": "OK",
@@ -1062,10 +963,7 @@
         "4.55.4": "(vocab_size=32128, d_model=512, d_kv=64, d_ff=2048, num_layers=6, num_decoder_layers=None, num_heads=8, relative_attention_num_buckets=32, relative_attention_max_distance=128, dropout_rate=0.1, layer_norm_epsilon=1e-06, initializer_factor=1.0, feed_forward_proj='relu', is_encoder_decoder=True, use_cache=True, pad_token_id=0, eos_token_id=1, classifier_dropout=0.0, **kwargs)",
         "5.5.1": "(transformers_version: str | None = None, architectures: list[str] | None = None, output_hidden_states: bool | None = False, return_dict: bool | None = True, dtype: Union[str, ForwardRef('torch.dtype'), NoneType] = None, chunk_size_feed_forward: int = 0, id2label: dict[int, str] | dict[str, str] | None = None, label2id: dict[str, int] | dict[str, str] | None = None, problem_type: Optional[Literal['regression', 'single_label_classification', 'multi_label_classification']] = None, *, is_encoder_decoder: bool = True, vocab_size: int = 32128, d_model: int = 512, d_kv: int = 64, d_ff: int = 2048, num_layers: int = 6, num_decoder_layers: int | None = None, num_heads: int = 8, relative_attention_num_buckets: int = 32, relative_attention_max_distance: int = 128, dropout_rate: float | int = 0.1, layer_norm_epsilon: float = 1e-06, initializer_factor: float = 1.0, feed_forward_proj: str = 'relu', use_cache: bool = True, pad_token_id: int | None = 0, eos_token_id: int | list[int] | None = 1, classifier_dropout: float | int = 0.0, is_decoder: bool = False) -> None",
         "5.8.1": "(transformers_version: str | None = None, architectures: list[str] | None = None, output_hidden_states: bool | None = False, return_dict: bool | None = True, dtype: Union[str, ForwardRef('torch.dtype'), NoneType] = None, chunk_size_feed_forward: int = 0, id2label: dict[int, str] | dict[str, str] | None = None, label2id: dict[str, int] | dict[str, str] | None = None, problem_type: Optional[Literal['regression', 'single_label_classification', 'multi_label_classification']] = None, *, is_encoder_decoder: bool = True, vocab_size: int = 32128, d_model: int = 512, d_kv: int = 64, d_ff: int = 2048, num_layers: int = 6, num_decoder_layers: int | None = None, num_heads: int = 8, relative_attention_num_buckets: int = 32, relative_attention_max_distance: int = 128, dropout_rate: float | int = 0.1, layer_norm_epsilon: float = 1e-06, initializer_factor: float = 1.0, feed_forward_proj: str = 'relu', use_cache: bool = True, pad_token_id: int | None = 0, eos_token_id: int | list[int] | None = 1, classifier_dropout: float | int = 0.0, is_decoder: bool = False) -> None",
-        "5.10.2": "(transformers_version: str | None = None, architectures: list[str] | None = None, output_hidden_states: bool | None = False, return_dict: bool | None = True, dtype: Union[str, ForwardRef('torch.dtype'), NoneType] = None, chunk_size_feed_forward: int = 0, id2label: dict[int, str] | dict[str, str] | None = None, label2id: dict[str, int] | dict[str, str] | None = None, problem_type: Optional[Literal['regression', 'single_label_classification', 'multi_label_classification']] = None, *, is_encoder_decoder: bool = True, vocab_size: int = 32128, d_model: int = 512, d_kv: int = 64, d_ff: int = 2048, num_layers: int = 6, num_decoder_layers: int | None = None, num_heads: int = 8, relative_attention_num_buckets: int = 32, relative_attention_max_distance: int = 128, dropout_rate: float | int = 0.1, layer_norm_epsilon: float = 1e-06, initializer_factor: float = 1.0, feed_forward_proj: str = 'relu', use_cache: bool = True, pad_token_id: int | None = 0, eos_token_id: int | list[int] | None = 1, classifier_dropout: float | int = 0.0, is_decoder: bool = False) -> None",
-        "5.11.0": "(transformers_version: str | None = None, architectures: list[str] | None = None, output_hidden_states: bool | None = False, return_dict: bool | None = True, dtype: Union[str, ForwardRef('torch.dtype'), NoneType] = None, chunk_size_feed_forward: int = 0, id2label: dict[int, str] | dict[str, str] | None = None, label2id: dict[str, int] | dict[str, str] | None = None, problem_type: Optional[Literal['regression', 'single_label_classification', 'multi_label_classification']] = None, *, is_encoder_decoder: bool = True, vocab_size: int = 32128, d_model: int = 512, d_kv: int = 64, d_ff: int = 2048, num_layers: int = 6, num_decoder_layers: int | None = None, num_heads: int = 8, relative_attention_num_buckets: int = 32, relative_attention_max_distance: int = 128, dropout_rate: float | int = 0.1, layer_norm_epsilon: float = 1e-06, initializer_factor: float = 1.0, feed_forward_proj: str = 'relu', use_cache: bool = True, pad_token_id: int | None = 0, eos_token_id: int | list[int] | None = 1, classifier_dropout: float | int = 0.0, is_decoder: bool = False) -> None",
-        "5.12.0": "(transformers_version: str | None = None, architectures: list[str] | None = None, output_hidden_states: bool | None = False, return_dict: bool | None = True, dtype: Union[str, ForwardRef('torch.dtype'), NoneType] = None, chunk_size_feed_forward: int = 0, id2label: dict[int, str] | dict[str, str] | None = None, label2id: dict[str, int] | dict[str, str] | None = None, problem_type: Optional[Literal['regression', 'single_label_classification', 'multi_label_classification']] = None, *, is_encoder_decoder: bool = True, vocab_size: int = 32128, d_model: int = 512, d_kv: int = 64, d_ff: int = 2048, num_layers: int = 6, num_decoder_layers: int | None = None, num_heads: int = 8, relative_attention_num_buckets: int = 32, relative_attention_max_distance: int = 128, dropout_rate: float | int = 0.1, layer_norm_epsilon: float = 1e-06, initializer_factor: float = 1.0, feed_forward_proj: str = 'relu', use_cache: bool = True, pad_token_id: int | None = 0, eos_token_id: int | list[int] | None = 1, classifier_dropout: float | int = 0.0, is_decoder: bool = False) -> None",
-        "5.12.1": "(transformers_version: str | None = None, architectures: list[str] | None = None, output_hidden_states: bool | None = False, return_dict: bool | None = True, dtype: Union[str, ForwardRef('torch.dtype'), NoneType] = None, chunk_size_feed_forward: int = 0, id2label: dict[int, str] | dict[str, str] | None = None, label2id: dict[str, int] | dict[str, str] | None = None, problem_type: Optional[Literal['regression', 'single_label_classification', 'multi_label_classification']] = None, *, is_encoder_decoder: bool = True, vocab_size: int = 32128, d_model: int = 512, d_kv: int = 64, d_ff: int = 2048, num_layers: int = 6, num_decoder_layers: int | None = None, num_heads: int = 8, relative_attention_num_buckets: int = 32, relative_attention_max_distance: int = 128, dropout_rate: float | int = 0.1, layer_norm_epsilon: float = 1e-06, initializer_factor: float = 1.0, feed_forward_proj: str = 'relu', use_cache: bool = True, pad_token_id: int | None = 0, eos_token_id: int | list[int] | None = 1, classifier_dropout: float | int = 0.0, is_decoder: bool = False) -> None",
+        "5.10.0": "(transformers_version: str | None = None, architectures: list[str] | None = None, output_hidden_states: bool | None = False, return_dict: bool | None = True, dtype: Union[str, ForwardRef('torch.dtype'), NoneType] = None, chunk_size_feed_forward: int = 0, id2label: dict[int, str] | dict[str, str] | None = None, label2id: dict[str, int] | dict[str, str] | None = None, problem_type: Optional[Literal['regression', 'single_label_classification', 'multi_label_classification']] = None, *, is_encoder_decoder: bool = True, vocab_size: int = 32128, d_model: int = 512, d_kv: int = 64, d_ff: int = 2048, num_layers: int = 6, num_decoder_layers: int | None = None, num_heads: int = 8, relative_attention_num_buckets: int = 32, relative_attention_max_distance: int = 128, dropout_rate: float | int = 0.1, layer_norm_epsilon: float = 1e-06, initializer_factor: float = 1.0, feed_forward_proj: str = 'relu', use_cache: bool = True, pad_token_id: int | None = 0, eos_token_id: int | list[int] | None = 1, classifier_dropout: float | int = 0.0, is_decoder: bool = False) -> None",
         "4.51.2": "(vocab_size=32128, d_model=512, d_kv=64, d_ff=2048, num_layers=6, num_decoder_layers=None, num_heads=8, relative_attention_num_buckets=32, relative_attention_max_distance=128, dropout_rate=0.1, layer_norm_epsilon=1e-06, initializer_factor=1.0, feed_forward_proj='relu', is_encoder_decoder=True, use_cache=True, pad_token_id=0, eos_token_id=1, classifier_dropout=0.0, **kwargs)",
         "4.48.2": "(vocab_size=32128, d_model=512, d_kv=64, d_ff=2048, num_layers=6, num_decoder_layers=None, num_heads=8, relative_attention_num_buckets=32, relative_attention_max_distance=128, dropout_rate=0.1, layer_norm_epsilon=1e-06, initializer_factor=1.0, feed_forward_proj='relu', is_encoder_decoder=True, use_cache=True, pad_token_id=0, eos_token_id=1, classifier_dropout=0.0, **kwargs)",
         "4.50.2": "(vocab_size=32128, d_model=512, d_kv=64, d_ff=2048, num_layers=6, num_decoder_layers=None, num_heads=8, relative_attention_num_buckets=32, relative_attention_max_distance=128, dropout_rate=0.1, layer_norm_epsilon=1e-06, initializer_factor=1.0, feed_forward_proj='relu', is_encoder_decoder=True, use_cache=True, pad_token_id=0, eos_token_id=1, classifier_dropout=0.0, **kwargs)",
@@ -1073,8 +971,6 @@
         "4.50.3": "(vocab_size=32128, d_model=512, d_kv=64, d_ff=2048, num_layers=6, num_decoder_layers=None, num_heads=8, relative_attention_num_buckets=32, relative_attention_max_distance=128, dropout_rate=0.1, layer_norm_epsilon=1e-06, initializer_factor=1.0, feed_forward_proj='relu', is_encoder_decoder=True, use_cache=True, pad_token_id=0, eos_token_id=1, classifier_dropout=0.0, **kwargs)",
         "4.57.5": "(vocab_size=32128, d_model=512, d_kv=64, d_ff=2048, num_layers=6, num_decoder_layers=None, num_heads=8, relative_attention_num_buckets=32, relative_attention_max_distance=128, dropout_rate=0.1, layer_norm_epsilon=1e-06, initializer_factor=1.0, feed_forward_proj='relu', is_encoder_decoder=True, use_cache=True, pad_token_id=0, eos_token_id=1, classifier_dropout=0.0, **kwargs)",
         "5.6.1": "(transformers_version: str | None = None, architectures: list[str] | None = None, output_hidden_states: bool | None = False, return_dict: bool | None = True, dtype: Union[str, ForwardRef('torch.dtype'), NoneType] = None, chunk_size_feed_forward: int = 0, id2label: dict[int, str] | dict[str, str] | None = None, label2id: dict[str, int] | dict[str, str] | None = None, problem_type: Optional[Literal['regression', 'single_label_classification', 'multi_label_classification']] = None, *, is_encoder_decoder: bool = True, vocab_size: int = 32128, d_model: int = 512, d_kv: int = 64, d_ff: int = 2048, num_layers: int = 6, num_decoder_layers: int | None = None, num_heads: int = 8, relative_attention_num_buckets: int = 32, relative_attention_max_distance: int = 128, dropout_rate: float | int = 0.1, layer_norm_epsilon: float = 1e-06, initializer_factor: float = 1.0, feed_forward_proj: str = 'relu', use_cache: bool = True, pad_token_id: int | None = 0, eos_token_id: int | list[int] | None = 1, classifier_dropout: float | int = 0.0, is_decoder: bool = False) -> None",
-        "5.10.0": "(transformers_version: str | None = None, architectures: list[str] | None = None, output_hidden_states: bool | None = False, return_dict: bool | None = True, dtype: Union[str, ForwardRef('torch.dtype'), NoneType] = None, chunk_size_feed_forward: int = 0, id2label: dict[int, str] | dict[str, str] | None = None, label2id: dict[str, int] | dict[str, str] | None = None, problem_type: Optional[Literal['regression', 'single_label_classification', 'multi_label_classification']] = None, *, is_encoder_decoder: bool = True, vocab_size: int = 32128, d_model: int = 512, d_kv: int = 64, d_ff: int = 2048, num_layers: int = 6, num_decoder_layers: int | None = None, num_heads: int = 8, relative_attention_num_buckets: int = 32, relative_attention_max_distance: int = 128, dropout_rate: float | int = 0.1, layer_norm_epsilon: float = 1e-06, initializer_factor: float = 1.0, feed_forward_proj: str = 'relu', use_cache: bool = True, pad_token_id: int | None = 0, eos_token_id: int | list[int] | None = 1, classifier_dropout: float | int = 0.0, is_decoder: bool = False) -> None",
-        "5.10.4": "(transformers_version: str | None = None, architectures: list[str] | None = None, output_hidden_states: bool | None = False, return_dict: bool | None = True, dtype: Union[str, ForwardRef('torch.dtype'), NoneType] = None, chunk_size_feed_forward: int = 0, id2label: dict[int, str] | dict[str, str] | None = None, label2id: dict[str, int] | dict[str, str] | None = None, problem_type: Optional[Literal['regression', 'single_label_classification', 'multi_label_classification']] = None, *, is_encoder_decoder: bool = True, vocab_size: int = 32128, d_model: int = 512, d_kv: int = 64, d_ff: int = 2048, num_layers: int = 6, num_decoder_layers: int | None = None, num_heads: int = 8, relative_attention_num_buckets: int = 32, relative_attention_max_distance: int = 128, dropout_rate: float | int = 0.1, layer_norm_epsilon: float = 1e-06, initializer_factor: float = 1.0, feed_forward_proj: str = 'relu', use_cache: bool = True, pad_token_id: int | None = 0, eos_token_id: int | list[int] | None = 1, classifier_dropout: float | int = 0.0, is_decoder: bool = False) -> None",
         "4.53.1": "(vocab_size=32128, d_model=512, d_kv=64, d_ff=2048, num_layers=6, num_decoder_layers=None, num_heads=8, relative_attention_num_buckets=32, relative_attention_max_distance=128, dropout_rate=0.1, layer_norm_epsilon=1e-06, initializer_factor=1.0, feed_forward_proj='relu', is_encoder_decoder=True, use_cache=True, pad_token_id=0, eos_token_id=1, classifier_dropout=0.0, **kwargs)",
         "4.57.0": "(vocab_size=32128, d_model=512, d_kv=64, d_ff=2048, num_layers=6, num_decoder_layers=None, num_heads=8, relative_attention_num_buckets=32, relative_attention_max_distance=128, dropout_rate=0.1, layer_norm_epsilon=1e-06, initializer_factor=1.0, feed_forward_proj='relu', is_encoder_decoder=True, use_cache=True, pad_token_id=0, eos_token_id=1, classifier_dropout=0.0, **kwargs)",
         "4.55.1": "(vocab_size=32128, d_model=512, d_kv=64, d_ff=2048, num_layers=6, num_decoder_layers=None, num_heads=8, relative_attention_num_buckets=32, relative_attention_max_distance=128, dropout_rate=0.1, layer_norm_epsilon=1e-06, initializer_factor=1.0, feed_forward_proj='relu', is_encoder_decoder=True, use_cache=True, pad_token_id=0, eos_token_id=1, classifier_dropout=0.0, **kwargs)",
@@ -1106,7 +1002,7 @@
       "compatible_ranges": [
         [
           "4.46.0",
-          "5.12.1"
+          "5.10.0"
         ]
       ],
       "statuses": {
@@ -1114,10 +1010,9 @@
         "4.55.4": "OK",
         "5.5.1": "OK",
         "5.8.1": "OK",
-        "5.10.2": "OK",
-        "5.11.0": "OK",
-        "5.12.0": "OK",
-        "5.12.1": "OK",
+        "5.10.2": "PROBE_ERROR",
+        "5.10.0": "OK",
+        "5.10.1": "PROBE_ERROR",
         "4.51.2": "OK",
         "4.48.2": "OK",
         "4.50.2": "OK",
@@ -1125,8 +1020,7 @@
         "4.50.3": "OK",
         "4.57.5": "OK",
         "5.6.1": "OK",
-        "5.10.0": "OK",
-        "5.10.4": "OK",
+        "5.10.4": "PROBE_ERROR",
         "4.53.1": "OK",
         "4.57.0": "OK",
         "4.55.1": "OK",
@@ -1144,10 +1038,7 @@
         "4.55.4": "() -> None",
         "5.5.1": "() -> None",
         "5.8.1": "() -> None",
-        "5.10.2": "() -> None",
-        "5.11.0": "() -> None",
-        "5.12.0": "() -> None",
-        "5.12.1": "() -> None",
+        "5.10.0": "() -> None",
         "4.51.2": "()",
         "4.48.2": "()",
         "4.50.2": "()",
@@ -1155,8 +1046,6 @@
         "4.50.3": "()",
         "4.57.5": "() -> None",
         "5.6.1": "() -> None",
-        "5.10.0": "() -> None",
-        "5.10.4": "() -> None",
         "4.53.1": "() -> None",
         "4.57.0": "() -> None",
         "4.55.1": "() -> None",
@@ -1263,5 +1152,11 @@
       "note": "moe_linear_type"
     }
   ],
-  "env_errors": {}
+  "env_errors": {
+    "5.10.2": "PROBE_ERROR",
+    "5.10.1": "PROBE_ERROR",
+    "5.10.4": "PROBE_ERROR"
+  },
+  "target": "transformers",
+  "pypi": "transformers"
 }

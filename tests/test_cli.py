@@ -1,8 +1,12 @@
+import os
 import sys
+
+import pytest
 
 from modelopt_ptq_transformers_doctor import cli
 from modelopt_ptq_transformers_doctor import progress as progress_mod
 from modelopt_ptq_transformers_doctor.models import ContractRecord
+from modelopt_ptq_transformers_doctor.targets import TARGETS
 
 
 def test_parser_accepts_bounds_without_modelopt_flag():
@@ -16,9 +20,9 @@ def test_main_end_to_end_with_monkeypatched_seams(tmp_path, monkeypatch):
     rec = ContractRecord("transformers.models.x.modeling_x", "XAttn",
                          "f.py", 1, guarded=False, dynamic=False, role="quant")
     monkeypatch.setattr(cli, "installed_modelopt_root", lambda: "/x")
-    monkeypatch.setattr(cli, "extract_contract", lambda root: [rec])
+    monkeypatch.setattr(cli, "extract_contract", lambda root, target=None: [rec])
     monkeypatch.setattr(cli, "fetch_available_versions",
-                        lambda: ["4.48.0", "4.49.0", "4.50.0"])
+                        lambda pkg="transformers": ["4.48.0", "4.49.0", "4.50.0"])
 
     class FakeRunner:
         def __init__(self, *a, **k):
@@ -50,7 +54,7 @@ def test_main_returns_nonzero_when_modelopt_not_installed(monkeypatch, tmp_path,
 def test_main_returns_nonzero_when_extraction_fails(monkeypatch, tmp_path):
     monkeypatch.setattr(cli, "installed_modelopt_root", lambda: "/x")
 
-    def boom(root):
+    def boom(root, target=None):
         raise FileNotFoundError("missing allowlist file")
     monkeypatch.setattr(cli, "extract_contract", boom)
     rc = cli.main(["scan", "--out", str(tmp_path / "o")])
@@ -69,9 +73,9 @@ def test_no_progress_uses_null_reporter(tmp_path, monkeypatch):
     rec = ContractRecord("transformers.models.x.modeling_x", "XAttn",
                          "f.py", 1, guarded=False, dynamic=False, role="quant")
     monkeypatch.setattr(cli, "installed_modelopt_root", lambda: "/x")
-    monkeypatch.setattr(cli, "extract_contract", lambda root: [rec])
+    monkeypatch.setattr(cli, "extract_contract", lambda root, target=None: [rec])
     monkeypatch.setattr(cli, "fetch_available_versions",
-                        lambda: ["4.48.0", "4.49.0"])
+                        lambda pkg="transformers": ["4.48.0", "4.49.0"])
 
     class FakeRunner:
         def __init__(self, *a, **k):
@@ -102,8 +106,8 @@ def test_no_progress_uses_null_reporter(tmp_path, monkeypatch):
 
 def test_progress_on_by_default_uses_reporter(tmp_path, monkeypatch):
     monkeypatch.setattr(cli, "installed_modelopt_root", lambda: "/x")
-    monkeypatch.setattr(cli, "extract_contract", lambda root: [])
-    monkeypatch.setattr(cli, "fetch_available_versions", lambda: ["4.48.0"])
+    monkeypatch.setattr(cli, "extract_contract", lambda root, target=None: [])
+    monkeypatch.setattr(cli, "fetch_available_versions", lambda pkg="transformers": ["4.48.0"])
     monkeypatch.setattr(cli, "select_versions", lambda available, mn, mx: ["4.48.0"])
     monkeypatch.setattr(cli, "EnvRunner", lambda *a, **k: object())
 
@@ -120,3 +124,94 @@ def test_progress_on_by_default_uses_reporter(tmp_path, monkeypatch):
     assert rc == 0
     assert isinstance(seen["reporter"], progress_mod.ProgressReporter)
     assert seen["reporter"].stream is sys.stderr
+
+
+def test_target_default_is_transformers(capsys, monkeypatch, tmp_path):
+    """--target defaults to transformers; out dir = doctor-report/transformers."""
+    seen = {}
+
+    monkeypatch.setattr(cli, "installed_modelopt_root", lambda: "/x")
+    monkeypatch.setattr(cli, "extract_contract", lambda root, target=None: [])
+    monkeypatch.setattr(cli, "fetch_available_versions",
+                        lambda pkg="transformers": ["4.48.0"])
+    monkeypatch.setattr(cli, "select_versions",
+                        lambda available, mn, mx: ["4.48.0"])
+
+    def fake_env_runner(*a, pkg=None, extra_deps=(), **k):
+        seen["pkg"] = pkg
+        seen["extra_deps"] = extra_deps
+        return object()
+
+    monkeypatch.setattr(cli, "EnvRunner", fake_env_runner)
+
+    def fake_build_matrix(records, versions, runner, reporter=None):
+        return {"versions_probed": versions, "symbols": {}, "dynamic": [],
+                "env_errors": {}}
+
+    monkeypatch.setattr(cli, "build_matrix", fake_build_matrix)
+
+    def fake_write_report(matrix, out_dir):
+        seen["out_dir"] = out_dir
+        report_dir = tmp_path / "r"
+        report_dir.mkdir(parents=True, exist_ok=True)
+        json_p = report_dir / "matrix.json"
+        md_p = report_dir / "REPORT.md"
+        json_p.write_text("{}")
+        md_p.write_text("# report")
+        return json_p, md_p
+
+    monkeypatch.setattr(cli, "write_report", fake_write_report)
+
+    rc = cli.main(["scan", "--min", "4.48.0", "--max", "4.48.0", "--no-progress"])
+    assert rc == 0
+    assert seen["out_dir"] == os.path.join("doctor-report", "transformers")
+    assert seen["pkg"] == "transformers"
+
+
+def test_target_explicit(capsys, monkeypatch, tmp_path):
+    """Explicit --target uses that target's pypi/deps/name."""
+    non_transformers = [k for k in TARGETS if k != "transformers"]
+    if not non_transformers:
+        pytest.skip("only one target registered")
+
+    target_key = non_transformers[0]
+    target = TARGETS[target_key]
+    seen = {}
+
+    monkeypatch.setattr(cli, "installed_modelopt_root", lambda: "/x")
+    monkeypatch.setattr(cli, "extract_contract", lambda root, target=None: [])
+    monkeypatch.setattr(cli, "fetch_available_versions",
+                        lambda pkg=target.pypi: ["1.0.0"])
+    monkeypatch.setattr(cli, "select_versions",
+                        lambda available, mn, mx: ["1.0.0"])
+
+    def fake_env_runner(*a, pkg=None, extra_deps=(), **k):
+        seen["pkg"] = pkg
+        seen["extra_deps"] = extra_deps
+        return object()
+
+    monkeypatch.setattr(cli, "EnvRunner", fake_env_runner)
+
+    def fake_build_matrix(records, versions, runner, reporter=None):
+        return {"versions_probed": versions, "symbols": {}, "dynamic": [],
+                "env_errors": {}}
+
+    monkeypatch.setattr(cli, "build_matrix", fake_build_matrix)
+
+    def fake_write_report(matrix, out_dir):
+        seen["out_dir"] = out_dir
+        report_dir = tmp_path / "r"
+        report_dir.mkdir(parents=True, exist_ok=True)
+        json_p = report_dir / "matrix.json"
+        md_p = report_dir / "REPORT.md"
+        json_p.write_text("{}")
+        md_p.write_text("# report")
+        return json_p, md_p
+
+    monkeypatch.setattr(cli, "write_report", fake_write_report)
+
+    rc = cli.main(["scan", "--target", target_key, "--no-progress"])
+    assert rc == 0
+    assert seen["pkg"] == target.pypi
+    assert seen["extra_deps"] == target.pinned_deps
+    assert seen["out_dir"] == os.path.join("doctor-report", target.name)
