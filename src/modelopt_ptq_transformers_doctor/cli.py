@@ -26,7 +26,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     scan.add_argument("--max", default=None, help="maximum transformers version (inclusive)")
     scan.add_argument("--pypi", action="store_true",
                       help="use the full stable PyPI release list as the search space")
-    scan.add_argument("--out", default="doctor-report", help="output directory")
+    scan.add_argument("--out", default=None, help="output directory (default: doctor-report/<target>)")
     scan.add_argument("--no-progress", action="store_true",
                       help="disable the live progress bar / ETA output")
     scan.add_argument("--target", choices=sorted(TARGETS), default="transformers",
@@ -61,7 +61,7 @@ def _run_scan(args) -> int:
     reporter = NullProgress() if args.no_progress else ProgressReporter(stream=sys.stderr)
     matrix = build_matrix(records, versions, runner, reporter=reporter)
 
-    out_dir = args.out if args.out != "doctor-report" else os.path.join("doctor-report", target.name)
+    out_dir = args.out if args.out is not None else os.path.join("doctor-report", target.name)
     json_path, md_path = write_report(matrix, out_dir)
     print(f"wrote {json_path}\nwrote {md_path}")
     return 0
