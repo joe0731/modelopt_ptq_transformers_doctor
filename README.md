@@ -1,5 +1,15 @@
 # modelopt-ptq-transformers-doctor
 
+> **Compatibility matrix for NVIDIA TensorRT Model Optimizer (modelopt) PTQ ↔ HuggingFace Transformers.**
+> Answers *"which `transformers` releases does the installed `modelopt` version's
+> post-training quantization (FP8 / NVFP4 / INT4-AWQ) actually support?"* — via static
+> dependency extraction, per-version probing in isolated environments, and
+> signature-drift detection. Output as JSON, Markdown, a styled HTML page, and a notebook.
+
+**Keywords:** NVIDIA modelopt · TensorRT Model Optimizer · HuggingFace Transformers ·
+post-training quantization (PTQ) · FP8 / NVFP4 / INT4-AWQ · LLM quantization ·
+version compatibility matrix · dependency scanner.
+
 Builds a **compatibility matrix** between [NVIDIA TensorRT Model Optimizer
 (modelopt)](https://github.com/NVIDIA/TensorRT-Model-Optimizer) PTQ and the
 `transformers` library, by statically extracting the set of `transformers`
@@ -241,6 +251,14 @@ MIT — see [LICENSE](LICENSE).
 > 以下为上文英文内容的中文镜像,内容保持一致。
 
 # modelopt-ptq-transformers-doctor
+
+> **NVIDIA TensorRT Model Optimizer(modelopt)PTQ ↔ HuggingFace Transformers 兼容性矩阵。**
+> 回答*「当前安装的 `modelopt` 版本,其训练后量化(PTQ:FP8 / NVFP4 / INT4-AWQ)到底兼容哪些
+> `transformers` 发布?」*—— 通过静态依赖提取、在隔离环境中逐版本探测、以及签名漂移检测,
+> 输出 JSON、Markdown、带样式的 HTML 页面与 Jupyter notebook。
+
+**关键词:** NVIDIA modelopt · TensorRT Model Optimizer · HuggingFace Transformers ·
+训练后量化 PTQ · FP8 / NVFP4 / INT4-AWQ · LLM 量化 · 版本兼容性矩阵 · 依赖扫描。
 
 构建 [NVIDIA TensorRT Model Optimizer
 (modelopt)](https://github.com/NVIDIA/TensorRT-Model-Optimizer) PTQ 与
