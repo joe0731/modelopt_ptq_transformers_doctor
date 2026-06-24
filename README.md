@@ -182,22 +182,39 @@ pip install git+https://github.com/NVIDIA/Model-Optimizer.git
 The tool scans the **installed** modelopt — no source path is needed:
 
 ```bash
-# Probe a version range
+# Probe transformers across a version range
 doctor scan --min 4.45.0 --max 4.52.0 --out doctor-report
 
-# Use the full stable PyPI release list as the search space
-doctor scan --pypi --out doctor-report
+# Probe a different library modelopt integrates with
+doctor scan --target torch       --min 2.1.0 --max 2.8.0
+doctor scan --target vllm        --min 0.6.0 --max 0.11.0
+doctor scan --target accelerate  --min 1.0.0 --max 1.10.0
 ```
 
 Options:
 
 | flag | meaning |
 |---|---|
-| `--min VERSION` | minimum `transformers` version, inclusive |
-| `--max VERSION` | maximum `transformers` version, inclusive |
+| `--target LIB` | library to probe modelopt against: `transformers` (default), `torch`, `vllm`, `accelerate` |
+| `--min VERSION` | minimum target version, inclusive |
+| `--max VERSION` | maximum target version, inclusive |
 | `--pypi` | use the full stable PyPI release list (only when no `--min`/`--max`) |
-| `--out DIR` | output directory (default: `doctor-report`) |
+| `--out DIR` | output directory (default: `doctor-report/<target>`) |
 | `--no-progress` | disable the live progress bar / ETA (progress is on by default, printed to stderr) |
+
+**Targets.** Each target probes a different library modelopt's PTQ integrates
+with, using the same flow and report. When probing one target, the *other*
+libraries are held at fixed known-good versions (best-effort isolation) so a
+failure is attributable to the varied library. **SGLang is not supported** —
+modelopt has no SGLang integration, so there is nothing to probe.
+
+**Combined report.** After scanning several targets into
+`report/<dir>/<target>/`, aggregate them into one page:
+
+```bash
+python report/render_combined.py report/<dir> --modelopt-version <ver>
+# → report/<dir>/index.html + index.ipynb (overview + a section per library)
+```
 
 During a scan, progress is printed to **stderr**: an up-front estimate of the
 number of binary-search probes (`~LOW-N`), then a live bar showing the
@@ -422,21 +439,35 @@ pip install git+https://github.com/NVIDIA/Model-Optimizer.git
 工具扫描的是**已安装的** modelopt——无需提供源码路径:
 
 ```bash
-# 探测一个版本区间
+# 探测 transformers 的版本区间
 doctor scan --min 4.45.0 --max 4.52.0 --out doctor-report
 
-# 用完整的 PyPI 稳定发布列表作为搜索空间
-doctor scan --pypi --out doctor-report
+# 探测 modelopt 集成的其他库
+doctor scan --target torch       --min 2.1.0 --max 2.8.0
+doctor scan --target vllm        --min 0.6.0 --max 0.11.0
+doctor scan --target accelerate  --min 1.0.0 --max 1.10.0
 ```
 
 选项:
 
 | 参数 | 含义 |
 |---|---|
-| `--min VERSION` | `transformers` 最小版本(含) |
-| `--max VERSION` | `transformers` 最大版本(含) |
+| `--target LIB` | 要对 modelopt 探测的库:`transformers`(默认)、`torch`、`vllm`、`accelerate` |
+| `--min VERSION` | 目标库最小版本(含) |
+| `--max VERSION` | 目标库最大版本(含) |
 | `--pypi` | 使用完整的 PyPI 稳定发布列表(仅在没有 `--min`/`--max` 时生效) |
-| `--out DIR` | 输出目录(默认:`doctor-report`) |
+| `--out DIR` | 输出目录(默认:`doctor-report/<target>`) |
+
+**多目标。** 每个 target 用相同的流程与报告探测 modelopt PTQ 集成的不同库。探测某个
+target 时,其他库会固定在已知可用的版本(尽力隔离),使失败可归因于被探测的库。
+**不支持 SGLang** —— modelopt 没有 SGLang 集成,无可探测内容。
+
+**合并报告。** 把多个 target 扫描到 `report/<dir>/<target>/` 后,聚合成一个页面:
+
+```bash
+python report/render_combined.py report/<dir> --modelopt-version <ver>
+# → report/<dir>/index.html + index.ipynb(总览 + 每个库一节)
+```
 
 输出:
 
