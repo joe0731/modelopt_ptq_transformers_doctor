@@ -42,6 +42,85 @@ def range_str(ranges) -> str:
     return "never" if not ranges else ", ".join(f"{lo} – {hi}" for lo, hi in ranges)
 
 
+# --------------------------------------------------- signature-diff (for readability)
+
+def _split_sig(sig: str):
+    """Split a signature string '(a, b=1) -> r' into (params:list, ret:str) or
+    (None, None) when it is not a parenthesised signature (e.g. a type name)."""
+    s = sig.strip()
+    if not s.startswith("("):
+        return None, None
+    depth = end = 0
+    for i, ch in enumerate(s):
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth -= 1
+            if depth == 0:
+                end = i
+                break
+    inside, ret = s[1:end], s[end + 1:].strip()
+    parts, depth, cur, q = [], 0, "", None
+    for ch in inside:
+        if q:
+            cur += ch
+            if ch == q:
+                q = None
+            continue
+        if ch in "'\"":
+            q = ch; cur += ch
+        elif ch in "([{":
+            depth += 1; cur += ch
+        elif ch in ")]}":
+            depth -= 1; cur += ch
+        elif ch == "," and depth == 0:
+            if cur.strip():
+                parts.append(cur.strip())
+            cur = ""
+        else:
+            cur += ch
+    if cur.strip():
+        parts.append(cur.strip())
+    return parts, ret
+
+
+def _pname(p: str) -> str:
+    t = p.strip().lstrip("*").strip()
+    for sep in (":", "="):
+        if sep in t:
+            t = t.split(sep, 1)[0]
+    return t.strip() or p.strip()
+
+
+def sig_changes(old_fp: str, new_fp: str):
+    """Human-readable change list between two signature fingerprints.
+
+    Returns a list of (kind, text) where kind in {add, del, mod, ret}, or None
+    when either side is opaque (not a signature)."""
+    po, ro = _split_sig(old_fp)
+    pn, rn = _split_sig(new_fp)
+    if po is None or pn is None:
+        return None
+    om, nm = {}, {}
+    for p in po:
+        om.setdefault(_pname(p), p)
+    for p in pn:
+        nm.setdefault(_pname(p), p)
+    out = []
+    for k, p in nm.items():
+        if k not in om:
+            out.append(("add", p))
+    for k, p in om.items():
+        if k not in nm:
+            out.append(("del", p))
+    for k, p in nm.items():
+        if k in om and om[k] != p:
+            out.append(("mod", f"{om[k]}  →  {p}"))
+    if ro != rn:
+        out.append(("ret", f"return {ro or '(none)'} → {rn or '(none)'}"))
+    return out
+
+
 def fetch_full_range(lo: str, hi: str, probed: list[str]) -> list[str]:
     """All stable transformers releases in [lo, hi]; falls back to *probed*."""
     try:
@@ -162,20 +241,34 @@ def build_html(matrix: dict, modelopt_version: str, generated: str, all_versions
             cls, tip = minor_status(info, mn, all_versions, probed_set)
             cells.append(f"<td class='{cls}' title='{esc(tip)}'>{glyph[cls]}</td>")
         grid_rows.append(
-            f"<tr><th class='rsym'><code>{esc(short(key))}</code></th>" + "".join(cells) + "</tr>"
+            f"<tr><th class='rsym'><code>{esc(key)}</code></th>" + "".join(cells) + "</tr>"
         )
 
     drift_html = ""
     drifts = [(k, i) for k, i in sorted(matrix["symbols"].items()) if i.get("signature_drift")]
     if drifts:
+        sym = {"add": "+", "del": "−", "mod": "~", "ret": "↩"}
         items = []
         for k, info in drifts:
-            steps = "".join(
-                f"<div class='step'><span class='v'>{esc(v)}</span>"
-                f"<code>{esc(fp)}</code></div>" for v, fp in info["signature_drift"]
-            )
-            items.append(f"<li><code>{esc(k)}</code>{steps}</li>")
-        drift_html = ("<h2>⚇ Signature changes <small>(within the compatible window)</small></h2>"
+            seq = info["signature_drift"]
+            steps = []
+            for (vo, fo), (vn, fn) in zip(seq, seq[1:]):
+                chg = sig_changes(fo, fn)
+                head = f"<span class='v'>{esc(vo)} → {esc(vn)}</span>"
+                if chg is None:
+                    body = f"<code>{esc(fo)}</code> <span class='arr'>→</span> <code>{esc(fn)}</code>"
+                elif len(chg) > 6:
+                    nb = {kk: sum(1 for t, _ in chg if t == kk) for kk in ("add", "del", "mod", "ret")}
+                    detail = "".join(f"<div class='cz {t}'>{esc(sym[t])} {esc(txt)}</div>" for t, txt in chg)
+                    body = (f"<span class='cz mod'>+{nb['add']} −{nb['del']} ~{nb['mod']} params (major rewrite)</span>"
+                            f"<details><summary>details</summary>{detail}</details>")
+                elif chg:
+                    body = "".join(f"<div class='cz {t}'>{esc(sym[t])} {esc(txt)}</div>" for t, txt in chg)
+                else:
+                    body = "<div class='cz'>(reordered / formatting only)</div>"
+                steps.append(f"<div class='step'>{head}{body}</div>")
+            items.append(f"<li><code>{esc(k)}</code>{''.join(steps)}</li>")
+        drift_html = ("<h2>⚇ Signature changes <small>(within the compatible window — what actually changed)</small></h2>"
                       "<ul class='drift'>" + "".join(items) + "</ul>")
 
     never = [k for k, i in sorted(matrix["symbols"].items()) if not i["compatible_ranges"]]
@@ -252,7 +345,12 @@ def build_html(matrix: dict, modelopt_version: str, generated: str, all_versions
   td.ok{{background:var(--ok)}} td.warn{{background:var(--warn)}} td.bad{{background:var(--bad)}}
   td.env{{background:var(--env)}} td.na{{color:#8c959f;background:repeating-linear-gradient(45deg,#fff,#fff 3px,#eaeef2 3px,#eaeef2 6px)}}
   ul.drift {{ list-style:none; padding:0; }} ul.drift>li {{ background:#fff; border:1px solid var(--line); border-radius:8px; padding:.6rem .9rem; margin-bottom:.6rem; }}
-  .step {{ margin:.25rem 0 0 1rem; }} .step .v {{ display:inline-block; min-width:60px; color:var(--bad); font-weight:600; }}
+  .step {{ margin:.5rem 0 0; padding-left:.8rem; border-left:2px solid #eaeef2; }}
+  .step .v {{ display:inline-block; color:#0969da; font-weight:650; font-size:.82rem; margin-bottom:.2rem; }}
+  .cz {{ font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.78rem; padding:.1rem .2rem; margin:.1rem 0; border-radius:4px; }}
+  .cz.add {{ color:#1a7f37; background:#e6ffec; }} .cz.del {{ color:#cf222e; background:#ffebe9; }}
+  .cz.mod {{ color:#9a6700; background:#fff8c5; }} .cz.ret {{ color:#0550ae; background:#ddf4ff; }}
+  .arr {{ color:var(--muted); }}
   .never-list code, .dyn code {{ color:#1f2328; }} .loc {{ color:var(--muted); font-size:.8em; }}
   details {{ margin-top:1.2rem; }} summary {{ cursor:pointer; color:var(--muted); }}
   ul.dyn {{ columns:2; font-size:.85rem; }}
@@ -363,15 +461,27 @@ def build_ipynb(matrix: dict, modelopt_version: str, generated: str, all_version
             "|---|" + "|".join([":--:"] * len(minors)) + "|"]
     for key, info in sorted(matrix["symbols"].items()):
         cells = " | ".join(minor_cell(info, mn) for mn in minors)
-        grid.append(f"| `{short(key)}` | {cells} |")
+        grid.append(f"| `{key}` | {cells} |")
 
     drift_lines = []
     drifts = [(k, i) for k, i in sorted(matrix["symbols"].items()) if i.get("signature_drift")]
     if drifts:
+        sym = {"add": "+", "del": "−", "mod": "~", "ret": "↩"}
         for k, info in drifts:
-            drift_lines.append(f"**`{k}`**  ")
-            for v, fp in info["signature_drift"]:
-                drift_lines.append(f"&nbsp;&nbsp;`{v}` → `{fp}`  ")
+            drift_lines.append(f"**`{k}`**")
+            seq = info["signature_drift"]
+            for (vo, fo), (vn, fn) in zip(seq, seq[1:]):
+                chg = sig_changes(fo, fn)
+                if chg is None:
+                    drift_lines.append(f"- `{vo} → {vn}` — `{fo}` → `{fn}`")
+                elif len(chg) > 6:
+                    nb = {kk: sum(1 for t, _ in chg if t == kk) for kk in ("add", "del", "mod", "ret")}
+                    drift_lines.append(f"- `{vo} → {vn}` — **+{nb['add']} −{nb['del']} ~{nb['mod']}** params (major rewrite)")
+                elif chg:
+                    parts = "; ".join(f"{sym[t]} `{txt}`" for t, txt in chg)
+                    drift_lines.append(f"- `{vo} → {vn}` — {parts}")
+                else:
+                    drift_lines.append(f"- `{vo} → {vn}` — (reordered / formatting only)")
             drift_lines.append("")
     else:
         drift_lines = ["_No signature drift detected._"]
