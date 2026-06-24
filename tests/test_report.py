@@ -67,6 +67,9 @@ def test_drift_marker_and_section_render():
     assert "⚇" in md
     assert "## Signature changes" in md
     assert "4.48.0 `(a)`" in md and "4.50.0 `(a, b)`" in md
+    # Verify marker appears on the drifting symbol's row, not just the legend
+    symbol_line = next(line for line in md.split("\n") if "transformers.m:Foo" in line)
+    assert "⚇" in symbol_line
 
 
 def test_no_drift_marker_when_absent():
