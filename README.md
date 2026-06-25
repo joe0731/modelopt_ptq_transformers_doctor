@@ -228,6 +228,19 @@ doctor capabilities            # prints named/fallback/quant-handled experts + c
 doctor capabilities --out caps.json
 ```
 
+**Runtime smoke probe (`doctor smoke`).** The *verdict* layer that static checks
+can't give: it runs the real pipeline — **load → quantize → export** — on a
+model and reports exactly which stage fails (`LOAD` / `QUANTIZE` / `EXPORT_ERROR`
++ message). This catches both runtime classes: a load-time config
+`AttributeError` and an export-time `NotImplementedError` (unsupported MoE
+experts). Needs modelopt + transformers + torch installed (a GPU for real
+recipes).
+
+```bash
+doctor smoke --model <hf-id-or-path> --recipe FP8_DEFAULT_CFG --device cuda
+doctor smoke --model <hf-id> --recipe NVFP4_DEFAULT_CFG --trust-remote-code --out smoke.json
+```
+
 During a scan, progress is printed to **stderr**: an up-front estimate of the
 number of binary-search probes (`~LOW-N`), then a live bar showing the
 `transformers` version under test, elapsed time, and an ETA. On a
@@ -489,6 +502,17 @@ python report/render_combined.py report/<dir> --modelopt-version <ver>
 ```bash
 doctor capabilities            # 打印 具名/兜底/量化已处理的 experts + 待验证候选
 doctor capabilities --out caps.json
+```
+
+**运行时冒烟探测(`doctor smoke`)。** 静态检查给不了的**判定层**:对一个模型真正跑
+**load → quantize → export**,报告具体在哪一步失败(`LOAD` / `QUANTIZE` /
+`EXPORT_ERROR` + 信息)。两类运行时问题都能抓:加载期的 config `AttributeError`,
+以及导出期的 `NotImplementedError`(不支持的 MoE experts)。需要环境装有 modelopt +
+transformers + torch(真实 recipe 需要 GPU)。
+
+```bash
+doctor smoke --model <hf-id-or-path> --recipe FP8_DEFAULT_CFG --device cuda
+doctor smoke --model <hf-id> --recipe NVFP4_DEFAULT_CFG --trust-remote-code --out smoke.json
 ```
 
 输出:

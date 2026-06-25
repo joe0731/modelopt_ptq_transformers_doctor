@@ -234,3 +234,28 @@ def test_capabilities_command(monkeypatch, capsys):
 def test_capabilities_in_parser():
     p = cli.build_arg_parser()
     assert p.parse_args(["capabilities"]).command == "capabilities"
+
+
+def test_smoke_in_parser():
+    p = cli.build_arg_parser()
+    ns = p.parse_args(["smoke", "--model", "tiny", "--recipe", "FP8_DEFAULT_CFG"])
+    assert ns.command == "smoke" and ns.model == "tiny" and ns.device == "cuda"
+
+
+def test_smoke_command_ok(monkeypatch, capsys):
+    def fake_build(model, recipe, device="cuda", trust_remote_code=False):
+        return {"load": lambda: "m", "quantize": lambda m: "m", "export": lambda m: None}
+    monkeypatch.setattr(cli, "build_real_stages", fake_build)
+    rc = cli.main(["smoke", "--model", "tiny", "--recipe", "FP8_DEFAULT_CFG"])
+    assert rc == 0 and "OK" in capsys.readouterr().out
+
+
+def test_smoke_command_reports_export_failure(monkeypatch, capsys):
+    def fake_build(model, recipe, device="cuda", trust_remote_code=False):
+        def exp(m):
+            raise NotImplementedError("experts type 'NemotronHExperts' is not supported in export.")
+        return {"load": lambda: "m", "quantize": lambda m: "m", "export": exp}
+    monkeypatch.setattr(cli, "build_real_stages", fake_build)
+    rc = cli.main(["smoke", "--model", "x", "--recipe", "R"])
+    out = capsys.readouterr().out
+    assert rc == 0 and "EXPORT_ERROR" in out and "NemotronHExperts" in out
