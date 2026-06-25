@@ -259,3 +259,28 @@ def test_smoke_command_reports_export_failure(monkeypatch, capsys):
     rc = cli.main(["smoke", "--model", "x", "--recipe", "R"])
     out = capsys.readouterr().out
     assert rc == 0 and "EXPORT_ERROR" in out and "NemotronHExperts" in out
+
+
+def test_smoke_matrix_command(monkeypatch, tmp_path):
+    import json
+    monkeypatch.setattr(cli, "fetch_available_versions", lambda pkg="transformers": ["5.11.0", "5.12.0"])
+    monkeypatch.setattr(cli, "select_versions", lambda a, mn, mx: ["5.11.0", "5.12.0"])
+
+    class FakeSmoke:
+        def __init__(self, **k):
+            pass
+
+        def smoke_version(self, v, **k):
+            if v == "5.12.0":
+                return {"reached": "export", "status": "EXPORT_ERROR",
+                        "error_type": "NotImplementedError", "error": "NemotronHExperts"}
+            return {"reached": "done", "status": "OK", "error_type": None, "error": None}
+
+    monkeypatch.setattr(cli, "SmokeEnvRunner", FakeSmoke)
+    out = tmp_path / "sm"
+    rc = cli.main(["smoke-matrix", "--model", "m", "--modelopt", "nvidia-modelopt==0.44.0",
+                   "--out", str(out), "--min", "5.11.0", "--max", "5.12.0"])
+    assert rc == 0
+    d = json.loads((out / "smoke_matrix.json").read_text())
+    assert d["results"]["5.12.0"]["status"] == "EXPORT_ERROR" and d["results"]["5.11.0"]["status"] == "OK"
+    assert (out / "SMOKE.md").read_text().count("|") > 4

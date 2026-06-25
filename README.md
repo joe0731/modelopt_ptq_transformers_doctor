@@ -239,6 +239,10 @@ recipes).
 ```bash
 doctor smoke --model <hf-id-or-path> --recipe FP8_DEFAULT_CFG --device cuda
 doctor smoke --model <hf-id> --recipe NVFP4_DEFAULT_CFG --trust-remote-code --out smoke.json
+
+# smoke across a target library's versions (runtime counterpart to scan; per-version isolated envs)
+doctor smoke-matrix --model <hf-id> --modelopt nvidia-modelopt==0.44.0 \
+  --target transformers --min 5.0.0 --max 5.12.1 --recipe FP8_DEFAULT_CFG
 ```
 
 During a scan, progress is printed to **stderr**: an up-front estimate of the
@@ -513,6 +517,10 @@ transformers + torch(真实 recipe 需要 GPU)。
 ```bash
 doctor smoke --model <hf-id-or-path> --recipe FP8_DEFAULT_CFG --device cuda
 doctor smoke --model <hf-id> --recipe NVFP4_DEFAULT_CFG --trust-remote-code --out smoke.json
+
+# 跨目标库版本做冒烟(scan 的运行时对应物;每版本隔离环境)
+doctor smoke-matrix --model <hf-id> --modelopt nvidia-modelopt==0.44.0 \
+  --target transformers --min 5.0.0 --max 5.12.1 --recipe FP8_DEFAULT_CFG
 ```
 
 输出:

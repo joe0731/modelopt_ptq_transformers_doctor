@@ -80,3 +80,27 @@ def test_probe_installs_target_pkg_and_pinned_deps():
     r.probe_version("0.9.0", RECORDS)
     install = next(c for c in cmds if "install" in c)
     assert "vllm==0.9.0" in install and "transformers==4.56.0" in install
+
+
+def test_smoke_env_runner_builds_install_and_runs_prober(tmp_path):
+    cmds = []
+
+    def fake_run(cmd, **kw):
+        cmds.append(cmd)
+        import types
+        if cmd[:2] == ["uv", "venv"] or "install" in cmd:
+            return types.SimpleNamespace(returncode=0, stdout="", stderr="")
+        # the prober module run
+        return types.SimpleNamespace(returncode=0,
+                                     stdout='{"reached":"done","status":"OK","error_type":null,"error":null}',
+                                     stderr="")
+
+    from modelopt_ptq_transformers_doctor.envman import SmokeEnvRunner
+    r = SmokeEnvRunner(modelopt_spec="nvidia-modelopt==0.44.0", repo_path=str(tmp_path),
+                       target_pkg="transformers", runner=fake_run)
+    res = r.smoke_version("5.12.1", model="tiny", recipe="FP8_DEFAULT_CFG", device="cpu")
+    assert res["status"] == "OK"
+    install = next(c for c in cmds if "install" in c and "transformers==5.12.1" in c)
+    assert "nvidia-modelopt==0.44.0" in install
+    assert any(c[:2] == ["python_unused", ""] for c in []) or \
+        any("modelopt_ptq_transformers_doctor.smoke_prober" in c for c in cmds)

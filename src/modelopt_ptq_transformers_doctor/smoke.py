@@ -91,6 +91,35 @@ def build_real_stages(model_id: str, recipe: str, device: str = "cuda",
     return {"load": load, "quantize": quantize, "export": export}
 
 
+def build_smoke_matrix(versions: list, smoke_fn) -> dict:
+    """Run a smoke probe for each version (the runtime counterpart to a scan).
+
+    ``smoke_fn(version) -> result`` does the per-version work (typically build an
+    isolated env and run ``smoke_prober`` in it). Returns ``{version: result}``
+    in input order. Smoke outcomes are stage verdicts, not a monotonic boolean,
+    so every requested version is probed (no bisection)."""
+    return {v: smoke_fn(v) for v in versions}
+
+
+def format_smoke_matrix_md(meta: dict, matrix: dict) -> str:
+    """Markdown report for a smoke × version matrix."""
+    lines = [
+        f"# Smoke matrix — modelopt `{meta['modelopt']}` × {meta['target']}",
+        "",
+        f"model `{meta['model']}` · recipe `{meta['recipe']}` · device {meta['device']}",
+        "",
+        "Each cell is a real **load → quantize → export** run; `status` is the "
+        "stage verdict.",
+        "",
+        "| version | status | reached | error |",
+        "|---|---|---|---|",
+    ]
+    for v, r in matrix.items():
+        err = (r.get("error") or "").replace("|", "\\|").replace("\n", " ")[:160]
+        lines.append(f"| {v} | {r['status']} | {r.get('reached', '')} | {err} |")
+    return "\n".join(lines) + "\n"
+
+
 def format_result(model: str, recipe: str, result: dict) -> str:
     """One-line human summary of a smoke result."""
     head = f"smoke: model={model} recipe={recipe} → {result['status']}"
