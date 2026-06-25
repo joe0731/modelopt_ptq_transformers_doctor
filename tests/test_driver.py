@@ -184,3 +184,51 @@ def test_missing_signatures_key_defaults_empty():
     m = build_matrix([_rec()], VERSIONS, FakeRunner(present_from=48))
     info = m["symbols"]["transformers.models.x.modeling_x:XAttn"]
     assert info["signatures"] == {} and info["signature_drift"] is None
+
+
+
+def test_structural_probe_results_are_collected_per_version():
+    class StructuralRunner:
+        def probe_version(self, version, records):
+            status = "OK" if version.endswith("50.0") else "MISSING"
+            return {
+                "status": "OK",
+                "installed": version,
+                "statuses": {f"{r['module_path']}:{r['symbol']}": "OK" for r in records},
+                "structural": [{"id": "attention-interface", "status": status,
+                                "missing": [] if status == "OK" else ["ALL_ATTENTION_FUNCTIONS"],
+                                "reason": ""}],
+            }
+
+    m = build_matrix([_rec()], ["4.49.0", "4.50.0"], StructuralRunner())
+    assert m["structural"]["attention-interface"]["statuses"] == {
+        "4.49.0": "MISSING",
+        "4.50.0": "OK",
+    }
+    assert m["structural"]["attention-interface"]["details"]["4.49.0"]["missing"] == [
+        "ALL_ATTENTION_FUNCTIONS"
+    ]
+
+
+
+def test_known_probe_results_are_collected_per_version():
+    class KnownRunner:
+        def probe_version(self, version, records):
+            status = "OK" if version.endswith("50.0") else "MISSING_SYMBOL"
+            return {
+                "status": "OK",
+                "installed": version,
+                "statuses": {f"{r['module_path']}:{r['symbol']}": "OK" for r in records},
+                "known_probes": [{"id": "legacy-modeling-utils-conv1d",
+                                  "module_path": "transformers.modeling_utils",
+                                  "symbol": "Conv1D",
+                                  "status": status,
+                                  "note": "legacy HF plugin path"}],
+            }
+
+    m = build_matrix([_rec()], ["4.49.0", "4.50.0"], KnownRunner())
+    assert m["known_probes"]["legacy-modeling-utils-conv1d"]["statuses"] == {
+        "4.49.0": "MISSING_SYMBOL",
+        "4.50.0": "OK",
+    }
+    assert m["known_probes"]["legacy-modeling-utils-conv1d"]["symbol"] == "Conv1D"

@@ -68,10 +68,12 @@ class NullProgress:
 class ProgressReporter(NullProgress):
     """Live progress for a scan. Single-line bar on a TTY, line-per-probe otherwise."""
 
-    def __init__(self, stream=None, clock=time.monotonic, bar_width: int = 10):
+    def __init__(self, stream=None, clock=time.monotonic, bar_width: int = 10,
+                 target: str = "transformers"):
         self.stream = stream if stream is not None else sys.stderr
         self.clock = clock
         self.bar_width = bar_width
+        self.target = target
         self.total = 0
         self.done = 0
         self.total_time = 0.0
@@ -103,7 +105,7 @@ class ProgressReporter(NullProgress):
             self._redraw(version)
         else:
             self._emit(
-                f"[{self.done:>2}/{self.total}] transformers=={version}  "
+                f"[{self.done:>2}/{self.total}] {self.target}=={version}  "
                 f"{status}  ({dur:.1f}s)\n"
             )
 
@@ -123,7 +125,7 @@ class ProgressReporter(NullProgress):
         remaining = max(self.total - self.done, 0)
         bar = render_bar(self.done, self.total, self.bar_width)
         line = (f"\r{bar} {self.done}/{self.total}  "
-                f"transformers=={version}  "
+                f"{self.target}=={version}  "
                 f"elapsed {format_duration(elapsed)}  "
                 f"ETA <={format_eta(self._avg(), remaining)}")
         self._emit(line + "\x1b[K")  # clear to end-of-line for shrinking text

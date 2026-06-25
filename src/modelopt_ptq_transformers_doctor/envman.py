@@ -13,12 +13,14 @@ from .models import ENV_ERROR, PROBE_ERROR
 
 
 class EnvRunner:
-    def __init__(self, prober_path, pkg="transformers", extra_deps=("torch",), uv="uv", runner=subprocess.run):
+    def __init__(self, prober_path, pkg="transformers", extra_deps=("torch",), uv="uv", runner=subprocess.run,
+                 probe_structures=False):
         self.prober_path = prober_path
         self.pkg = pkg
         self.extra_deps = tuple(extra_deps)
         self.uv = uv
         self.runner = runner
+        self.probe_structures = probe_structures
 
     def _python_path(self, venv_dir: str) -> str:
         if sys.platform == "win32":
@@ -50,7 +52,7 @@ class EnvRunner:
             except OSError:
                 return {"status": ENV_ERROR, "installed": None, "statuses": {}}
 
-            payload = json.dumps({"records": records})
+            payload = json.dumps({"records": records, "probe_structures": self.probe_structures})
             proc = self.runner([py, run_prober], input=payload,
                                capture_output=True, text=True)
             if proc.returncode != 0:
@@ -61,7 +63,8 @@ class EnvRunner:
                 return {"status": PROBE_ERROR, "installed": None, "statuses": {}}
             return {"status": "OK", "installed": out.get("transformers_version"),
                     "statuses": out.get("statuses", {}),
-                    "signatures": out.get("signatures", {})}
+                    "signatures": out.get("signatures", {}),
+                    "structural": out.get("structural", [])}
 
 
 class SmokeEnvRunner:

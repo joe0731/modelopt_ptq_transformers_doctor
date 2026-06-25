@@ -76,6 +76,17 @@ def test_null_progress_writes_nothing():
     np.finish()  # no exception, no output channel at all
 
 
+def test_non_tty_logs_target_package_name():
+    stream = FakeStream(tty=False)
+    clock = FakeClock([0, 0, 3, 3])
+    r = ProgressReporter(stream=stream, clock=clock, target="torch")
+    r.start(1, 1)
+    r.probe_start("2.6.0")
+    r.probe_done("2.6.0", "OK")
+    assert "torch==2.6.0  OK" in stream.text
+    assert "transformers==2.6.0" not in stream.text
+
+
 def test_non_tty_logs_one_line_per_probe():
     stream = FakeStream(tty=False)
     # clock: start, then (probe_start, probe_done) pairs, then finish

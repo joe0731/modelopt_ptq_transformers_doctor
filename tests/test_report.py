@@ -30,6 +30,12 @@ def test_markdown_contains_authoritative_note():
     assert "compatible" in md and "authoritative" in md
 
 
+def test_markdown_title_uses_target_label():
+    matrix = dict(MATRIX, target="torch")
+    md = render_markdown(matrix)
+    assert md.startswith("# modelopt PTQ ↔ torch compatibility matrix")
+
+
 def test_write_report_creates_both_artifacts(tmp_path):
     json_path, md_path = write_report(MATRIX, str(tmp_path / "out"))
     assert Path(json_path).name == "matrix.json"
@@ -80,3 +86,37 @@ def test_no_drift_marker_when_absent():
         if "XAttn" in line:
             assert "⚇" not in line, "Marker should not appear in symbol row"
     assert "## Signature changes" not in md
+
+
+
+def test_markdown_renders_structural_checks():
+    matrix = dict(MATRIX)
+    matrix["target"] = "transformers"
+    matrix["structural"] = {
+        "attention-interface": {
+            "statuses": {"4.48.0": "OK", "4.49.0": "MISSING"},
+            "details": {"4.49.0": {"missing": ["ALL_ATTENTION_FUNCTIONS"], "reason": "missing"}},
+        }
+    }
+    md = render_markdown(matrix)
+    assert "Transformers structural checks" in md
+    assert "attention-interface" in md
+    assert "ALL_ATTENTION_FUNCTIONS" in md
+
+
+
+def test_markdown_renders_known_probe_checks():
+    matrix = dict(MATRIX)
+    matrix["target"] = "transformers"
+    matrix["known_probes"] = {
+        "legacy-modeling-utils-conv1d": {
+            "module_path": "transformers.modeling_utils",
+            "symbol": "Conv1D",
+            "note": "legacy HF plugin path",
+            "statuses": {"4.48.0": "MISSING_SYMBOL", "4.49.0": "OK"},
+        }
+    }
+    md = render_markdown(matrix)
+    assert "Known upstream seam probes" in md
+    assert "legacy-modeling-utils-conv1d" in md
+    assert "transformers.modeling_utils.Conv1D" in md

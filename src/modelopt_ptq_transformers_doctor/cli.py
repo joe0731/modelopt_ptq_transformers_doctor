@@ -12,6 +12,8 @@ from .contract import extract_contract, installed_modelopt_root
 from .driver import build_matrix
 from .envman import EnvRunner, SmokeEnvRunner
 from .progress import ProgressReporter, NullProgress
+from .relations import (format_relations_report, installed_package_root,
+                        screen_relations)
 from .report import write_report
 from .smoke import (build_real_stages, build_smoke_matrix, format_result,
                     format_smoke_matrix_md, run_smoke)
@@ -39,6 +41,15 @@ def build_arg_parser() -> argparse.ArgumentParser:
         "capabilities",
         help="screen modelopt PTQ export-capability gaps (static screening — verify candidates at runtime)")
     cap.add_argument("--out", default=None, help="also write the screening report as JSON to this path")
+
+    rel = sub.add_parser(
+        "relations",
+        help="screen ModelOpt <-> transformers source-level dependency relations")
+    rel.add_argument("--modelopt-root", default=None,
+                     help="ModelOpt source root (default: locate installed modelopt with find_spec)")
+    rel.add_argument("--transformers-root", default=None,
+                     help="transformers repo/package root (default: locate installed transformers with find_spec)")
+    rel.add_argument("--out", default=None, help="also write the relation report as JSON to this path")
 
     smoke = sub.add_parser(
         "smoke",
@@ -91,8 +102,9 @@ def _run_scan(args) -> int:
         print(f"error: no {target.name} versions selected for the given range", file=sys.stderr)
         return 3
 
-    runner = EnvRunner(prober.__file__, pkg=target.pypi, extra_deps=target.pinned_deps)
-    reporter = NullProgress() if args.no_progress else ProgressReporter(stream=sys.stderr)
+    runner = EnvRunner(prober.__file__, pkg=target.pypi, extra_deps=target.pinned_deps,
+                       probe_structures=(target.name == "transformers"))
+    reporter = NullProgress() if args.no_progress else ProgressReporter(stream=sys.stderr, target=target.name)
     matrix = build_matrix(records, versions, runner, reporter=reporter)
     matrix["target"] = target.name
     matrix["pypi"] = target.pypi
@@ -117,6 +129,28 @@ def _run_capabilities(args) -> int:
         with open(args.out, "w", encoding="utf-8") as fh:
             json.dump(report, fh, indent=2, ensure_ascii=False)
         print(f"\nwrote {args.out}", file=sys.stderr)
+    return 0
+
+
+def _run_relations(args) -> int:
+    try:
+        modelopt_root = args.modelopt_root or installed_modelopt_root()
+        transformers_root = args.transformers_root or str(installed_package_root("transformers"))
+    except ModuleNotFoundError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+    try:
+        report = screen_relations(modelopt_root, transformers_root)
+    except FileNotFoundError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+    print(format_relations_report(report))
+    if args.out:
+        import json
+        os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
+        with open(args.out, "w", encoding="utf-8") as fh:
+            json.dump(report, fh, indent=2, ensure_ascii=False)
+        print(f"wrote {args.out}", file=sys.stderr)
     return 0
 
 
@@ -174,6 +208,8 @@ def main(argv=None) -> int:
         return _run_scan(args)
     if args.command == "capabilities":
         return _run_capabilities(args)
+    if args.command == "relations":
+        return _run_relations(args)
     if args.command == "smoke":
         return _run_smoke(args)
     if args.command == "smoke-matrix":
