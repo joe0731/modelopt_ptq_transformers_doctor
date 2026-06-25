@@ -50,3 +50,17 @@ def test_error_message_truncated():
     stages, _ = _stages(fail_at="quantize", exc=RuntimeError("x" * 5000))
     r = smoke.run_smoke(stages)
     assert len(r["error"]) <= 500
+
+
+def test_build_smoke_matrix_probes_each_version_in_order():
+    seen = []
+
+    def fake(v):
+        seen.append(v)
+        return {"reached": "export", "status": "EXPORT_ERROR", "error_type": "NotImplementedError",
+                "error": "x"} if v == "5.5.0" else {"reached": "done", "status": "OK",
+                                                     "error_type": None, "error": None}
+
+    m = smoke.build_smoke_matrix(["4.50.0", "5.5.0"], fake)
+    assert seen == ["4.50.0", "5.5.0"]
+    assert m["4.50.0"]["status"] == "OK" and m["5.5.0"]["status"] == "EXPORT_ERROR"
