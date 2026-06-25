@@ -57,7 +57,8 @@ def render_markdown(matrix: dict) -> str:
     target_label = matrix.get("target", "transformers")
     lines = [f"# modelopt PTQ ↔ {target_label} compatibility matrix", ""]
 
-    lines.append("> Version columns show versions actually probed by the guarded validation scan. "
+    strategy = matrix.get("strategy", "legacy")
+    lines.append(f"> Scan strategy: `{strategy}`. Version columns show versions actually probed. "
                  "The **compatible** column is the authoritative set of tested OK ranges; "
                  "untested versions must stay N/A in rendered artifacts.")
     lines.append("")

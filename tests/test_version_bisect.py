@@ -1,4 +1,7 @@
-from modelopt_ptq_transformers_doctor.version_bisect import compatible_ranges
+from modelopt_ptq_transformers_doctor.version_bisect import (
+    compatible_ranges,
+    ranges_from_statuses,
+)
 
 V = [f"4.{m}" for m in range(40, 60)]  # "4.40".."4.59", 20 versions
 
@@ -64,3 +67,8 @@ def test_safety_validation_probes_every_selected_version():
 
     compatible_ranges(versions, is_ok)
     assert set(calls) == set(versions)
+
+def test_ranges_from_statuses_splits_unprobed_gaps():
+    versions = ["5.8", "5.9", "5.10", "5.11", "5.12"]
+    statuses = {"5.8": True, "5.9": True, "5.11": True, "5.12": True}
+    assert ranges_from_statuses(versions, statuses) == [("5.8", "5.9"), ("5.11", "5.12")]

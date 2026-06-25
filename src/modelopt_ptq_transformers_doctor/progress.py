@@ -6,14 +6,20 @@ import sys
 import time
 
 
-def estimate_probes(n_versions: int, n_symbols: int) -> tuple[int, int]:
+def estimate_probes(n_versions: int, n_symbols: int, strategy: str = "full") -> tuple[int, int]:
     """Estimated (low, high) number of unique version probes a scan performs.
 
-    The guarded search validates every selected version at most once and caches
-    results across symbols, so both bounds are the selected version count.
-    ``n_symbols`` is kept for API compatibility with older callers.
+    ``full`` validates every selected version at most once. ``risk-adaptive``
+    starts sparse and can expand up to all versions; the lower bound is a small
+    seed estimate, and the upper bound is the selected version count. ``n_symbols``
+    is kept for API compatibility with older callers.
     """
-    return (max(n_versions, 0), max(n_versions, 0))
+    n = max(n_versions, 0)
+    if strategy == "risk-adaptive":
+        if n == 0:
+            return (0, 0)
+        return (min(n, max(1, n // 4)), n)
+    return (n, n)
 
 
 def format_duration(seconds: float) -> str:
@@ -64,11 +70,12 @@ class ProgressReporter(NullProgress):
     """Live progress for a scan. Single-line bar on a TTY, line-per-probe otherwise."""
 
     def __init__(self, stream=None, clock=time.monotonic, bar_width: int = 10,
-                 target: str = "transformers"):
+                 target: str = "transformers", strategy: str = "full"):
         self.stream = stream if stream is not None else sys.stderr
         self.clock = clock
         self.bar_width = bar_width
         self.target = target
+        self.strategy = strategy
         self.total = 0
         self.done = 0
         self.total_time = 0.0
@@ -80,12 +87,16 @@ class ProgressReporter(NullProgress):
     def start(self, n_versions: int, n_symbols: int) -> None:
         self.total = n_versions
         self._t0 = self.clock()
-        low, high = estimate_probes(n_versions, n_symbols)
-        self._emit(
-            f"search space: {n_versions} versions | "
-            f"validated version probes: {low}-{high} "
-            f"(cached across symbols)\n"
-        )
+        low, high = estimate_probes(n_versions, n_symbols, self.strategy)
+        if self.strategy == "risk-adaptive":
+            msg = (f"search space: {n_versions} versions | "
+                   f"risk-adaptive probes: {low}-{high} "
+                   f"(sparse seed + expansion, cached across symbols)\n")
+        else:
+            msg = (f"search space: {n_versions} versions | "
+                   f"validated version probes: {low}-{high} "
+                   f"(cached across symbols)\n")
+        self._emit(msg)
 
     def probe_start(self, version: str) -> None:
         self._probe_t0 = self.clock()
@@ -111,7 +122,6 @@ class ProgressReporter(NullProgress):
         self._emit(f"probed {self.done}/{self.total} versions in "
                    f"{format_duration(elapsed)}\n")
 
-    # --- helpers -------------------------------------------------------
     def _avg(self) -> float:
         return self.total_time / self.done if self.done else 0.0
 
@@ -123,7 +133,7 @@ class ProgressReporter(NullProgress):
                 f"{self.target}=={version}  "
                 f"elapsed {format_duration(elapsed)}  "
                 f"ETA <={format_eta(self._avg(), remaining)}")
-        self._emit(line + "\x1b[K")  # clear to end-of-line for shrinking text
+        self._emit(line + "\x1b[K")
 
     def _emit(self, text: str) -> None:
         self.stream.write(text)

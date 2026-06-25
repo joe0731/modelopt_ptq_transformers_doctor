@@ -377,6 +377,7 @@ def build_html(matrix: dict, modelopt_version: str, generated: str, all_versions
     lo, hi = (all_versions[0], all_versions[-1]) if all_versions else ("?", "?")
     s = summary(matrix)
     target_label = matrix.get("target", "transformers")
+    strategy = matrix.get("strategy", "legacy")
 
     body = "\n  ".join([
         _probed_block(probed, all_versions),
@@ -399,10 +400,10 @@ def build_html(matrix: dict, modelopt_version: str, generated: str, all_versions
 <header>
   <h1>modelopt PTQ ↔ {esc(target_label)} compatibility</h1>
   <div class="meta">modelopt <b>{esc(modelopt_version)}</b> &nbsp;·&nbsp; {esc(target_label)} <b>{esc(lo)} – {esc(hi)}</b>
-   &nbsp;·&nbsp; {len(probed)} versions probed &nbsp;·&nbsp; generated {esc(generated)}</div>
+   &nbsp;·&nbsp; {len(probed)} versions probed &nbsp;·&nbsp; strategy {esc(strategy)} &nbsp;·&nbsp; generated {esc(generated)}</div>
 </header>
 <main>
-  <div class="note">{_coverage(probed, all_versions)} Compatible ranges are built only from directly probed OK versions.</div>
+  <div class="note">{_coverage(probed, all_versions)} Compatible ranges are built only from directly probed OK versions. Scan strategy: {esc(strategy)}.</div>
   {_cards(s)}
   {body}
 </main>
@@ -500,7 +501,7 @@ def build_ipynb(matrix: dict, modelopt_version: str, generated: str, all_version
             f"| **{s['symbols']}** | {s['with_window']} | {s['never']} | {s['drift']} | "
             f"{s['dynamic']} | {s['env_errors']} |"),
         _md("## Versions actually probed",
-            f"The guarded validation scan directly tested **{len(probed)}** of **{len(all_versions)}** stable "
+            f"The scan directly tested **{len(probed)}** of **{len(all_versions)}** stable "
             f"releases in `{lo}`–`{hi}`. Compatible ranges are built only from "
             "tested versions; versions marked N/A below were **not** tested.", "",
             "**✓ probed:** " + ", ".join(f"`{v}`" for v in probed), "",

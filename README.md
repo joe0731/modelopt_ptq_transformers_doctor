@@ -17,12 +17,13 @@ modelopt's PTQ pipeline (init / module-replacement → quantization → export)
 calls specific APIs of `transformers`, `torch`, `vllm`, and `accelerate` — and
 those APIs drift across versions. This tool finds the breakage early.
 
-## What it checks — three layers
+## What it checks — four layers
 
 | layer | command | answers | runs the model? |
 |---|---|---|:--:|
 | **Static API scan** | `doctor scan --target <lib>` | which library versions modelopt's PTQ symbols import cleanly against, + **signature drift** | no |
 | **Export-capability screening** | `doctor capabilities` | MoE experts modelopt *quantizes* but the export path may not support ("quantizes but won't export") | no |
+| **Model-family coverage inventory** | `doctor model-coverage` | which `transformers.models/*` families have explicit ModelOpt PTQ symbols vs structural candidates | no |
 | **Runtime smoke probe** | `doctor smoke` · `doctor smoke-matrix` | does the real **load → quantize → export** actually succeed (single, or per version) | yes (GPU) |
 
 Static layers are cheap **bulk screening**; the smoke probe is the **runtime
@@ -41,11 +42,12 @@ version window where it imports cleanly, plus signature drift.
    relies on (`contract.py`, file list in `allowlist.py`).
 3. **Discover** — stable `transformers` releases are fetched from PyPI
    (`versions.py`), optionally filtered to a `--min`/`--max` range.
-4. **Probe** — for each candidate version a throwaway [`uv`](https://docs.astral.sh/uv/)
-   virtualenv is created, `transformers==<version>` (plus `torch`) is installed,
-   and a stdlib-only prober imports each symbol inside that env (`envman.py`,
-   `prober.py`). `version_bisect.py` uses a binary-search seed for early edge
-   discovery, then validates the selected range so break/fix releases are not missed.
+4. **Probe** — `--strategy risk-adaptive` (default) starts with endpoints,
+   quartiles, feature-version edges, known-risk minors, then expands around
+   observed status changes; `--strategy full` probes every selected release for
+   release reports. Each probed version runs in a throwaway [`uv`](https://docs.astral.sh/uv/)
+   virtualenv where the stdlib-only prober imports symbols (`envman.py`,
+   `prober.py`).
 5. **Report** — results are written as JSON + Markdown (`report.py`).
 
 > **Trust boundary:** this tool creates virtualenvs and **installs and imports
@@ -71,7 +73,7 @@ flowchart TD
     discover --> select["Select search space<br/>versions.select_versions<br/><i>--min / --max / --pypi</i>"]
     select --> orchestrate["Orchestrate&nbsp;(driver.build_matrix)"]
 
-    orchestrate --> bisect["For each symbol: guarded validation search<br/>version_bisect.compatible_ranges"]
+    orchestrate --> bisect["Shared version probe strategy<br/>risk-adaptive or full<br/>version_bisect"]
 
     subgraph probing["Lazy, cached probing"]
       bisect -->|"is this symbol OK at version v?"| cache_check{"v in cache?"}
@@ -165,15 +167,16 @@ Pure bisection risk:
   3. report only 5.8-5.9
   4. miss the fixed 5.11-5.12 window
 
-Guarded validation strategy used here:
+Risk-adaptive strategy used by default:
   1. seed: probe endpoints / quartiles / midpoint
-  2. left side: binary-search a tentative first OK before the anchor
-  3. right side: binary-search a tentative first break after the anchor
-  4. safety pass: continue validating every selected version once
+  2. cover: probe first/latest patch in every feature version
+  3. risk: fully probe known-risk minors, e.g. transformers 4.56/4.57/5.10
+  4. expand: if observed status vectors differ across a gap, probe the midpoint
   5. split: build ranges only from contiguous probed OK runs
 
-Validated result:   5.8-5.9, 5.11-5.12
-N/A rule:           any unprobed version stays N/A; it is never colored OK
+Validated quick result: 5.8-5.9, 5.11-5.12 if those points were probed
+Full result:            use --strategy full to validate every selected release
+N/A rule:               any unprobed version stays N/A; it is never colored OK
 ```
 
 > The report (`report.py`) writes `matrix.json` (full) + `REPORT.md`. Guarded
@@ -217,8 +220,11 @@ pip install git+https://github.com/NVIDIA/Model-Optimizer.git
 The tool scans the **installed** modelopt — no source path is needed:
 
 ```bash
-# Probe transformers across a version range
+# Quick probe transformers across a version range (default: risk-adaptive)
 doctor scan --min 4.45.0 --max 4.52.0 --out doctor-report
+
+# Release/report-grade validation: probe every selected version
+doctor scan --strategy full --min 4.45.0 --max 4.52.0 --out doctor-report
 
 # Probe a different library modelopt integrates with
 doctor scan --target torch       --min 2.1.0 --max 2.8.0
@@ -234,6 +240,7 @@ Options:
 | `--min VERSION` | minimum target version, inclusive |
 | `--max VERSION` | maximum target version, inclusive |
 | `--pypi` | use the full stable PyPI release list (only when no `--min`/`--max`) |
+| `--strategy MODE` | `risk-adaptive` (default quick scan) or `full` (probe every selected version) |
 | `--out DIR` | output directory (default: `doctor-report/<target>`) |
 | `--no-progress` | disable the live progress bar / ETA (progress is on by default, printed to stderr) |
 
@@ -263,6 +270,17 @@ doctor capabilities            # prints named/fallback/quant-handled experts + c
 doctor capabilities --out caps.json
 ```
 
+
+**Model-family coverage inventory (`doctor model-coverage`).** A static source-tree
+scan for the question "Transformers has hundreds of `models/*` families; which
+ones does ModelOpt explicitly touch?" It lists every family with `modeling_*.py`,
+marks explicit ModelOpt PTQ symbols, and flags structural candidates containing
+attention / MoE / linear-like classes. It is a **screening signal, not a verdict**.
+
+```bash
+doctor model-coverage --transformers-root /path/to/transformers --out coverage.json
+```
+
 **Runtime smoke probe (`doctor smoke`).** The *verdict* layer that static checks
 can't give: it runs the real pipeline — **load → quantize → export** — on a
 model and reports exactly which stage fails (`LOAD` / `QUANTIZE` / `EXPORT_ERROR`
@@ -280,9 +298,9 @@ doctor smoke-matrix --model <hf-id> --modelopt nvidia-modelopt==0.44.0 \
   --target transformers --min 5.0.0 --max 5.12.1 --recipe FP8_DEFAULT_CFG
 ```
 
-During a scan, progress is printed to **stderr**: an up-front estimate of the
-number of validated version probes (`N-N`), then a live bar showing the
-`transformers` version under test, elapsed time, and an ETA. On a
+During a scan, progress is printed to **stderr**: an up-front strategy-specific
+probe estimate, then a live bar showing the target version under test, elapsed
+time, and an ETA. On a
 non-interactive stream (pipe / CI) it logs one line per probed version instead.
 Use `--no-progress` to silence it.
 
@@ -348,12 +366,13 @@ modelopt 的 PTQ 流水线(init / 模块替换 → 量化 → 导出)会调用 `
 `torch`、`vllm`、`accelerate` 的具体 API,而这些 API 会随版本漂移。本工具尽早发现这些
 不兼容。
 
-## 检查的三个层次
+## 检查的四个层次
 
 | 层次 | 命令 | 回答 | 是否真跑模型 |
 |---|---|---|:--:|
 | **静态 API 扫描** | `doctor scan --target <lib>` | modelopt PTQ 符号能在哪些库版本上干净导入,以及**签名漂移** | 否 |
 | **导出能力筛查** | `doctor capabilities` | modelopt 能*量化*、但导出路径可能不支持的 MoE experts(「能量化、却导不出」) | 否 |
+| **模型族覆盖清单** | `doctor model-coverage` | `transformers.models/*` 中哪些模型族被 ModelOpt 显式依赖,哪些只是结构候选 | 否 |
 | **运行时冒烟探测** | `doctor smoke` · `doctor smoke-matrix` | 真实的 **load → quantize → export** 是否成功(单次,或逐版本) | 是(GPU) |
 
 静态层是廉价的**批量筛查**;冒烟探测是**运行时判定**。「能导入 + 签名 OK」≠「能跑」——
@@ -373,7 +392,7 @@ modelopt 的 PTQ 流水线(init / 模块替换 → 量化 → 导出)会调用 `
 4. **探测** —— 对每个候选版本创建一个一次性的 [`uv`](https://docs.astral.sh/uv/)
    虚拟环境,安装 `transformers==<version>`(及 `torch`),并在该环境中用仅依赖
    标准库的 prober 导入每个符号(`envman.py`、`prober.py`)。`version_bisect.py`
-   先用二分做 seed 与边界预热,再验证选中范围,避免漏掉 break 后又修复的版本。
+   默认 `risk-adaptive`: 先抽样 endpoints/quartiles/feature edges 和高风险 minor,再围绕状态变化扩展;正式报告可用 `--strategy full` 全量验证。
 5. **报告** —— 结果输出为 JSON + Markdown(`report.py`)。
 
 > **信任边界:** 本工具会创建虚拟环境并**安装、导入第三方包**(`transformers`、
@@ -462,7 +481,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    drive["driver.build_matrix<br/>对每个符号"] --> search["version_bisect.compatible_ranges<br/><i>二分 seed,再验证选中版本</i>"]
+    drive["driver.build_matrix<br/>共享版本探测计划"] --> search["version_bisect<br/><i>risk-adaptive 或 full</i>"]
     search --> ask{"is_ok(v) → probe(v)<br/>v 是否已在按版本缓存中?"}
     ask -->|命中| reuse["复用缓存的 statuses<br/><i>不安装</i>"]
     ask -->|未命中| install["envman.probe_version(v)<br/><i>只安装一次 v · 触发进度</i>"]
@@ -538,8 +557,11 @@ pip install git+https://github.com/NVIDIA/Model-Optimizer.git
 工具扫描的是**已安装的** modelopt——无需提供源码路径:
 
 ```bash
-# 探测 transformers 的版本区间
+# 快速扫描 transformers 版本区间(默认 risk-adaptive)
 doctor scan --min 4.45.0 --max 4.52.0 --out doctor-report
+
+# 正式报告:验证每个选中版本
+doctor scan --strategy full --min 4.45.0 --max 4.52.0 --out doctor-report
 
 # 探测 modelopt 集成的其他库
 doctor scan --target torch       --min 2.1.0 --max 2.8.0
@@ -555,6 +577,7 @@ doctor scan --target accelerate  --min 1.0.0 --max 1.10.0
 | `--min VERSION` | 目标库最小版本(含) |
 | `--max VERSION` | 目标库最大版本(含) |
 | `--pypi` | 使用完整的 PyPI 稳定发布列表(仅在没有 `--min`/`--max` 时生效) |
+| `--strategy MODE` | `risk-adaptive`(默认快扫)或 `full`(逐个验证所有选中版本) |
 | `--out DIR` | 输出目录(默认:`doctor-report/<target>`) |
 
 **多目标。** 每个 target 用相同的流程与报告探测 modelopt PTQ 集成的不同库。探测某个
@@ -576,6 +599,16 @@ python report/render_combined.py report/<dir> --modelopt-version <ver>
 ```bash
 doctor capabilities            # 打印 具名/兜底/量化已处理的 experts + 待验证候选
 doctor capabilities --out caps.json
+```
+
+
+**模型族覆盖清单(`doctor model-coverage`)。** 静态扫描 transformers 源码树,回答
+「Transformers 有很多 `models/*`,哪些被 ModelOpt 显式依赖?」它会列出带
+`modeling_*.py` 的模型族,标记 explicit PTQ symbol,并把 attention / MoE /
+linear-like 结构标成候选。它是**筛查信号,不是运行 verdict**。
+
+```bash
+doctor model-coverage --transformers-root /path/to/transformers --out coverage.json
 ```
 
 **运行时冒烟探测(`doctor smoke`)。** 静态检查给不了的**判定层**:对一个模型真正跑

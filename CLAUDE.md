@@ -51,15 +51,16 @@ multiple targets aggregate into one combined `index.html`/`index.ipynb`.
 | `allowlist.py` | The transformers target's modelopt source-file list (quant + export). |
 | `versions.py` | Discover stable releases of a target from PyPI; select a `--min`/`--max` range. |
 | `envman.py` + `prober.py` | Per-version throwaway `uv` venv; **stdlib-only** prober imports each symbol and checks `hasattr` + `inspect.signature`. |
-| `version_bisect.py` | Binary-search each symbol's contiguous compatible window. |
+| `version_bisect.py` | Version probe strategies: `risk-adaptive` default, `full` validation, and validated range construction. |
 | `driver.py` | `build_matrix`: orchestrate, cache probes per version, detect signature drift, drive progress. |
 | `progress.py` | `ProgressReporter`/`NullProgress` (stderr bar + ETA + probe estimate). |
 | `report.py` | `matrix.json` + `REPORT.md`. |
 | `report/render_compat.py` | Styled `compatibility.html` + results-only `.ipynb` (CSS in `report/assets/compat.css`). |
 | `report/render_combined.py` | One combined multi-target `index.html`/`.ipynb`. |
 | `capabilities.py` | Static **export-capability screening** (`doctor capabilities`). |
+| `model_coverage.py` | Static transformers model-family coverage/risk inventory (`doctor model-coverage`). |
 | `smoke.py` | Runtime **load → quantize → export** verdict (`doctor smoke`). |
-| `cli.py` | `doctor scan` / `doctor capabilities` / `doctor smoke`. |
+| `cli.py` | `doctor scan` / `doctor capabilities` / `doctor model-coverage` / `doctor smoke`. |
 
 ## 4. What it catches — and what it does NOT (the boundary)
 
@@ -67,14 +68,20 @@ This boundary is a **hard rule**: never overstate a static result as a verdict.
 
 - **`doctor scan` (static, import/API level)** — catches: missing modules,
   moved import paths, changed callable **signatures** (signature drift). Flags
-  `register({var:...})` dynamic deps as *runtime-discovered, unchecked*. The
-  compatible window is **inferred from a bisection sample** — reports must show
-  probed vs **N/A** (untested) versions and never colour untested as compatible.
+  `register({var:...})` dynamic deps as *runtime-discovered, unchecked*.
+  `--strategy risk-adaptive` is the default quick mode: sparse seed + risk
+  minors + expansion around observed changes. `--strategy full` probes every
+  selected version for release reports. Reports must show probed vs **N/A**
+  (untested) versions and never colour untested as compatible.
 - **`doctor capabilities` (static screening)** — flags MoE expert types modelopt
   *quantizes* but that the HF export path doesn't explicitly support and that
   don't statically match a structural fallback. This is a **screening signal,
   not a verdict** (export support is a runtime predicate: named cases + fused /
   iterable fallbacks). Candidates mean "verify at runtime".
+- **`doctor model-coverage` (static screening)** — inventories the transformers
+  `models/*` families in a source tree and marks whether ModelOpt has explicit
+  PTQ symbols for them or whether they are structural candidates (attention /
+  MoE / linear-like classes). This does **not** prove model compatibility.
 - **Static layers CANNOT catch**: runtime instance-attribute access (e.g.
   `config.moe_latent_size`), behavioral changes, whether export actually
   succeeds, or recipe-specific runtime errors. "Imports OK + signature OK" ≠
@@ -103,7 +110,7 @@ Positioning: static layers are **bulk pre-screening**; smoke is the **verdict**.
   probe). Don't add it.
 - **Trust boundary:** scans install and import third-party packages in throwaway
   envs. Run only against versions/sources you trust.
-- **Reports never lie about coverage:** state the window is inferred, list the
+- **Reports never lie about coverage:** state the scan strategy, list the
   versions actually probed, mark untested as N/A, label screening as screening.
 - **Tests are deterministic and offline** — inject the PyPI opener
   (`versions.py`) and the subprocess runner (`envman.py`); never hit the network
@@ -127,7 +134,7 @@ Positioning: static layers are **bulk pre-screening**; smoke is the **verdict**.
   Conventional-Commit messages; bump `pyproject.toml` version and tag `vX.Y.Z`
   on release; commit author/committer email is the GitHub noreply
   (`joe0731@users.noreply.github.com`) — never a real corporate email.
-- **Report-generator invariants** (in `render_compat.py`): inferred-window note,
+- **Report-generator invariants** (in `render_compat.py`): strategy/range note,
   probed-vs-N/A explicit, one column per feature version, **full symbol names**,
   readable `+/−/~` signature diffs, ui-ux-pro-max design (blue+amber, Fira fonts,
   WCAG ≥ 4.5:1 contrast, focus states, reduced-motion, responsive).
@@ -137,10 +144,13 @@ Positioning: static layers are **bulk pre-screening**; smoke is the **verdict**.
 ```bash
 # Static compatibility matrix for a target library
 doctor scan --target {transformers,torch,vllm,accelerate} --min A --max B --out DIR
-#   --pypi (full stable list), --no-progress
+#   --strategy {risk-adaptive,full}, --pypi (full stable list), --no-progress
 
 # Static export-capability screening (quantizes-but-may-not-export candidates)
 doctor capabilities [--out caps.json]
+
+# Static transformers model-family coverage/risk inventory
+doctor model-coverage [--modelopt-root PATH] [--transformers-root PATH] [--out coverage.json]
 
 # Runtime verdict: load -> quantize -> export one model, report the failing stage
 doctor smoke --model <hf-id|path> --recipe FP8_DEFAULT_CFG --device cuda \

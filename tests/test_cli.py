@@ -16,6 +16,14 @@ def test_parser_accepts_bounds_without_modelopt_flag():
     assert not hasattr(ns, "modelopt")
 
 
+def test_scan_strategy_default_and_parser():
+    p = cli.build_arg_parser()
+    ns = p.parse_args(["scan"])
+    assert ns.strategy == "risk-adaptive"
+    ns2 = p.parse_args(["scan", "--strategy", "full"])
+    assert ns2.strategy == "full"
+
+
 def test_main_end_to_end_with_monkeypatched_seams(tmp_path, monkeypatch):
     rec = ContractRecord("transformers.models.x.modeling_x", "XAttn",
                          "f.py", 1, guarded=False, dynamic=False, role="quant")
@@ -90,8 +98,10 @@ def test_no_progress_uses_null_reporter(tmp_path, monkeypatch):
 
     seen = {}
 
-    def fake_build_matrix(records, versions, runner, reporter=None):
+    def fake_build_matrix(records, versions, runner, reporter=None, strategy=None, target_name=None):
         seen["reporter"] = reporter
+        seen["strategy"] = strategy
+        seen["target_name"] = target_name
         return {"versions_probed": versions, "symbols": {}, "dynamic": [],
                 "env_errors": {}}
 
@@ -102,6 +112,8 @@ def test_no_progress_uses_null_reporter(tmp_path, monkeypatch):
     assert rc == 0
     assert isinstance(seen["reporter"], progress_mod.NullProgress)
     assert not isinstance(seen["reporter"], progress_mod.ProgressReporter)
+    assert seen["strategy"] == "risk-adaptive"
+    assert seen["target_name"] == "transformers"
 
 
 def test_progress_on_by_default_uses_reporter(tmp_path, monkeypatch):
@@ -113,7 +125,7 @@ def test_progress_on_by_default_uses_reporter(tmp_path, monkeypatch):
 
     seen = {}
 
-    def fake_build_matrix(records, versions, runner, reporter=None):
+    def fake_build_matrix(records, versions, runner, reporter=None, **kwargs):
         seen["reporter"] = reporter
         return {"versions_probed": versions, "symbols": {}, "dynamic": [],
                 "env_errors": {}}
@@ -135,7 +147,7 @@ def test_progress_reporter_uses_explicit_target(tmp_path, monkeypatch):
 
     seen = {}
 
-    def fake_build_matrix(records, versions, runner, reporter=None):
+    def fake_build_matrix(records, versions, runner, reporter=None, **kwargs):
         seen["reporter"] = reporter
         return {"versions_probed": versions, "symbols": {}, "dynamic": [],
                 "env_errors": {}}
@@ -166,7 +178,7 @@ def test_target_default_is_transformers(capsys, monkeypatch, tmp_path):
 
     monkeypatch.setattr(cli, "EnvRunner", fake_env_runner)
 
-    def fake_build_matrix(records, versions, runner, reporter=None):
+    def fake_build_matrix(records, versions, runner, reporter=None, **kwargs):
         return {"versions_probed": versions, "symbols": {}, "dynamic": [],
                 "env_errors": {}}
 
@@ -214,7 +226,7 @@ def test_target_explicit(capsys, monkeypatch, tmp_path):
 
     monkeypatch.setattr(cli, "EnvRunner", fake_env_runner)
 
-    def fake_build_matrix(records, versions, runner, reporter=None):
+    def fake_build_matrix(records, versions, runner, reporter=None, **kwargs):
         return {"versions_probed": versions, "symbols": {}, "dynamic": [],
                 "env_errors": {}}
 
@@ -332,3 +344,22 @@ def test_smoke_matrix_command(monkeypatch, tmp_path):
     d = json.loads((out / "smoke_matrix.json").read_text())
     assert d["results"]["5.12.0"]["status"] == "EXPORT_ERROR" and d["results"]["5.11.0"]["status"] == "OK"
     assert (out / "SMOKE.md").read_text().count("|") > 4
+
+def test_model_coverage_in_parser():
+    p = cli.build_arg_parser()
+    ns = p.parse_args(["model-coverage", "--modelopt-root", "/m", "--transformers-root", "/t"])
+    assert ns.command == "model-coverage"
+    assert ns.modelopt_root == "/m" and ns.transformers_root == "/t"
+
+
+def test_model_coverage_command(monkeypatch, capsys, tmp_path):
+    report = {"modelopt_root": "/m", "transformers_root": "/t", "families": []}
+    monkeypatch.setattr(cli, "screen_model_coverage", lambda m, t: report)
+    monkeypatch.setattr(cli, "format_model_coverage_report", lambda r: "coverage ok")
+    out = tmp_path / "coverage.json"
+    rc = cli.main(["model-coverage", "--modelopt-root", "/m", "--transformers-root", "/t",
+                   "--out", str(out)])
+    captured = capsys.readouterr()
+    assert rc == 0
+    assert "coverage ok" in captured.out
+    assert out.exists()

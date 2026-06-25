@@ -12,6 +12,7 @@ from .contract import extract_contract, installed_modelopt_root
 from .driver import build_matrix
 from .envman import EnvRunner, SmokeEnvRunner
 from .progress import ProgressReporter, NullProgress
+from .model_coverage import format_model_coverage_report, screen_model_coverage
 from .relations import (format_relations_report, installed_package_root,
                         screen_relations)
 from .report import write_report
@@ -19,6 +20,7 @@ from .smoke import (build_real_stages, build_smoke_matrix, format_result,
                     format_smoke_matrix_md, run_smoke)
 from .targets import TARGETS
 from .versions import fetch_available_versions, select_versions
+from .version_bisect import SCAN_STRATEGIES, RISK_ADAPTIVE_STRATEGY
 
 
 def build_arg_parser() -> argparse.ArgumentParser:
@@ -36,6 +38,8 @@ def build_arg_parser() -> argparse.ArgumentParser:
                       help="disable the live progress bar / ETA output")
     scan.add_argument("--target", choices=sorted(TARGETS), default="transformers",
                       help="target package to probe (default: transformers)")
+    scan.add_argument("--strategy", choices=SCAN_STRATEGIES, default=RISK_ADAPTIVE_STRATEGY,
+                      help="version probing strategy (default: risk-adaptive; use full for release reports)")
 
     cap = sub.add_parser(
         "capabilities",
@@ -50,6 +54,15 @@ def build_arg_parser() -> argparse.ArgumentParser:
     rel.add_argument("--transformers-root", default=None,
                      help="transformers repo/package root (default: locate installed transformers with find_spec)")
     rel.add_argument("--out", default=None, help="also write the relation report as JSON to this path")
+
+    cov = sub.add_parser(
+        "model-coverage",
+        help="screen transformers model-family coverage/risk against ModelOpt's explicit PTQ symbols")
+    cov.add_argument("--modelopt-root", default=None,
+                     help="ModelOpt source root (default: locate installed modelopt with find_spec)")
+    cov.add_argument("--transformers-root", default=None,
+                     help="transformers repo/package root (default: locate installed transformers with find_spec)")
+    cov.add_argument("--out", default=None, help="also write the coverage report as JSON to this path")
 
     smoke = sub.add_parser(
         "smoke",
@@ -104,8 +117,10 @@ def _run_scan(args) -> int:
 
     runner = EnvRunner(prober.__file__, pkg=target.pypi, extra_deps=target.pinned_deps,
                        probe_structures=(target.name == "transformers"))
-    reporter = NullProgress() if args.no_progress else ProgressReporter(stream=sys.stderr, target=target.name)
-    matrix = build_matrix(records, versions, runner, reporter=reporter)
+    reporter = (NullProgress() if args.no_progress else
+                ProgressReporter(stream=sys.stderr, target=target.name, strategy=args.strategy))
+    matrix = build_matrix(records, versions, runner, reporter=reporter,
+                          strategy=args.strategy, target_name=target.name)
     matrix["target"] = target.name
     matrix["pypi"] = target.pypi
 
@@ -147,6 +162,29 @@ def _run_relations(args) -> int:
     print(format_relations_report(report))
     if args.out:
         import json
+        os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
+        with open(args.out, "w", encoding="utf-8") as fh:
+            json.dump(report, fh, indent=2, ensure_ascii=False)
+        print(f"wrote {args.out}", file=sys.stderr)
+    return 0
+
+
+def _run_model_coverage(args) -> int:
+    import json
+
+    try:
+        modelopt_root = args.modelopt_root or installed_modelopt_root()
+        transformers_root = args.transformers_root or str(installed_package_root("transformers"))
+    except ModuleNotFoundError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+    try:
+        report = screen_model_coverage(modelopt_root, transformers_root)
+    except FileNotFoundError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+    print(format_model_coverage_report(report))
+    if args.out:
         os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
         with open(args.out, "w", encoding="utf-8") as fh:
             json.dump(report, fh, indent=2, ensure_ascii=False)
@@ -210,6 +248,8 @@ def main(argv=None) -> int:
         return _run_capabilities(args)
     if args.command == "relations":
         return _run_relations(args)
+    if args.command == "model-coverage":
+        return _run_model_coverage(args)
     if args.command == "smoke":
         return _run_smoke(args)
     if args.command == "smoke-matrix":

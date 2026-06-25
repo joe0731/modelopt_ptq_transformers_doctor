@@ -232,3 +232,60 @@ def test_known_probe_results_are_collected_per_version():
         "4.50.0": "OK",
     }
     assert m["known_probes"]["legacy-modeling-utils-conv1d"]["symbol"] == "Conv1D"
+
+def test_full_strategy_probes_every_selected_version():
+    versions = [f"1.0.{i}" for i in range(8)]
+    runner = FakeRunner(present_from=0)
+    build_matrix([_rec()], versions, runner, strategy="full")
+    assert runner.calls == len(versions)
+
+
+def test_risk_adaptive_skips_stable_low_risk_versions():
+    versions = [f"1.0.{i}" for i in range(12)]
+    runner = FakeRunner(present_from=0)
+    m = build_matrix([_rec()], versions, runner, strategy="risk-adaptive", target_name="generic")
+    assert runner.calls < len(versions)
+    assert set(m["versions_probed"]) < set(versions)
+    sym = m["symbols"]["transformers.models.x.modeling_x:XAttn"]
+    assert sym["compatible_ranges"]
+    assert m["strategy"] == "risk-adaptive"
+
+
+def test_risk_adaptive_expands_status_transition_to_boundary():
+    versions = [f"1.0.{i}" for i in range(9)]
+
+    class PatchRunner:
+        def __init__(self):
+            self.calls = 0
+
+        def probe_version(self, version, records):
+            self.calls += 1
+            patch = int(version.split(".")[2])
+            status = "OK" if patch >= 5 else "MISSING_SYMBOL"
+            return {"status": "OK", "installed": version,
+                    "statuses": {f"{r['module_path']}:{r['symbol']}": status for r in records}}
+
+    m = build_matrix([_rec()], versions, PatchRunner(), strategy="risk-adaptive", target_name="generic")
+    sym = m["symbols"]["transformers.models.x.modeling_x:XAttn"]
+    assert sym["compatible_ranges"] == [("1.0.5", "1.0.6"), ("1.0.8", "1.0.8")]
+
+
+def test_risk_adaptive_target_profile_checks_transformers_510_patch_versions():
+    versions = ["5.10.0", "5.10.1", "5.10.2", "5.10.4"]
+
+    class LocalBreakRunner:
+        def __init__(self):
+            self.seen = []
+
+        def probe_version(self, version, records):
+            self.seen.append(version)
+            ok = version in {"5.10.0", "5.10.4"}
+            return {"status": "OK", "installed": version,
+                    "statuses": {f"{r['module_path']}:{r['symbol']}": ("OK" if ok else "MISSING_SYMBOL")
+                                 for r in records}}
+
+    runner = LocalBreakRunner()
+    m = build_matrix([_rec()], versions, runner, strategy="risk-adaptive", target_name="transformers")
+    assert set(runner.seen) == set(versions)
+    sym = m["symbols"]["transformers.models.x.modeling_x:XAttn"]
+    assert sym["compatible_ranges"] == [("5.10.0", "5.10.0"), ("5.10.4", "5.10.4")]

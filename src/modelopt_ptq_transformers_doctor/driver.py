@@ -4,7 +4,12 @@ from __future__ import annotations
 
 from packaging.version import Version
 
-from .version_bisect import compatible_ranges
+from .version_bisect import (
+    RISK_ADAPTIVE_STRATEGY,
+    expand_probe_indices,
+    initial_probe_indices,
+    ranges_from_statuses,
+)
 from .models import OK, ContractRecord
 from .progress import NullProgress
 
@@ -30,12 +35,12 @@ def _signature_drift(sigs: dict) -> list | None:
     return transitions if len(transitions) > 1 else None
 
 
-def build_matrix(records: list[ContractRecord], versions: list[str], env_runner, reporter=None) -> dict:
+def build_matrix(records: list[ContractRecord], versions: list[str], env_runner, reporter=None,
+                 strategy: str = RISK_ADAPTIVE_STRATEGY, target_name: str | None = None) -> dict:
     """Build a symbol × version compatibility matrix.
 
-    ``versions_probed`` in the returned dict contains only the bisection-probed
-    subset of *versions* (those actually installed and probed), not the full
-    input list.
+    ``versions_probed`` in the returned dict contains only versions actually
+    installed and probed, not necessarily the full input list.
     """
     reporter = reporter or NullProgress()
     static = [r for r in records if not r.dynamic]
@@ -58,27 +63,41 @@ def build_matrix(records: list[ContractRecord], versions: list[str], env_runner,
         return cache[version]
 
     matrix = {"versions_probed": [], "symbols": {}, "dynamic": [], "env_errors": env_errors,
-              "structural": {}, "known_probes": {}}
+              "structural": {}, "known_probes": {}, "strategy": strategy}
+
+    keys = [r.key for r in static]
+
+    def status_vector(index: int) -> tuple:
+        res = cache[versions[index]]
+        if res["status"] != OK:
+            return (res["status"],)
+        return tuple(res.get("statuses", {}).get(key, "UNKNOWN") for key in keys)
+
+    if static:
+        pending = set(initial_probe_indices(versions, strategy=strategy, target_name=target_name))
+        while pending:
+            for index in sorted(pending):
+                probe(versions[index])
+            pending = set(expand_probe_indices(
+                versions,
+                probed_indices={versions.index(v) for v in cache},
+                status_at_index=status_vector,
+                strategy=strategy,
+                target_name=target_name,
+            ))
 
     for r in static:
-        def is_ok(version: str, key: str = r.key) -> bool:
-            res = probe(version)
-            if res["status"] != "OK":
-                return False
-            return res["statuses"].get(key) == OK
-
+        statuses: dict[str, str] = {}
+        ok_by_version: dict[str, bool] = {}
+        for v, res in cache.items():
+            status = res["statuses"].get(r.key, res["status"]) if res["status"] == OK else res["status"]
+            statuses[v] = status
+            ok_by_version[v] = status == OK
         matrix["symbols"][r.key] = {
             "file": r.file, "line": r.line, "guarded": r.guarded, "role": r.role,
-            "compatible_ranges": compatible_ranges(versions, is_ok), "statuses": {},
+            "compatible_ranges": ranges_from_statuses(versions, ok_by_version),
+            "statuses": statuses,
         }
-
-    # Second pass: cache is now complete, so every symbol's statuses covers the same probed versions.
-    for r in static:
-        info = matrix["symbols"][r.key]
-        for v, res in cache.items():
-            info["statuses"][v] = (
-                res["statuses"].get(r.key, res["status"]) if res["status"] == OK else res["status"]
-            )
 
     # Known historical seam probes returned by the prober (transformers target only).
     for v, res in cache.items():
