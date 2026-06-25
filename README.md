@@ -331,7 +331,7 @@ This repo ships agent skills for Claude Code and Codex:
 - **`verify_testcase_runtime_reach`** (`.claude/skills/`, `.codex/skills/`) — a
   project-agnostic workflow for proving whether tests execute specific C/C++
   symbols or stable bpftrace anchors. Tracked in git.
-- **`verify_testcase_runtime_reach_cn`** (`.claude/skills/`, `.codex/skills/`)
+- **`cn_verify_testcase_runtime_reach`** (`.claude/skills/`, `.codex/skills/`)
   — the Chinese-language version of `verify_testcase_runtime_reach`. Tracked in
   git.
 
@@ -658,7 +658,7 @@ pytest
 - **`verify_testcase_runtime_reach`**(`.claude/skills/`、`.codex/skills/`)——
   英文版;面向任意项目的通用工作流,用于证明测试是否执行到特定 C/C++ 符号或稳定
   bpftrace 锚点。已纳入 git。
-- **`verify_testcase_runtime_reach_cn`**(`.claude/skills/`、`.codex/skills/`)——
+- **`cn_verify_testcase_runtime_reach`**(`.claude/skills/`、`.codex/skills/`)——
   中文版;与 `verify_testcase_runtime_reach` 等价。已纳入 git。
 
 报告样式借助第三方设计技能 **`ui-ux-pro-max`** 设计完成,但**未提交**(为 vendored
