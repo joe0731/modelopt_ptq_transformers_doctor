@@ -1,0 +1,299 @@
+{
+  "versions_probed": [
+    "1.0.0",
+    "1.6.0",
+    "1.10.0",
+    "1.12.0",
+    "1.13.0",
+    "1.14.0"
+  ],
+  "symbols": {
+    "accelerate:init_empty_weights": {
+      "file": "modelopt/torch/quantization/plugins/accelerate.py",
+      "line": 23,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "1.0.0",
+          "1.14.0"
+        ]
+      ],
+      "statuses": {
+        "1.0.0": "OK",
+        "1.6.0": "OK",
+        "1.10.0": "OK",
+        "1.12.0": "OK",
+        "1.13.0": "OK",
+        "1.14.0": "OK"
+      },
+      "signatures": {
+        "1.0.0": "(include_buffers: bool = None)",
+        "1.6.0": "(include_buffers: bool = None)",
+        "1.10.0": "(include_buffers: bool = None)",
+        "1.12.0": "(include_buffers: Optional[bool] = None)",
+        "1.13.0": "(include_buffers: Optional[bool] = None)",
+        "1.14.0": "(include_buffers: Optional[bool] = None)"
+      },
+      "signature_drift": [
+        [
+          "1.0.0",
+          "(include_buffers: bool = None)"
+        ],
+        [
+          "1.12.0",
+          "(include_buffers: Optional[bool] = None)"
+        ]
+      ]
+    },
+    "accelerate:load_checkpoint_and_dispatch": {
+      "file": "modelopt/torch/quantization/plugins/accelerate.py",
+      "line": 23,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "1.0.0",
+          "1.14.0"
+        ]
+      ],
+      "statuses": {
+        "1.0.0": "OK",
+        "1.6.0": "OK",
+        "1.10.0": "OK",
+        "1.12.0": "OK",
+        "1.13.0": "OK",
+        "1.14.0": "OK"
+      },
+      "signatures": {
+        "1.0.0": "(model: torch.nn.modules.module.Module, checkpoint: Union[str, os.PathLike], device_map: Union[str, Dict[str, Union[int, str, torch.device]], NoneType] = None, max_memory: Optional[Dict[Union[int, str], Union[int, str]]] = None, no_split_module_classes: Optional[List[str]] = None, offload_folder: Union[str, os.PathLike, NoneType] = None, offload_buffers: bool = False, dtype: Union[str, torch.dtype, NoneType] = None, offload_state_dict: Optional[bool] = None, skip_keys: Union[List[str], str, NoneType] = None, preload_module_classes: Optional[List[str]] = None, force_hooks: bool = False, strict: bool = False)",
+        "1.6.0": "(model: torch.nn.modules.module.Module, checkpoint: Union[str, os.PathLike], device_map: Union[str, dict[str, Union[int, str, torch.device]], NoneType] = None, max_memory: Optional[dict[Union[int, str], Union[int, str]]] = None, no_split_module_classes: Optional[list[str]] = None, offload_folder: Union[str, os.PathLike, NoneType] = None, offload_buffers: bool = False, dtype: Union[str, torch.dtype, NoneType] = None, offload_state_dict: Optional[bool] = None, skip_keys: Union[str, list[str], NoneType] = None, preload_module_classes: Optional[list[str]] = None, force_hooks: bool = False, strict: bool = False)",
+        "1.10.0": "(model: torch.nn.modules.module.Module, checkpoint: Union[str, os.PathLike], device_map: Union[str, dict[str, Union[int, str, torch.device]], NoneType] = None, max_memory: Optional[dict[Union[int, str], Union[int, str]]] = None, no_split_module_classes: Optional[list[str]] = None, offload_folder: Union[str, os.PathLike, NoneType] = None, offload_buffers: bool = False, dtype: Union[str, torch.dtype, NoneType] = None, offload_state_dict: Optional[bool] = None, skip_keys: Union[str, list[str], NoneType] = None, preload_module_classes: Optional[list[str]] = None, force_hooks: bool = False, strict: bool = False, full_state_dict: bool = True, broadcast_from_rank0: bool = False)",
+        "1.12.0": "(model: torch.nn.modules.module.Module, checkpoint: Union[str, os.PathLike], device_map: Union[str, dict[str, Union[int, str, torch.device]], NoneType] = None, max_memory: Optional[dict[Union[int, str], Union[int, str]]] = None, no_split_module_classes: Optional[list[str]] = None, offload_folder: Union[str, os.PathLike, NoneType] = None, offload_buffers: bool = False, dtype: Union[str, torch.dtype, NoneType] = None, offload_state_dict: Optional[bool] = None, skip_keys: Union[str, list[str], NoneType] = None, preload_module_classes: Optional[list[str]] = None, force_hooks: bool = False, strict: bool = False, full_state_dict: bool = True, broadcast_from_rank0: bool = False)",
+        "1.13.0": "(model: torch.nn.modules.module.Module, checkpoint: Union[str, os.PathLike], device_map: Union[str, dict[str, Union[int, str, torch.device]], NoneType] = None, max_memory: Optional[dict[Union[int, str], Union[int, str]]] = None, no_split_module_classes: Optional[list[str]] = None, offload_folder: Union[str, os.PathLike, NoneType] = None, offload_buffers: bool = False, dtype: Union[str, torch.dtype, NoneType] = None, offload_state_dict: Optional[bool] = None, skip_keys: Union[str, list[str], NoneType] = None, preload_module_classes: Optional[list[str]] = None, force_hooks: bool = False, strict: bool = False, full_state_dict: bool = True, broadcast_from_rank0: bool = False)",
+        "1.14.0": "(model: torch.nn.modules.module.Module, checkpoint: Union[str, os.PathLike], device_map: Union[str, dict[str, Union[int, str, torch.device]], NoneType] = None, max_memory: Optional[dict[Union[int, str], Union[int, str]]] = None, no_split_module_classes: Optional[list[str]] = None, offload_folder: Union[str, os.PathLike, NoneType] = None, offload_buffers: bool = False, dtype: Union[str, torch.dtype, NoneType] = None, offload_state_dict: Optional[bool] = None, skip_keys: Union[str, list[str], NoneType] = None, preload_module_classes: Optional[list[str]] = None, force_hooks: bool = False, strict: bool = False, full_state_dict: bool = True, broadcast_from_rank0: bool = False)"
+      },
+      "signature_drift": [
+        [
+          "1.0.0",
+          "(model: torch.nn.modules.module.Module, checkpoint: Union[str, os.PathLike], device_map: Union[str, Dict[str, Union[int, str, torch.device]], NoneType] = None, max_memory: Optional[Dict[Union[int, str], Union[int, str]]] = None, no_split_module_classes: Optional[List[str]] = None, offload_folder: Union[str, os.PathLike, NoneType] = None, offload_buffers: bool = False, dtype: Union[str, torch.dtype, NoneType] = None, offload_state_dict: Optional[bool] = None, skip_keys: Union[List[str], str, NoneType] = None, preload_module_classes: Optional[List[str]] = None, force_hooks: bool = False, strict: bool = False)"
+        ],
+        [
+          "1.6.0",
+          "(model: torch.nn.modules.module.Module, checkpoint: Union[str, os.PathLike], device_map: Union[str, dict[str, Union[int, str, torch.device]], NoneType] = None, max_memory: Optional[dict[Union[int, str], Union[int, str]]] = None, no_split_module_classes: Optional[list[str]] = None, offload_folder: Union[str, os.PathLike, NoneType] = None, offload_buffers: bool = False, dtype: Union[str, torch.dtype, NoneType] = None, offload_state_dict: Optional[bool] = None, skip_keys: Union[str, list[str], NoneType] = None, preload_module_classes: Optional[list[str]] = None, force_hooks: bool = False, strict: bool = False)"
+        ],
+        [
+          "1.10.0",
+          "(model: torch.nn.modules.module.Module, checkpoint: Union[str, os.PathLike], device_map: Union[str, dict[str, Union[int, str, torch.device]], NoneType] = None, max_memory: Optional[dict[Union[int, str], Union[int, str]]] = None, no_split_module_classes: Optional[list[str]] = None, offload_folder: Union[str, os.PathLike, NoneType] = None, offload_buffers: bool = False, dtype: Union[str, torch.dtype, NoneType] = None, offload_state_dict: Optional[bool] = None, skip_keys: Union[str, list[str], NoneType] = None, preload_module_classes: Optional[list[str]] = None, force_hooks: bool = False, strict: bool = False, full_state_dict: bool = True, broadcast_from_rank0: bool = False)"
+        ]
+      ]
+    },
+    "accelerate.hooks:AlignDevicesHook": {
+      "file": "modelopt/torch/quantization/plugins/accelerate.py",
+      "line": 24,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "1.0.0",
+          "1.14.0"
+        ]
+      ],
+      "statuses": {
+        "1.0.0": "OK",
+        "1.6.0": "OK",
+        "1.10.0": "OK",
+        "1.12.0": "OK",
+        "1.13.0": "OK",
+        "1.14.0": "OK"
+      },
+      "signatures": {
+        "1.0.0": "(execution_device: Union[int, str, torch.device, NoneType] = None, offload: bool = False, io_same_device: bool = False, weights_map: Optional[Mapping] = None, offload_buffers: bool = False, place_submodules: bool = False, skip_keys: Union[List[str], str, NoneType] = None, tied_params_map: Optional[Dict[int, Dict[torch.device, torch.Tensor]]] = None)",
+        "1.6.0": "(execution_device: Union[int, str, torch.device, NoneType] = None, offload: bool = False, io_same_device: bool = False, weights_map: Optional[collections.abc.Mapping] = None, offload_buffers: bool = False, place_submodules: bool = False, skip_keys: Union[str, list[str], NoneType] = None, tied_params_map: Optional[dict[int, dict[torch.device, torch.Tensor]]] = None)",
+        "1.10.0": "(execution_device: Union[int, str, torch.device, NoneType] = None, offload: bool = False, io_same_device: bool = False, weights_map: Optional[collections.abc.Mapping] = None, offload_buffers: bool = False, place_submodules: bool = False, skip_keys: Union[str, list[str], NoneType] = None, tied_params_map: Optional[dict[int, dict[torch.device, torch.Tensor]]] = None)",
+        "1.12.0": "(execution_device: Union[int, str, torch.device, NoneType] = None, offload: bool = False, io_same_device: bool = False, weights_map: Optional[collections.abc.Mapping] = None, offload_buffers: bool = False, place_submodules: bool = False, skip_keys: Union[str, list[str], NoneType] = None, tied_params_map: Optional[dict[int, dict[torch.device, torch.Tensor]]] = None)",
+        "1.13.0": "(execution_device: Union[int, str, torch.device, NoneType] = None, offload: bool = False, io_same_device: bool = False, weights_map: Optional[collections.abc.Mapping] = None, offload_buffers: bool = False, place_submodules: bool = False, skip_keys: Union[str, list[str], NoneType] = None, tied_params_map: Optional[dict[int, dict[torch.device, torch.Tensor]]] = None)",
+        "1.14.0": "(execution_device: Union[int, str, torch.device, NoneType] = None, offload: bool = False, io_same_device: bool = False, weights_map: Optional[collections.abc.Mapping] = None, offload_buffers: bool = False, place_submodules: bool = False, skip_keys: Union[str, list[str], NoneType] = None, tied_params_map: Optional[dict[int, dict[torch.device, torch.Tensor]]] = None)"
+      },
+      "signature_drift": [
+        [
+          "1.0.0",
+          "(execution_device: Union[int, str, torch.device, NoneType] = None, offload: bool = False, io_same_device: bool = False, weights_map: Optional[Mapping] = None, offload_buffers: bool = False, place_submodules: bool = False, skip_keys: Union[List[str], str, NoneType] = None, tied_params_map: Optional[Dict[int, Dict[torch.device, torch.Tensor]]] = None)"
+        ],
+        [
+          "1.6.0",
+          "(execution_device: Union[int, str, torch.device, NoneType] = None, offload: bool = False, io_same_device: bool = False, weights_map: Optional[collections.abc.Mapping] = None, offload_buffers: bool = False, place_submodules: bool = False, skip_keys: Union[str, list[str], NoneType] = None, tied_params_map: Optional[dict[int, dict[torch.device, torch.Tensor]]] = None)"
+        ]
+      ]
+    },
+    "accelerate.hooks:SequentialHook": {
+      "file": "modelopt/torch/quantization/plugins/accelerate.py",
+      "line": 24,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "1.0.0",
+          "1.14.0"
+        ]
+      ],
+      "statuses": {
+        "1.0.0": "OK",
+        "1.6.0": "OK",
+        "1.10.0": "OK",
+        "1.12.0": "OK",
+        "1.13.0": "OK",
+        "1.14.0": "OK"
+      },
+      "signatures": {
+        "1.0.0": "(*hooks)",
+        "1.6.0": "(*hooks)",
+        "1.10.0": "(*hooks)",
+        "1.12.0": "(*hooks)",
+        "1.13.0": "(*hooks)",
+        "1.14.0": "(*hooks)"
+      },
+      "signature_drift": null
+    },
+    "accelerate.utils:get_max_memory": {
+      "file": "modelopt/torch/quantization/plugins/accelerate.py",
+      "line": 25,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "1.0.0",
+          "1.14.0"
+        ]
+      ],
+      "statuses": {
+        "1.0.0": "OK",
+        "1.6.0": "OK",
+        "1.10.0": "OK",
+        "1.12.0": "OK",
+        "1.13.0": "OK",
+        "1.14.0": "OK"
+      },
+      "signatures": {
+        "1.0.0": "(max_memory: Optional[Dict[Union[int, str], Union[int, str]]] = None)",
+        "1.6.0": "(max_memory: Optional[dict[Union[int, str], Union[int, str]]] = None)",
+        "1.10.0": "(max_memory: Optional[dict[Union[int, str], Union[int, str]]] = None)",
+        "1.12.0": "(max_memory: Optional[dict[Union[int, str], Union[int, str]]] = None)",
+        "1.13.0": "(max_memory: Optional[dict[Union[int, str], Union[int, str]]] = None)",
+        "1.14.0": "(max_memory: Optional[dict[Union[int, str], Union[int, str]]] = None)"
+      },
+      "signature_drift": [
+        [
+          "1.0.0",
+          "(max_memory: Optional[Dict[Union[int, str], Union[int, str]]] = None)"
+        ],
+        [
+          "1.6.0",
+          "(max_memory: Optional[dict[Union[int, str], Union[int, str]]] = None)"
+        ]
+      ]
+    },
+    "accelerate.utils:infer_auto_device_map": {
+      "file": "modelopt/torch/quantization/plugins/accelerate.py",
+      "line": 25,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "1.0.0",
+          "1.14.0"
+        ]
+      ],
+      "statuses": {
+        "1.0.0": "OK",
+        "1.6.0": "OK",
+        "1.10.0": "OK",
+        "1.12.0": "OK",
+        "1.13.0": "OK",
+        "1.14.0": "OK"
+      },
+      "signatures": {
+        "1.0.0": "(model: torch.nn.modules.module.Module, max_memory: Optional[Dict[Union[int, str], Union[int, str]]] = None, no_split_module_classes: Optional[List[str]] = None, dtype: Union[str, torch.dtype, NoneType] = None, special_dtypes: Optional[Dict[str, Union[str, torch.dtype]]] = None, verbose: bool = False, clean_result: bool = True, offload_buffers: bool = False)",
+        "1.6.0": "(model: torch.nn.modules.module.Module, max_memory: Optional[dict[Union[int, str], Union[int, str]]] = None, no_split_module_classes: Optional[list[str]] = None, dtype: Union[str, torch.dtype, NoneType] = None, special_dtypes: Optional[dict[str, Union[str, torch.dtype]]] = None, verbose: bool = False, clean_result: bool = True, offload_buffers: bool = False, fallback_allocation: bool = False)",
+        "1.10.0": "(model: torch.nn.modules.module.Module, max_memory: Optional[dict[Union[int, str], Union[int, str]]] = None, no_split_module_classes: Optional[list[str]] = None, dtype: Union[str, torch.dtype, NoneType] = None, special_dtypes: Optional[dict[str, Union[str, torch.dtype]]] = None, verbose: bool = False, clean_result: bool = True, offload_buffers: bool = False, fallback_allocation: bool = False)",
+        "1.12.0": "(model: torch.nn.modules.module.Module, max_memory: Optional[dict[Union[int, str], Union[int, str]]] = None, no_split_module_classes: Optional[list[str]] = None, dtype: Union[str, torch.dtype, NoneType] = None, special_dtypes: Optional[dict[str, Union[str, torch.dtype]]] = None, verbose: bool = False, clean_result: bool = True, offload_buffers: bool = False, fallback_allocation: bool = False)",
+        "1.13.0": "(model: torch.nn.modules.module.Module, max_memory: Optional[dict[Union[int, str], Union[int, str]]] = None, no_split_module_classes: Optional[list[str]] = None, dtype: Union[str, torch.dtype, NoneType] = None, special_dtypes: Optional[dict[str, Union[str, torch.dtype]]] = None, verbose: bool = False, clean_result: bool = True, offload_buffers: bool = False, fallback_allocation: bool = False)",
+        "1.14.0": "(model: torch.nn.modules.module.Module, max_memory: Optional[dict[Union[int, str], Union[int, str]]] = None, no_split_module_classes: Optional[list[str]] = None, dtype: Union[str, torch.dtype, NoneType] = None, special_dtypes: Optional[dict[str, Union[str, torch.dtype]]] = None, verbose: bool = False, clean_result: bool = True, offload_buffers: bool = False, fallback_allocation: bool = False)"
+      },
+      "signature_drift": [
+        [
+          "1.0.0",
+          "(model: torch.nn.modules.module.Module, max_memory: Optional[Dict[Union[int, str], Union[int, str]]] = None, no_split_module_classes: Optional[List[str]] = None, dtype: Union[str, torch.dtype, NoneType] = None, special_dtypes: Optional[Dict[str, Union[str, torch.dtype]]] = None, verbose: bool = False, clean_result: bool = True, offload_buffers: bool = False)"
+        ],
+        [
+          "1.6.0",
+          "(model: torch.nn.modules.module.Module, max_memory: Optional[dict[Union[int, str], Union[int, str]]] = None, no_split_module_classes: Optional[list[str]] = None, dtype: Union[str, torch.dtype, NoneType] = None, special_dtypes: Optional[dict[str, Union[str, torch.dtype]]] = None, verbose: bool = False, clean_result: bool = True, offload_buffers: bool = False, fallback_allocation: bool = False)"
+        ]
+      ]
+    },
+    "accelerate.utils.dataclasses:CustomDtype": {
+      "file": "modelopt/torch/quantization/plugins/accelerate.py",
+      "line": 26,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "1.0.0",
+          "1.14.0"
+        ]
+      ],
+      "statuses": {
+        "1.0.0": "OK",
+        "1.6.0": "OK",
+        "1.10.0": "OK",
+        "1.12.0": "OK",
+        "1.13.0": "OK",
+        "1.14.0": "OK"
+      },
+      "signatures": {
+        "1.0.0": "(*values)",
+        "1.6.0": "(*values)",
+        "1.10.0": "(*values)",
+        "1.12.0": "(*values)",
+        "1.13.0": "(*values)",
+        "1.14.0": "(*values)"
+      },
+      "signature_drift": null
+    },
+    "accelerate.utils.offload:PrefixedDataset": {
+      "file": "modelopt/torch/quantization/plugins/accelerate.py",
+      "line": 27,
+      "guarded": false,
+      "role": "quant",
+      "compatible_ranges": [
+        [
+          "1.0.0",
+          "1.14.0"
+        ]
+      ],
+      "statuses": {
+        "1.0.0": "OK",
+        "1.6.0": "OK",
+        "1.10.0": "OK",
+        "1.12.0": "OK",
+        "1.13.0": "OK",
+        "1.14.0": "OK"
+      },
+      "signatures": {
+        "1.0.0": "(dataset: collections.abc.Mapping, prefix: str)",
+        "1.6.0": "(dataset: collections.abc.Mapping, prefix: str)",
+        "1.10.0": "(dataset: collections.abc.Mapping, prefix: str)",
+        "1.12.0": "(dataset: collections.abc.Mapping, prefix: str)",
+        "1.13.0": "(dataset: collections.abc.Mapping, prefix: str)",
+        "1.14.0": "(dataset: collections.abc.Mapping, prefix: str)"
+      },
+      "signature_drift": null
+    }
+  },
+  "dynamic": [],
+  "env_errors": {},
+  "structural": {},
+  "known_probes": {},
+  "target": "accelerate",
+  "pypi": "accelerate"
+}
