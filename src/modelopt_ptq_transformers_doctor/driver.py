@@ -57,7 +57,8 @@ def build_matrix(records: list[ContractRecord], versions: list[str], env_runner,
             _safe(reporter.probe_done, version, res["status"])
         return cache[version]
 
-    matrix = {"versions_probed": [], "symbols": {}, "dynamic": [], "env_errors": env_errors}
+    matrix = {"versions_probed": [], "symbols": {}, "dynamic": [], "env_errors": env_errors,
+              "structural": {}, "known_probes": {}}
 
     for r in static:
         def is_ok(version: str, key: str = r.key) -> bool:
@@ -78,6 +79,42 @@ def build_matrix(records: list[ContractRecord], versions: list[str], env_runner,
             info["statuses"][v] = (
                 res["statuses"].get(r.key, res["status"]) if res["status"] == OK else res["status"]
             )
+
+    # Known historical seam probes returned by the prober (transformers target only).
+    for v, res in cache.items():
+        if res["status"] != OK:
+            continue
+        for probe in res.get("known_probes", []) or []:
+            pid = probe.get("id")
+            if not pid:
+                continue
+            entry = matrix["known_probes"].setdefault(
+                pid, {
+                    "module_path": probe.get("module_path"),
+                    "symbol": probe.get("symbol"),
+                    "note": probe.get("note", ""),
+                    "statuses": {},
+                }
+            )
+            entry["statuses"][v] = probe.get("status", "UNKNOWN")
+
+    # Structural source checks returned by the prober (transformers target only).
+    for v, res in cache.items():
+        if res["status"] != OK:
+            continue
+        for check in res.get("structural", []) or []:
+            cid = check.get("id")
+            if not cid:
+                continue
+            entry = matrix["structural"].setdefault(
+                cid, {"file": check.get("file"), "statuses": {}, "details": {}}
+            )
+            entry["statuses"][v] = check.get("status", "UNKNOWN")
+            if check.get("status") != OK:
+                entry["details"][v] = {
+                    "missing": check.get("missing", []),
+                    "reason": check.get("reason", ""),
+                }
 
     # Signatures pass: collect signatures from OK versions and detect drift.
     for r in static:

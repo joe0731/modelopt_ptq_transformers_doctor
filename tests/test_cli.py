@@ -126,6 +126,28 @@ def test_progress_on_by_default_uses_reporter(tmp_path, monkeypatch):
     assert seen["reporter"].stream is sys.stderr
 
 
+def test_progress_reporter_uses_explicit_target(tmp_path, monkeypatch):
+    monkeypatch.setattr(cli, "installed_modelopt_root", lambda: "/x")
+    monkeypatch.setattr(cli, "extract_contract", lambda root, target=None: [])
+    monkeypatch.setattr(cli, "fetch_available_versions", lambda pkg="torch": ["2.6.0"])
+    monkeypatch.setattr(cli, "select_versions", lambda available, mn, mx: ["2.6.0"])
+    monkeypatch.setattr(cli, "EnvRunner", lambda *a, **k: object())
+
+    seen = {}
+
+    def fake_build_matrix(records, versions, runner, reporter=None):
+        seen["reporter"] = reporter
+        return {"versions_probed": versions, "symbols": {}, "dynamic": [],
+                "env_errors": {}}
+
+    monkeypatch.setattr(cli, "build_matrix", fake_build_matrix)
+    rc = cli.main(["scan", "--target", "torch", "--min", "2.6.0",
+                   "--max", "2.6.0", "--out", str(tmp_path / "r")])
+    assert rc == 0
+    assert isinstance(seen["reporter"], progress_mod.ProgressReporter)
+    assert seen["reporter"].target == "torch"
+
+
 def test_target_default_is_transformers(capsys, monkeypatch, tmp_path):
     """--target defaults to transformers; out dir = doctor-report/transformers."""
     seen = {}
@@ -234,6 +256,32 @@ def test_capabilities_command(monkeypatch, capsys):
 def test_capabilities_in_parser():
     p = cli.build_arg_parser()
     assert p.parse_args(["capabilities"]).command == "capabilities"
+
+
+def test_relations_in_parser():
+    p = cli.build_arg_parser()
+    ns = p.parse_args(["relations", "--modelopt-root", "/m", "--transformers-root", "/t"])
+    assert ns.command == "relations" and ns.modelopt_root == "/m" and ns.transformers_root == "/t"
+
+
+def test_relations_command(monkeypatch, capsys, tmp_path):
+    report = {
+        "modelopt_root": "/m",
+        "transformers_root": "/t",
+        "direct_contract": {"total": 0, "quant": 0, "export": 0,
+                            "guarded": 0, "dynamic": 0, "items": []},
+        "structural": [],
+        "reverse_refs": [],
+    }
+    monkeypatch.setattr(cli, "screen_relations", lambda m, t: report)
+    monkeypatch.setattr(cli, "format_relations_report", lambda r: "relations ok")
+    out = tmp_path / "relations.json"
+    rc = cli.main(["relations", "--modelopt-root", "/m", "--transformers-root", "/t",
+                   "--out", str(out)])
+    captured = capsys.readouterr()
+    assert rc == 0
+    assert "relations ok" in captured.out
+    assert out.exists()
 
 
 def test_smoke_in_parser():
