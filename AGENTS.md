@@ -127,11 +127,9 @@ Positioning: static layers are **bulk pre-screening**; smoke is the **verdict**.
   test-first (RED baseline → write → GREEN verify).
 - **Skills:** the repo ships the `compat-report` agent skill for **Claude Code**
   (`.claude/skills/`) and **Codex** (`.codex/skills/`) — it encodes the
-  scan→report workflow; keep both copies in sync. It also vendors
-  `using-superpowers` for local Superpowers workflow activation in both agent
-  directories. The third-party `ui-ux-pro-max` design skill is vendored but
-  **git-ignored** (reinstall with `uipro init --ai claude|codex`); reports
-  render without it (CSS is baked in).
+  scan→report workflow; keep both copies in sync. The third-party
+  `ui-ux-pro-max` design skill is vendored but **git-ignored** (reinstall with
+  `uipro init --ai claude|codex`); reports render without it (CSS is baked in).
 - **Git discipline:** feature work goes on a branch (not `master` directly);
   Conventional-Commit messages; bump `pyproject.toml` version and tag `vX.Y.Z`
   on release; commit author/committer email is the GitHub noreply
