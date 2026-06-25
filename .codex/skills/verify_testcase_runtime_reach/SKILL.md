@@ -40,37 +40,72 @@ These thoughts mean you are about to overclaim:
 
 ```dot
 digraph runtime_reach {
-  rankdir=LR;
-  need [label="Need runtime reach proof", shape=box];
-  durable [label="Long-lived / CI signal?", shape=diamond];
-  level1 [label="Level 1\\nAttach existing symbol", shape=box];
-  level2 [label="Level 2\\nAdd extern C anchor", shape=box];
-  build [label="Build probeable binary", shape=box];
-  nm [label="Verify symbol with nm -D", shape=box];
-  trace [label="Run bpftrace + testcase", shape=box];
-  classify [label="Classify hit / zero / missing / untested", shape=box];
-  report [label="Record evidence + matrix", shape=box];
+  rankdir=TB;
+  node [shape=box];
 
-  need -> durable;
+  start [label="Need runtime reach proof"];
+  define [label="Define exact code point\nand expected testcase"];
+  durable [label="Long-lived / CI signal?", shape=diamond];
+  level1 [label="Level 1:\nselect existing exported symbol"];
+  level2 [label="Level 2:\nadd extern C stable anchor"];
+  build [label="Build probeable binary\nor enable anchor build"];
+  nm [label="Run nm -D --defined-only"];
+  symbol_ok [label="Symbol present?", shape=diamond];
+  stop_missing [label="STOP:\nmissing-symbol\nfix build/anchor/manifest", color=red];
+  privilege [label="Can this host run\nprivileged bpftrace?", shape=diamond];
+  stop_symbol_only [label="STOP:\nsymbol presence only\nstate = untested", color=red];
+  generate [label="Generate or write\nbpftrace uprobe program"];
+  attach [label="Attach probe and verify\nno attach error"];
+  attach_ok [label="Attach succeeded?", shape=diamond];
+  fix_probe [label="STOP:\nfix binary path / symbol / permissions", color=red];
+  run [label="Run intended testcase\nwhile probe is attached"];
+  hits [label="Raw hit count > 0?", shape=diamond];
+  hit [label="state = hit\nrecord raw count"];
+  zero [label="state = zero-hit\nrecord raw count"];
+  matrix [label="Update evidence record\nand coverage matrix"];
+  boundary [label="Report boundary:\nexecution evidence only"];
+
+  start -> define -> durable;
   durable -> level2 [label="yes"];
   durable -> level1 [label="no"];
   level1 -> build;
   level2 -> build;
-  build -> nm -> trace -> classify -> report;
+  build -> nm -> symbol_ok;
+  symbol_ok -> stop_missing [label="no"];
+  symbol_ok -> privilege [label="yes"];
+  privilege -> stop_symbol_only [label="no"];
+  privilege -> generate [label="yes"];
+  generate -> attach -> attach_ok;
+  attach_ok -> fix_probe [label="no"];
+  attach_ok -> run [label="yes"];
+  run -> hits;
+  hits -> hit [label="yes"];
+  hits -> zero [label="no"];
+  hit -> matrix;
+  zero -> matrix;
+  matrix -> boundary;
 }
 ```
 
-## Checklist
+**Do NOT skip graph nodes. Do NOT proceed from symbol presence to runtime reach
+without the privileged bpftrace branch. Do NOT report coverage until the terminal
+state is `hit`, `zero-hit`, `missing-symbol`, or `untested`.**
 
-Create a visible checklist for non-trivial investigations:
+## Graph Checklist
 
-- [ ] Define the exact code point that must be proven.
-- [ ] Choose Level 1 for one-off exploration or Level 2 for durable coverage.
-- [ ] Build with probeable flags or enable anchor builds.
-- [ ] Verify every probe symbol with `nm -D --defined-only`.
-- [ ] Run `bpftrace` while executing the intended testcase or workload.
-- [ ] Save raw hit counts and classify every probe state.
-- [ ] Report the boundary: execution evidence, not semantic correctness.
+Use the graph as the checklist. Track each completed node with its evidence:
+
+- [ ] `Define exact code point`: source location, binary, symbol, testcase.
+- [ ] `Level 1` or `Level 2`: decision reason.
+- [ ] `Build probeable binary`: build command or anchor build flag.
+- [ ] `Run nm -D --defined-only`: captured symbol-present evidence.
+- [ ] `Can this host run privileged bpftrace?`: yes/no and host constraint.
+- [ ] `Generate or write bpftrace`: exact program or generated file path.
+- [ ] `Attach probe`: attach success or failure output.
+- [ ] `Run intended testcase`: exact command.
+- [ ] `Raw hit count`: raw bpftrace output.
+- [ ] `Update evidence record`: final state for every probe.
+- [ ] `Report boundary`: state that this proves reach only, not correctness.
 
 ## Decision
 
