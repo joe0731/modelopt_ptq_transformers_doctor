@@ -7,6 +7,7 @@ import os
 import sys
 
 from . import prober
+from .capabilities import screen_modelopt, format_report
 from .contract import extract_contract, installed_modelopt_root
 from .driver import build_matrix
 from .envman import EnvRunner
@@ -31,6 +32,11 @@ def build_arg_parser() -> argparse.ArgumentParser:
                       help="disable the live progress bar / ETA output")
     scan.add_argument("--target", choices=sorted(TARGETS), default="transformers",
                       help="target package to probe (default: transformers)")
+
+    cap = sub.add_parser(
+        "capabilities",
+        help="screen modelopt PTQ export-capability gaps (static screening — verify candidates at runtime)")
+    cap.add_argument("--out", default=None, help="also write the screening report as JSON to this path")
     return parser
 
 
@@ -69,10 +75,29 @@ def _run_scan(args) -> int:
     return 0
 
 
+def _run_capabilities(args) -> int:
+    try:
+        modelopt_root = installed_modelopt_root()
+    except ModuleNotFoundError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+    report = screen_modelopt(modelopt_root)
+    print(format_report(report))
+    if args.out:
+        import json
+        os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
+        with open(args.out, "w", encoding="utf-8") as fh:
+            json.dump(report, fh, indent=2, ensure_ascii=False)
+        print(f"\nwrote {args.out}", file=sys.stderr)
+    return 0
+
+
 def main(argv=None) -> int:
     args = build_arg_parser().parse_args(argv)
     if args.command == "scan":
         return _run_scan(args)
+    if args.command == "capabilities":
+        return _run_capabilities(args)
     return 1
 
 

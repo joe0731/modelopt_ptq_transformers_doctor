@@ -215,3 +215,22 @@ def test_target_explicit(capsys, monkeypatch, tmp_path):
     assert seen["pkg"] == target.pypi
     assert seen["extra_deps"] == target.pinned_deps
     assert seen["out_dir"] == os.path.join("doctor-report", target.name)
+
+
+def test_capabilities_command(monkeypatch, capsys):
+    monkeypatch.setattr(cli, "installed_modelopt_root", lambda: "/x")
+    monkeypatch.setattr(cli, "screen_modelopt", lambda root: {
+        "export_named": ["QuantDbrxExperts"], "export_fallbacks": ["iterable experts"],
+        "quant_experts": ["_QuantDbrxExperts", "_QuantNonGatedFusedExperts"],
+        "candidates": ["_QuantNonGatedFusedExperts"],
+        "candidates_detail": [{"name": "_QuantNonGatedFusedExperts", "maybe_fallback": False}],
+        "files_found": {}})
+    rc = cli.main(["capabilities"])
+    out = capsys.readouterr().out
+    assert rc == 0
+    assert "_QuantNonGatedFusedExperts" in out and "screening" in out.lower()
+
+
+def test_capabilities_in_parser():
+    p = cli.build_arg_parser()
+    assert p.parse_args(["capabilities"]).command == "capabilities"
