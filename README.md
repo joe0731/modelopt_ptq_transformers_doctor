@@ -216,6 +216,18 @@ python report/render_combined.py report/<dir> --modelopt-version <ver>
 # → report/<dir>/index.html + index.ipynb (overview + a section per library)
 ```
 
+**Export-capability screening (`doctor capabilities`).** A separate static
+check that flags MoE expert types modelopt PTQ *quantizes* but that its HF
+export path does not explicitly support — the "quantizes but won't export"
+class (e.g. NemotronH). It is a **screening signal, not a verdict**: export
+support is a runtime predicate (named cases + structural fallbacks), so
+candidates must be verified at runtime.
+
+```bash
+doctor capabilities            # prints named/fallback/quant-handled experts + candidates to verify
+doctor capabilities --out caps.json
+```
+
 During a scan, progress is printed to **stderr**: an up-front estimate of the
 number of binary-search probes (`~LOW-N`), then a live bar showing the
 `transformers` version under test, elapsed time, and an ETA. On a
@@ -467,6 +479,16 @@ target 时,其他库会固定在已知可用的版本(尽力隔离),使失败可
 ```bash
 python report/render_combined.py report/<dir> --modelopt-version <ver>
 # → report/<dir>/index.html + index.ipynb(总览 + 每个库一节)
+```
+
+**导出能力筛查(`doctor capabilities`)。** 一个独立的静态检查,标记 modelopt PTQ
+能**量化**、但其 HF 导出路径未显式支持的 MoE experts 类型——即「能量化、却导不出」
+那一类(如 NemotronH)。这是**筛查信号,不是判定**:导出支持是运行时谓词(具名分支
++ 结构化兜底),候选项需在运行时验证。
+
+```bash
+doctor capabilities            # 打印 具名/兜底/量化已处理的 experts + 待验证候选
+doctor capabilities --out caps.json
 ```
 
 输出:
