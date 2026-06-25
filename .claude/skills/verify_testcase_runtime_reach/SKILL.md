@@ -5,6 +5,38 @@ description: Use when tests or workloads need proof that a specific C or C++ cod
 
 # verify_testcase_runtime_reach
 
+## Required Tools (Run First)
+
+Before following the flow, check which required host tools exist and record the
+result. Missing `bpftrace` means you may do symbol-presence checks only; it does
+not prove runtime reach.
+
+| Tool / package | Needed for | Existence check |
+|---|---|---|
+| Linux with uprobe support | `bpftrace` uprobe attachment | `test "$(uname -s)" = Linux` |
+| `bpftrace` | Runtime hit counts | `command -v bpftrace && bpftrace --version` |
+| `binutils` (`nm`, `c++filt`) | Exported symbol checks and demangling | `command -v nm && command -v c++filt` |
+| C/C++ build tools | Probeable debug or anchor-enabled builds | `command -v c++ || command -v clang++` |
+| `sudo` or equivalent tracing capability | Attaching uprobes on most hosts | `sudo -n true 2>/dev/null && echo sudo-ok || echo sudo-required` |
+| `rg` or `grep` | Filtering symbol lists | `command -v rg || command -v grep` |
+
+Common Linux packages: `bpftrace`, `binutils`, `ripgrep`, and a C++ build stack
+such as `build-essential` or `gcc-c++` plus the project's build system.
+
+Run this first and paste the result into the evidence record:
+
+```bash
+for tool in bpftrace nm c++filt rg grep c++ clang++; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    printf 'present %s %s\n' "$tool" "$(command -v "$tool")"
+  else
+    printf 'missing %s\n' "$tool"
+  fi
+done
+printf 'kernel %s %s\n' "$(uname -s)" "$(uname -r)"
+sudo -n true >/dev/null 2>&1 && echo 'present sudo-noninteractive' || echo 'missing sudo-noninteractive'
+```
+
 ## Overview
 
 Use `bpftrace` uprobes to prove that a test or workload reached a specific
@@ -37,6 +69,13 @@ These thoughts mean you are about to overclaim:
 - "Existing optimized C++ symbols are stable enough for CI."
 
 ## Flow
+
+Read this graph as the required execution order, not as an illustration. Start at
+`Need runtime reach proof`. Complete each box before following its outgoing edge.
+At each diamond, choose exactly one labeled edge based on observed evidence. If a
+path reaches a red `STOP` node, stop there and report that terminal state; do not
+continue to later runtime-reach claims. Only graph nodes that have produced
+evidence may be checked off in the Graph Checklist.
 
 ```dot
 digraph runtime_reach {
