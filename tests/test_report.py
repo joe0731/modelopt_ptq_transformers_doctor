@@ -120,3 +120,26 @@ def test_markdown_renders_known_probe_checks():
     assert "Known upstream seam probes" in md
     assert "legacy-modeling-utils-conv1d" in md
     assert "transformers.modeling_utils.Conv1D" in md
+
+def test_markdown_includes_affected_models_column():
+    matrix = {
+        "versions_probed": ["5.9.0"],
+        "symbols": {
+            "transformers.models.t5.modeling_t5:T5Attention": {
+                "file": "hf.py", "line": 1, "guarded": False, "role": "quant",
+                "compatible_ranges": [("5.9.0", "5.9.0")],
+                "statuses": {"5.9.0": "OK"},
+            },
+            "transformers.modeling_utils:PreTrainedModel": {
+                "file": "hf.py", "line": 2, "guarded": False, "role": "export",
+                "compatible_ranges": [("5.9.0", "5.9.0")],
+                "statuses": {"5.9.0": "OK"},
+            },
+        },
+        "dynamic": [],
+        "env_errors": {},
+    }
+    md = render_markdown(matrix)
+    assert "affected models" in md
+    assert "T5" in md
+    assert "shared / cross-family" in md

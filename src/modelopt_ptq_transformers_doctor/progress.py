@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import math
 import sys
 import time
 
@@ -10,15 +9,11 @@ import time
 def estimate_probes(n_versions: int, n_symbols: int) -> tuple[int, int]:
     """Estimated (low, high) number of unique version probes a scan performs.
 
-    high == n_versions (a version is never installed twice — the driver caches
-    per version). low ~= one symbol's bisection cost (an anchor sample of <=5
-    points plus two edge binary searches); runs usually land near low because
-    symbols share the cache.
+    The guarded search validates every selected version at most once and caches
+    results across symbols, so both bounds are the selected version count.
+    ``n_symbols`` is kept for API compatibility with older callers.
     """
-    if n_versions <= 1:
-        return (n_versions, n_versions)
-    low = min(n_versions, 5 + 2 * math.ceil(math.log2(n_versions)))
-    return (low, n_versions)
+    return (max(n_versions, 0), max(n_versions, 0))
 
 
 def format_duration(seconds: float) -> str:
@@ -88,8 +83,8 @@ class ProgressReporter(NullProgress):
         low, high = estimate_probes(n_versions, n_symbols)
         self._emit(
             f"search space: {n_versions} versions | "
-            f"est. binary-search probes: ~{low}-{high} "
-            f"(cached; usually near {low})\n"
+            f"validated version probes: {low}-{high} "
+            f"(cached across symbols)\n"
         )
 
     def probe_start(self, version: str) -> None:

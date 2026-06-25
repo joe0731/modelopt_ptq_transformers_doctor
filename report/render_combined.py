@@ -70,7 +70,7 @@ def _overview_html(targets_data: list[tuple[str, dict, dict, list[str]]]) -> str
         "<h2>Overview</h2>"
         "<table><thead><tr>"
         "<th>target</th><th>version range</th><th>#probed</th>"
-        "<th>symbols</th><th>with_window</th><th>drift</th><th>env_errors</th>"
+        "<th>symbols</th><th>with_ranges</th><th>drift</th><th>env_errors</th>"
         "</tr></thead>"
         f"<tbody>{''.join(rows)}</tbody></table>"
     )
@@ -157,7 +157,7 @@ def build_combined(report_dir: str, modelopt_version: str, generated: str, outdi
 
     # Title + overview table cell
     overview_md_rows = [
-        "| target | version range | #probed | symbols | with_window | drift | env_errors |",
+        "| target | version range | #probed | symbols | with_ranges | drift | env_errors |",
         "|---|---|:--:|:--:|:--:|:--:|:--:|",
     ]
     for target, matrix, s, all_versions in targets_data:
@@ -195,15 +195,15 @@ def build_combined(report_dir: str, modelopt_version: str, generated: str, outdi
 
         # Per-symbol table
         sym_rows = [
-            "| symbol | role | compatible window (inferred) | support |",
-            "|---|---|---|:--:|",
+            "| symbol | affected models | role | compatible ranges (validated) | support |",
+            "|---|---|---|---|:--:|",
         ]
         for key, info in symbols:
             win = R.range_str(info["compatible_ranges"])
             win = "**never**" if win == "never" else win
             frac = sum(1 for v in probed if info["statuses"].get(v) == "OK") / len(probed) if probed else 0.0
             emoji = "🟩" if frac == 1 else ("🟥" if frac == 0 else "🟨")
-            sym_rows.append(f"| `{key}` | {info['role']} | {win} | {emoji} |")
+            sym_rows.append(f"| `{key}` | {R.affected_models(key)} | {info['role']} | {win} | {emoji} |")
 
         grid_rows = [
             "| symbol | " + " | ".join(minors) + " |",

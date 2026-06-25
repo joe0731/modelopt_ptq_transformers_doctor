@@ -4,8 +4,8 @@
 * ``compatibility.html`` — a polished, colour-graded standalone page, and
 * ``compatibility.ipynb`` — a clean, results-only notebook (markdown only).
 
-Each probed version is shown as yes / no; in-range versions the bisection did
-not probe are shown as N/A. Stdlib only (plus ``packaging``); the page styling
+Each probed version is shown as yes / no; in-range versions not directly
+probed are shown as N/A. Stdlib only (plus ``packaging``); the page styling
 lives in ``assets/compat.css`` and is inlined at build time.
 
 Usage:
@@ -51,6 +51,38 @@ def short(key: str) -> str:
 def minor(v: str) -> str:
     p = v.split(".")
     return ".".join(p[:2]) if len(p) >= 2 else v
+
+
+_MODEL_LABELS = {
+    "dbrx": "DBRX",
+    "gpt_oss": "GPT-OSS",
+    "llama4": "Llama 4",
+    "mixtral": "Mixtral",
+    "nemotron_h": "Nemotron-H",
+    "qwen3_5_moe": "Qwen3.5 MoE",
+    "qwen3_moe": "Qwen3 MoE",
+    "qwen3_vl_moe": "Qwen3 VL MoE",
+    "t5": "T5",
+}
+
+
+def affected_models(key: str) -> str:
+    module_path = key.split(":", 1)[0]
+    parts = module_path.split(".")
+    if "models" in parts:
+        idx = parts.index("models")
+        if idx + 1 < len(parts):
+            family = parts[idx + 1]
+            return _MODEL_LABELS.get(family, family.replace("_", " ").title())
+    if module_path.startswith("transformers"):
+        return "shared / cross-family"
+    if module_path.startswith("torch"):
+        return "all torch-backed models"
+    if module_path.startswith("vllm"):
+        return "vLLM serving path"
+    if module_path.startswith("accelerate"):
+        return "accelerate loading/offload path"
+    return "unknown"
 
 
 def range_str(ranges) -> str:
@@ -210,7 +242,7 @@ def _support_bar(frac: float) -> str:
 def _cards(s: dict) -> str:
     items = [
         (s["symbols"], "dependency symbols"),
-        (s["with_window"], "with a compatible window"),
+        (s["with_window"], "with compatible ranges"),
         (s["never"], "never compatible"),
         (s["drift"], "signature drift ⚇"),
         (s["dynamic"], "dynamic (unchecked)"),
@@ -228,7 +260,7 @@ def _probed_block(probed: list[str], all_versions: list[str]) -> str:
     return (
         f"<details open class='probed'><summary><b>{len(probed)}</b> of {len(all_versions)} "
         "in-range releases were <b>actually probed</b> — the rest are <b>N/A</b> "
-        "(inferred from the window, not tested)</summary>"
+        "(not directly tested)</summary>"
         f"<div class='chips'><b>✓ probed ({len(probed)}):</b> {probed_chips}</div>{na_row}</details>"
     )
 
@@ -245,19 +277,19 @@ def _coverage(probed: list[str], all_versions: list[str]) -> str:
 def _per_symbol_table(symbols, probed: list[str]) -> str:
     rows = []
     for key, info in symbols:
-        drift = ("<span class='tag drift' title='signature changed within window'>⚇ drift</span>"
+        drift = ("<span class='tag drift' title='signature changed within compatible ranges'>⚇ drift</span>"
                  if info.get("signature_drift") else "")
         guard = "<span class='tag guard'>🛡</span>" if info["guarded"] else ""
         win = ("<span class='never'>never</span>" if not info["compatible_ranges"]
                else esc(range_str(info["compatible_ranges"])))
         rows.append(
             f"<tr><td class='sym'><code>{esc(key)}</code> {guard}{drift}</td>"
-            f"<td>{esc(info['role'])}</td><td>{win}</td>"
+            f"<td>{esc(affected_models(key))}</td><td>{esc(info['role'])}</td><td>{win}</td>"
             f"<td class='supcell'>{_support_bar(support_frac(info, probed))}</td></tr>"
         )
-    return ("<h2>Per-symbol compatibility <small>(window is inferred from the probed sample)</small></h2>"
-            "<table><thead><tr><th>symbol</th><th>role</th>"
-            "<th>compatible window <small>(inferred)</small></th><th>support</th></tr></thead>"
+    return ("<h2>Per-symbol compatibility <small>(ranges are validated from probed versions)</small></h2>"
+            "<table><thead><tr><th>symbol</th><th>affected models</th><th>role</th>"
+            "<th>compatible ranges <small>(validated)</small></th><th>support</th></tr></thead>"
             f"<tbody>{''.join(rows)}</tbody></table>")
 
 
@@ -301,7 +333,7 @@ def _drift_section(symbols) -> str:
                 body = "<div class='cz'>(reordered / formatting only)</div>"
             steps.append(f"<div class='step'>{vhead}{body}</div>")
         items.append(f"<li><code>{esc(k)}</code>{''.join(steps)}</li>")
-    return ("<h2>⚇ Signature changes <small>(within the compatible window — what actually changed)"
+    return ("<h2>⚇ Signature changes <small>(within compatible ranges — what actually changed)"
             "</small></h2><ul class='drift'>" + "".join(items) + "</ul>")
 
 
@@ -370,7 +402,7 @@ def build_html(matrix: dict, modelopt_version: str, generated: str, all_versions
    &nbsp;·&nbsp; {len(probed)} versions probed &nbsp;·&nbsp; generated {esc(generated)}</div>
 </header>
 <main>
-  <div class="note">{_coverage(probed, all_versions)} The <b>compatible</b> window is the authoritative per-symbol result.</div>
+  <div class="note">{_coverage(probed, all_versions)} Compatible ranges are built only from directly probed OK versions.</div>
   {_cards(s)}
   {body}
 </main>
@@ -417,13 +449,13 @@ def build_ipynb(matrix: dict, modelopt_version: str, generated: str, all_version
                 f"**{len(probed)}** of {len(all_versions)} in-range releases were probed directly; "
                 f"the other **{len(na)}** are N/A (not tested).")
 
-    tbl = ["| symbol | role | compatible window (inferred) | support | |",
-           "|---|---|---|:--:|:--:|"]
+    tbl = ["| symbol | affected models | role | compatible ranges (validated) | support | |",
+           "|---|---|---|---|:--:|:--:|"]
     for key, info in symbols:
         win = range_str(info["compatible_ranges"])
         win = "**never**" if win == "never" else win
-        tbl.append(f"| `{key}` | {info['role']} | {win} | {_nb_support_emoji(info, probed)} "
-                   f"| {'⚇' if info.get('signature_drift') else ''} |")
+        tbl.append(f"| `{key}` | {affected_models(key)} | {info['role']} | {win} | "
+                   f"{_nb_support_emoji(info, probed)} | {'⚇' if info.get('signature_drift') else ''} |")
 
     grid = ["| symbol | " + " | ".join(minors) + " |",
             "|---|" + "|".join([":--:"] * len(minors)) + "|"]
@@ -468,19 +500,19 @@ def build_ipynb(matrix: dict, modelopt_version: str, generated: str, all_version
             f"| **{s['symbols']}** | {s['with_window']} | {s['never']} | {s['drift']} | "
             f"{s['dynamic']} | {s['env_errors']} |"),
         _md("## Versions actually probed",
-            f"Bisection directly tested **{len(probed)}** of **{len(all_versions)}** stable "
-            f"releases in `{lo}`–`{hi}`. The compatible window is **inferred** from these "
-            "samples — versions marked N/A below were **not** tested.", "",
+            f"The guarded validation scan directly tested **{len(probed)}** of **{len(all_versions)}** stable "
+            f"releases in `{lo}`–`{hi}`. Compatible ranges are built only from "
+            "tested versions; versions marked N/A below were **not** tested.", "",
             "**✓ probed:** " + ", ".join(f"`{v}`" for v in probed), "",
             ("**– N/A (not tested):** " + ", ".join(f"`{v}`" for v in na)) if na
             else "_All in-range releases were probed._"),
         _md("## Per-symbol compatibility", "",
-            "The **compatible window** is the authoritative result; **support** is "
+            "The **compatible ranges** are validated from probed versions; **support** is "
             "🟩 full · 🟨 partial · 🟥 never across probed versions.", "", *tbl),
         _md("## Support grid <sub>(by minor version)</sub>", "",
             "🟩 yes · 🟨 partial / symbol missing · 🟥 no / module missing · ⬜ N/A", "", *grid),
         _md("## ⚇ Signature changes",
-            "*A symbol that still imports but whose signature changed within its window — "
+            "*A symbol that still imports but whose signature changed within compatible ranges — "
             "the \"imports fine, breaks at runtime\" risk.*", "", *drift_lines),
         _md("## ✗ Never compatible", "*Architecture absent from this transformers range.*", "",
             *never_lines),

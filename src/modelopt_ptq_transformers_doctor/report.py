@@ -10,6 +10,42 @@ _MARK = {"OK": "✅", "MISSING_SYMBOL": "⚠️", "MISSING_MODULE": "❌",
          "ENV_ERROR": "🛠", "PROBE_ERROR": "💥"}
 
 
+_MODEL_LABELS = {
+    "dbrx": "DBRX",
+    "gpt_oss": "GPT-OSS",
+    "llama4": "Llama 4",
+    "mixtral": "Mixtral",
+    "nemotron_h": "Nemotron-H",
+    "qwen3_5_moe": "Qwen3.5 MoE",
+    "qwen3_moe": "Qwen3 MoE",
+    "qwen3_vl_moe": "Qwen3 VL MoE",
+    "t5": "T5",
+}
+
+
+def affected_models(key: str) -> str:
+    """Best-effort model-family hint from a dependency symbol key.
+
+    This is a static source-location hint, not a runtime verdict.
+    """
+    module_path = key.split(":", 1)[0]
+    parts = module_path.split(".")
+    if "models" in parts:
+        idx = parts.index("models")
+        if idx + 1 < len(parts):
+            family = parts[idx + 1]
+            return _MODEL_LABELS.get(family, family.replace("_", " ").title())
+    if module_path.startswith("transformers"):
+        return "shared / cross-family"
+    if module_path.startswith("torch"):
+        return "all torch-backed models"
+    if module_path.startswith("vllm"):
+        return "vLLM serving path"
+    if module_path.startswith("accelerate"):
+        return "accelerate loading/offload path"
+    return "unknown"
+
+
 def _range_str(ranges) -> str:
     if not ranges:
         return "never"
@@ -21,9 +57,9 @@ def render_markdown(matrix: dict) -> str:
     target_label = matrix.get("target", "transformers")
     lines = [f"# modelopt PTQ ↔ {target_label} compatibility matrix", ""]
 
-    lines.append("> Version columns show only the versions the bisection actually probed "
-                 "(a sample, not every version in range). "
-                 "The **compatible** column is the authoritative result.")
+    lines.append("> Version columns show versions actually probed by the guarded validation scan. "
+                 "The **compatible** column is the authoritative set of tested OK ranges; "
+                 "untested versions must stay N/A in rendered artifacts.")
     lines.append("")
 
     if matrix.get("env_errors"):
@@ -32,14 +68,14 @@ def render_markdown(matrix: dict) -> str:
                      + ". Compatible ranges adjacent to these versions may be understated.")
         lines.append("")
 
-    header = "| symbol | role | compatible | " + " | ".join(versions) + " |"
-    sep = "|---|---|---|" + "---|" * len(versions)
+    header = "| symbol | affected models | role | compatible | " + " | ".join(versions) + " |"
+    sep = "|---|---|---|---|" + "---|" * len(versions)
     lines += [header, sep]
     for key, info in sorted(matrix["symbols"].items()):
         cells = [_MARK.get(info["statuses"].get(v, ""), "·") for v in versions]
         guard = " 🛡" if info["guarded"] else ""
         drift = " ⚇" if info.get("signature_drift") else ""
-        lines.append(f"| `{key}`{guard}{drift} | {info['role']} | "
+        lines.append(f"| `{key}`{guard}{drift} | {affected_models(key)} | {info['role']} | "
                      f"{_range_str(info['compatible_ranges'])} | " + " | ".join(cells) + " |")
 
     dyn = matrix.get("dynamic", [])
@@ -82,14 +118,14 @@ def render_markdown(matrix: dict) -> str:
     drifts = [(k, info) for k, info in sorted(matrix["symbols"].items())
               if info.get("signature_drift")]
     if drifts:
-        lines += ["", "## Signature changes (within compatible window)", ""]
+        lines += ["", "## Signature changes (within compatible ranges)", ""]
         for k, info in drifts:
             trail = " → ".join(f"{v} `{fp}`" for v, fp in info["signature_drift"])
             lines.append(f"- `{k}`: {trail}")
 
     lines += ["", "Legend: ✅ OK · ⚠️ symbol missing · ❌ module missing · "
               "🛠 env error · 💥 probe error · 🛡 import is try/except-guarded · "
-              "⚇ signature changed within compatible window", ""]
+              "⚇ signature changed within compatible ranges", ""]
     return "\n".join(lines)
 
 

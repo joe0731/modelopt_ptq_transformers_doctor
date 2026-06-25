@@ -1,5 +1,4 @@
 # tests/test_progress.py
-import math
 from modelopt_ptq_transformers_doctor import progress
 from modelopt_ptq_transformers_doctor.progress import ProgressReporter, NullProgress
 
@@ -7,12 +6,8 @@ from modelopt_ptq_transformers_doctor.progress import ProgressReporter, NullProg
 def test_estimate_probes_bounds():
     assert progress.estimate_probes(0, 3) == (0, 0)
     assert progress.estimate_probes(1, 3) == (1, 1)
-    # high is always n_versions; low never exceeds high
     for n in (2, 10, 130):
-        low, high = progress.estimate_probes(n, 5)
-        assert high == n
-        assert 1 <= low <= n
-        assert low == min(n, 5 + 2 * math.ceil(math.log2(n)))
+        assert progress.estimate_probes(n, 5) == (n, n)
 
 
 def test_format_duration():
@@ -100,7 +95,7 @@ def test_non_tty_logs_one_line_per_probe():
     r.finish()
     text = stream.text
     assert "search space: 2 versions" in text
-    assert "est. binary-search probes:" in text
+    assert "validated version probes:" in text
     assert "transformers==4.50.0  OK" in text
     assert "transformers==4.51.0  ENV_ERROR" in text
     assert "\r" not in text  # non-TTY never uses carriage returns

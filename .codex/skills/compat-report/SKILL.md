@@ -38,8 +38,8 @@ throwaway `uv` virtualenv. So the target modelopt only needs its source on disk
    ```
 
 3. **Scan each target up to its newest release so the upper bound is real.** The
-   compatible window is **clamped to the scanned range**, so a low `--max`
-   understates it. Use `--target` (default `transformers`) and route each target
+   compatible ranges are **clamped to the scanned range**, so a low `--max`
+   understates later break/fix behaviour. Use `--target` (default `transformers`) and route each target
    to its own subdir `report/modelopt<XX>/<target>/`:
    ```bash
    DR=/tmp/doctor-<ver>/bin/doctor
@@ -74,7 +74,7 @@ throwaway `uv` virtualenv. So the target modelopt only needs its source on disk
 
 ## Report invariants (keep when editing `report/render_compat.py`)
 
-- **Window is inferred** from a bisection *sample* — show probed vs **N/A**
+- **Ranges are validated from directly probed versions** — show probed vs **N/A**
   versions explicitly; N/A = not tested, and is never coloured as compatible.
 - Support grid: one column per **feature (minor) version**, colour-graded, with
   **full symbol names**.

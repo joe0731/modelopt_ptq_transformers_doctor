@@ -34,3 +34,33 @@ def test_two_disjoint_windows_via_fallback():
     # Anchor sample (ends/mid/quartiles) misses both windows -> full-scan fallback.
     ok = {"4.41", "4.58"}
     assert compatible_ranges(V, lambda v: v in ok) == [("4.41", "4.41"), ("4.58", "4.58")]
+
+def test_break_then_fix_after_ok_anchor_is_split():
+    versions = ["5.8", "5.9", "5.10", "5.11", "5.12"]
+    ok = {"5.8", "5.9", "5.11", "5.12"}
+    assert compatible_ranges(versions, lambda v: v in ok) == [
+        ("5.8", "5.9"),
+        ("5.11", "5.12"),
+    ]
+
+
+def test_break_inside_candidate_window_is_validated():
+    versions = [f"5.{m}" for m in range(8, 17)]
+    ok = set(versions) - {"5.13"}
+    assert compatible_ranges(versions, lambda v: v in ok) == [
+        ("5.8", "5.12"),
+        ("5.14", "5.16"),
+    ]
+
+
+def test_safety_validation_probes_every_selected_version():
+    calls = []
+    versions = ["5.8", "5.9", "5.10", "5.11", "5.12"]
+    ok = {"5.8", "5.9", "5.11", "5.12"}
+
+    def is_ok(version):
+        calls.append(version)
+        return version in ok
+
+    compatible_ranges(versions, is_ok)
+    assert set(calls) == set(versions)

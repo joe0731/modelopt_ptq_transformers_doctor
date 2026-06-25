@@ -22,3 +22,18 @@ def test_combined_has_section_per_target(tmp_path):
     assert "torch" in html and "accelerate" in html and "Overview" in html
     nb = json.loads((tmp_path / "index.ipynb").read_text())
     assert sum(1 for c in nb["cells"] if c["cell_type"] == "code") == 0
+
+def test_combined_notebook_includes_affected_models(tmp_path):
+    (tmp_path / "transformers").mkdir()
+    data = _matrix(["5.9.0"], "transformers.models.t5.modeling_t5:T5Attention")
+    data["target"] = "transformers"
+    data["pypi"] = "transformers"
+    (tmp_path / "transformers" / "matrix.json").write_text(json.dumps(data))
+    rc.build_combined(str(tmp_path), "0.46.0", "2026-06-25")
+    html = (tmp_path / "index.html").read_text()
+    assert "affected models" in html
+    assert "T5" in html
+    nb = json.loads((tmp_path / "index.ipynb").read_text())
+    src = "".join("".join(c["source"]) for c in nb["cells"])
+    assert "affected models" in src
+    assert "T5" in src

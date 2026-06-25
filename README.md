@@ -44,8 +44,8 @@ version window where it imports cleanly, plus signature drift.
 4. **Probe** — for each candidate version a throwaway [`uv`](https://docs.astral.sh/uv/)
    virtualenv is created, `transformers==<version>` (plus `torch`) is installed,
    and a stdlib-only prober imports each symbol inside that env (`envman.py`,
-   `prober.py`). A binary search finds each symbol's compatible window
-   (`version_bisect.py`).
+   `prober.py`). `version_bisect.py` uses a binary-search seed for early edge
+   discovery, then validates the selected range so break/fix releases are not missed.
 5. **Report** — results are written as JSON + Markdown (`report.py`).
 
 > **Trust boundary:** this tool creates virtualenvs and **installs and imports
@@ -71,7 +71,7 @@ flowchart TD
     discover --> select["Select search space<br/>versions.select_versions<br/><i>--min / --max / --pypi</i>"]
     select --> orchestrate["Orchestrate&nbsp;(driver.build_matrix)"]
 
-    orchestrate --> bisect["For each symbol: binary search<br/>version_bisect.compatible_ranges"]
+    orchestrate --> bisect["For each symbol: guarded validation search<br/>version_bisect.compatible_ranges"]
 
     subgraph probing["Lazy, cached probing"]
       bisect -->|"is this symbol OK at version v?"| cache_check{"v in cache?"}
@@ -130,28 +130,55 @@ flowchart TD
     status_ok --> fingerprint["capture signature fingerprint<br/><i>inspect.signature, else type name</i>"]
 ```
 
-### 4. Bisection & caching — which versions actually get installed
+### 4. Guarded validation & caching — which versions actually get installed
 
 *`build_matrix` drives `version_bisect` per symbol; `is_ok(v)` is served from a
-per-version cache, so each version is installed at most once across the scan.*
+per-version cache, so each version is installed at most once across the scan.
+The search uses a binary seed, then validates the selected range before reporting
+compatible ranges.*
 
 ```mermaid
 flowchart TD
-    drive["driver.build_matrix<br/>for each symbol"] --> search["version_bisect.compatible_ranges<br/><i>binary search picks a version v</i>"]
+    drive["driver.build_matrix<br/>for each symbol"] --> search["version_bisect.compatible_ranges<br/><i>seed with bisection, validate selected versions</i>"]
     search --> ask{"is_ok(v) → probe(v)<br/>v already in per-version cache?"}
     ask -->|hit| reuse["reuse cached statuses<br/><i>no install</i>"]
     ask -->|miss| install["envman.probe_version(v)<br/><i>install v once · fires progress</i>"]
     install --> store["store statuses in cache"]
     store --> verdict["return OK / not-OK to the search"]
     reuse --> verdict
-    verdict -->|search continues| search
-    verdict -->|window found| window["compatible window [lo, hi]"]
-    window --> note["REPORT.md per-version columns = probed sample;<br/>compatible column = authoritative window"]
+    verdict -->|seed continues| search
+    verdict --> validate["safety validation pass<br/><i>probe every selected version once</i>"]
+    validate --> split["split contiguous OK runs"]
+    split --> window["compatible ranges [lo, hi], ..."]
+    window --> note["REPORT.md per-version columns = probed versions;<br/>compatible column = validated OK ranges"]
+```
+
+ASCII strategy workflow (break/fix safe):
+
+```text
+Selected releases:  5.8   5.9   5.10  5.11  5.12
+Actual outcome:     OK    OK    FAIL  OK    OK
+
+Pure bisection risk:
+  1. find an OK anchor around 5.9
+  2. search right edge and hit first FAIL at 5.10
+  3. report only 5.8-5.9
+  4. miss the fixed 5.11-5.12 window
+
+Guarded validation strategy used here:
+  1. seed: probe endpoints / quartiles / midpoint
+  2. left side: binary-search a tentative first OK before the anchor
+  3. right side: binary-search a tentative first break after the anchor
+  4. safety pass: continue validating every selected version once
+  5. split: build ranges only from contiguous probed OK runs
+
+Validated result:   5.8-5.9, 5.11-5.12
+N/A rule:           any unprobed version stays N/A; it is never colored OK
 ```
 
 > The report (`report.py`) writes `matrix.json` (full) + `REPORT.md`. Guarded
 > imports are marked 🛡, dynamic registrations listed separately, symbols whose
-> signature changed across the window are marked ⚇ (detailed in a **Signature
+> signature changed across compatible ranges are marked ⚇ (detailed in a **Signature
 > changes** section), and any `ENV_ERROR` version is flagged as a caveat
 > (adjacent ranges may be understated).
 
@@ -254,7 +281,7 @@ doctor smoke-matrix --model <hf-id> --modelopt nvidia-modelopt==0.44.0 \
 ```
 
 During a scan, progress is printed to **stderr**: an up-front estimate of the
-number of binary-search probes (`~LOW-N`), then a live bar showing the
+number of validated version probes (`N-N`), then a live bar showing the
 `transformers` version under test, elapsed time, and an ETA. On a
 non-interactive stream (pipe / CI) it logs one line per probed version instead.
 Use `--no-progress` to silence it.
@@ -264,7 +291,7 @@ Output:
 - `doctor-report/matrix.json` — machine-readable matrix (each symbol also
   carries `signatures` per version and a `signature_drift` list)
 - `doctor-report/REPORT.md` — human-readable matrix; the **compatible** column
-  is the authoritative per-symbol version window. A `⚇` marks symbols whose
+  contains validated per-symbol OK ranges. A `⚇` marks symbols whose
   signature changed across that window, with the transitions listed in a
   **Signature changes** section.
 
@@ -345,8 +372,8 @@ modelopt 的 PTQ 流水线(init / 模块替换 → 量化 → 导出)会调用 `
    `--min`/`--max` 过滤区间。
 4. **探测** —— 对每个候选版本创建一个一次性的 [`uv`](https://docs.astral.sh/uv/)
    虚拟环境,安装 `transformers==<version>`(及 `torch`),并在该环境中用仅依赖
-   标准库的 prober 导入每个符号(`envman.py`、`prober.py`)。二分查找定位每个
-   符号的兼容区间(`version_bisect.py`)。
+   标准库的 prober 导入每个符号(`envman.py`、`prober.py`)。`version_bisect.py`
+   先用二分做 seed 与边界预热,再验证选中范围,避免漏掉 break 后又修复的版本。
 5. **报告** —— 结果输出为 JSON + Markdown(`report.py`)。
 
 > **信任边界:** 本工具会创建虚拟环境并**安装、导入第三方包**(`transformers`、
@@ -369,7 +396,7 @@ flowchart TD
     discover --> select["选择搜索空间<br/>versions.select_versions<br/><i>--min / --max / --pypi</i>"]
     select --> orchestrate["编排&nbsp;(driver.build_matrix)"]
 
-    orchestrate --> bisect["对每个符号做二分查找<br/>version_bisect.compatible_ranges"]
+    orchestrate --> bisect["对每个符号做带保护的验证查找<br/>version_bisect.compatible_ranges"]
 
     subgraph probing["惰性 + 带缓存的探测"]
       bisect -->|"该符号在版本 v 上是否 OK?"| cache_check{"v 已缓存?"}
@@ -427,27 +454,53 @@ flowchart TD
     status_ok --> fingerprint["采集签名指纹<br/><i>inspect.signature,否则取类型名</i>"]
 ```
 
-### 4. 二分与缓存 —— 实际会安装哪些版本
+### 4. 带保护的验证查找与缓存 —— 实际会安装哪些版本
 
 *`build_matrix` 对每个符号驱动 `version_bisect`;`is_ok(v)` 由按版本缓存提供,
-因此整次扫描中每个版本最多只安装一次。*
+因此整次扫描中每个版本最多只安装一次。查找先用二分做 seed,再验证选中范围,
+最后只用真实探测为 OK 的连续区间生成兼容范围。*
 
 ```mermaid
 flowchart TD
-    drive["driver.build_matrix<br/>对每个符号"] --> search["version_bisect.compatible_ranges<br/><i>二分查找选中某版本 v</i>"]
+    drive["driver.build_matrix<br/>对每个符号"] --> search["version_bisect.compatible_ranges<br/><i>二分 seed,再验证选中版本</i>"]
     search --> ask{"is_ok(v) → probe(v)<br/>v 是否已在按版本缓存中?"}
     ask -->|命中| reuse["复用缓存的 statuses<br/><i>不安装</i>"]
     ask -->|未命中| install["envman.probe_version(v)<br/><i>只安装一次 v · 触发进度</i>"]
     install --> store["把 statuses 写入缓存"]
     store --> verdict["把 OK / 非 OK 返回给查找"]
     reuse --> verdict
-    verdict -->|查找继续| search
-    verdict -->|找到区间| window["兼容区间 [lo, hi]"]
-    window --> note["REPORT.md 逐版本列 = 被探测的采样;<br/>compatible 列 = 权威区间"]
+    verdict -->|seed 继续| search
+    verdict --> validate["安全验证 pass<br/><i>每个选中版本最多探测一次</i>"]
+    validate --> split["切分连续 OK 段"]
+    split --> window["兼容范围 [lo, hi], ..."]
+    window --> note["REPORT.md 逐版本列 = 已探测版本;<br/>compatible 列 = 已验证 OK 范围"]
+```
+
+ASCII 策略演示(防止漏掉 break/fix):
+
+```text
+选中版本:       5.8   5.9   5.10  5.11  5.12
+真实结果:       OK    OK    FAIL  OK    OK
+
+纯二分风险:
+  1. 在 5.9 附近找到 OK anchor
+  2. 向右找边界时在 5.10 遇到第一个 FAIL
+  3. 只报告 5.8-5.9
+  4. 漏掉后来修复的 5.11-5.12
+
+当前带保护策略:
+  1. seed: 探测端点 / 四分位 / 中点
+  2. 左侧: 二分找 anchor 左边的临时 first OK
+  3. 右侧: 二分找 anchor 右边的临时 first break
+  4. safety pass: 继续验证每个选中版本,全局缓存避免重复安装
+  5. split: 只根据真实探测 OK 的连续段生成范围
+
+验证后结果:     5.8-5.9, 5.11-5.12
+N/A 规则:       未探测版本保持 N/A,绝不涂成 OK
 ```
 
 > 报告(`report.py`)写出 `matrix.json`(完整)与 `REPORT.md`。guarded 导入标
-> 🛡,dynamic 注册单独列出,签名在区间内变化的符号标 ⚇(并在 **Signature
+> 🛡,dynamic 注册单独列出,签名在兼容范围内变化的符号标 ⚇(并在 **Signature
 > changes** 小节列出),任何 `ENV_ERROR` 版本都会被标注为注意事项(其相邻区间
 > 可能被低估)。
 
