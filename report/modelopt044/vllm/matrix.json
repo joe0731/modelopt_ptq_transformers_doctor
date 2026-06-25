@@ -393,6 +393,8 @@
     "0.10.1.1": "PROBE_ERROR",
     "0.10.2": "PROBE_ERROR"
   },
+  "structural": {},
+  "known_probes": {},
   "target": "vllm",
   "pypi": "vllm"
 }

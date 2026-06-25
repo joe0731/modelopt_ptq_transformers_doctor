@@ -1,4 +1,4 @@
-# modelopt PTQ ↔ transformers compatibility matrix
+# modelopt PTQ ↔ torch compatibility matrix
 
 > Version columns show only the versions the bisection actually probed (a sample, not every version in range). The **compatible** column is the authoritative result.
 

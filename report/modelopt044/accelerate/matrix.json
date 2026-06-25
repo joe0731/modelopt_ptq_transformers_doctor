@@ -283,6 +283,8 @@
   },
   "dynamic": [],
   "env_errors": {},
+  "structural": {},
+  "known_probes": {},
   "target": "accelerate",
   "pypi": "accelerate"
 }

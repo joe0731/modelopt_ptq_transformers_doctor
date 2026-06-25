@@ -2796,6 +2796,8 @@
     "2.1.2": "ENV_ERROR",
     "2.1.1": "ENV_ERROR"
   },
+  "structural": {},
+  "known_probes": {},
   "target": "torch",
   "pypi": "torch"
 }

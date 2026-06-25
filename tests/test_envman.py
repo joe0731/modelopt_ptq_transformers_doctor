@@ -30,6 +30,27 @@ def test_successful_probe_returns_statuses():
     assert res["statuses"] == {"json:dumps": "OK"}
 
 
+def test_successful_probe_preserves_known_probe_results():
+    out = json.dumps({
+        "transformers_version": "4.50.0",
+        "statuses": {"json:dumps": "OK"},
+        "known_probes": [{
+            "id": "legacy-modeling-utils-conv1d",
+            "module_path": "transformers.modeling_utils",
+            "symbol": "Conv1D",
+            "status": "MISSING_SYMBOL",
+        }],
+    })
+    runner = EnvRunner(PROBER, runner=_fake_run_factory(probe_stdout=out))
+    res = runner.probe_version("4.50.0", RECORDS)
+    assert res["known_probes"] == [{
+        "id": "legacy-modeling-utils-conv1d",
+        "module_path": "transformers.modeling_utils",
+        "symbol": "Conv1D",
+        "status": "MISSING_SYMBOL",
+    }]
+
+
 def test_install_failure_returns_env_error():
     runner = EnvRunner(PROBER, runner=_fake_run_factory(install_rc=1))
     res = runner.probe_version("9.9.9", RECORDS)

@@ -64,7 +64,8 @@ class EnvRunner:
             return {"status": "OK", "installed": out.get("transformers_version"),
                     "statuses": out.get("statuses", {}),
                     "signatures": out.get("signatures", {}),
-                    "structural": out.get("structural", [])}
+                    "structural": out.get("structural", []),
+                    "known_probes": out.get("known_probes", [])}
 
 
 class SmokeEnvRunner:
