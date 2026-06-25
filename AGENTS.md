@@ -146,6 +146,10 @@ doctor capabilities [--out caps.json]
 doctor smoke --model <hf-id|path> --recipe FP8_DEFAULT_CFG --device cuda \
              [--trust-remote-code] [--out smoke.json]
 
+# Runtime verdict across a target library's versions (per-version isolated envs)
+doctor smoke-matrix --model <hf-id> --modelopt nvidia-modelopt==X.Y.Z \
+                    --target transformers --min A --max B --recipe FP8_DEFAULT_CFG
+
 # Render reports from a matrix.json / report dir
 python report/render_compat.py   <dir>/matrix.json --modelopt-version V --outdir <dir>
 python report/render_combined.py <reportdir> --modelopt-version V
@@ -155,9 +159,10 @@ python report/render_combined.py <reportdir> --modelopt-version V
 
 - The static layer is import + signature + export-capability **screening**, not a
   runtime verdict. Reproducing a specific model's failure needs `doctor smoke`
-  with that checkpoint on a GPU host.
-- `doctor smoke` currently runs in one interpreter; a **smoke × version matrix**
-  (run the probe across library versions in isolated envs, like `scan`) is the
-  natural follow-on.
+  (single) or `doctor smoke-matrix` (per-version) with that checkpoint on a GPU host.
+- `doctor smoke-matrix` installs real modelopt + torch + the target per version —
+  heavy and GPU-bound; run it on a cluster, not in CI. The orchestration is
+  unit-tested; a single env cell is validated end-to-end (`smoke_prober` emits
+  pure JSON with library output quarantined to stderr).
 - vLLM scans are heavy and frequently `ENV_ERROR` without CUDA/matching torch —
   expected and shown, not a tool bug.
