@@ -1,30 +1,38 @@
 # modelopt-ptq-transformers-doctor
 
-> **Compatibility matrix for NVIDIA TensorRT Model Optimizer (modelopt) PTQ ↔ HuggingFace Transformers.**
-> Answers *"which `transformers` releases does the installed `modelopt` version's
-> post-training quantization (FP8 / NVFP4 / INT4-AWQ) actually support?"* — via static
-> dependency extraction, per-version probing in isolated environments, and
-> signature-drift detection. Output as JSON, Markdown, a styled HTML page, and a notebook.
+> **Compatibility doctor for the NVIDIA TensorRT Model Optimizer (modelopt) PTQ
+> pipeline ↔ its dependency libraries** — HuggingFace Transformers, PyTorch,
+> vLLM, accelerate.
+> Answers *"which library versions does the installed `modelopt`'s post-training
+> quantization (FP8 / NVFP4 / INT4-AWQ) actually work with — across init →
+> quantize → export?"* by combining static dependency/API scanning,
+> export-capability screening, and a real load → quantize → export smoke probe.
+> Output as JSON, Markdown, styled HTML, and notebooks.
 
 **Keywords:** NVIDIA modelopt · TensorRT Model Optimizer · HuggingFace Transformers ·
-post-training quantization (PTQ) · FP8 / NVFP4 / INT4-AWQ · LLM quantization ·
-version compatibility matrix · dependency scanner.
+PyTorch · vLLM · accelerate · post-training quantization (PTQ) ·
+FP8 / NVFP4 / INT4-AWQ · LLM quantization · version compatibility matrix · dependency scanner.
 
-Builds a **compatibility matrix** between [NVIDIA TensorRT Model Optimizer
-(modelopt)](https://github.com/NVIDIA/TensorRT-Model-Optimizer) PTQ and the
-`transformers` library, by statically extracting the set of `transformers`
-symbols that modelopt PTQ depends on and probing each one against a range of
-`transformers` releases.
+modelopt's PTQ pipeline (init / module-replacement → quantization → export)
+calls specific APIs of `transformers`, `torch`, `vllm`, and `accelerate` — and
+those APIs drift across versions. This tool finds the breakage early.
 
-For every dependency symbol it reports the contiguous version window in which
-that symbol imports cleanly, so you can answer "which `transformers` versions
-does the installed modelopt actually work with?"
+## What it checks — three layers
 
-It also records each symbol's **signature** per version and flags **signature
-drift** — a symbol that still imports but whose signature changed across the
-window (the common "imports fine, breaks at runtime" failure mode).
+| layer | command | answers | runs the model? |
+|---|---|---|:--:|
+| **Static API scan** | `doctor scan --target <lib>` | which library versions modelopt's PTQ symbols import cleanly against, + **signature drift** | no |
+| **Export-capability screening** | `doctor capabilities` | MoE experts modelopt *quantizes* but the export path may not support ("quantizes but won't export") | no |
+| **Runtime smoke probe** | `doctor smoke` · `doctor smoke-matrix` | does the real **load → quantize → export** actually succeed (single, or per version) | yes (GPU) |
 
-## How it works
+Static layers are cheap **bulk screening**; the smoke probe is the **runtime
+verdict**. "Imports + signature OK" ≠ "runs OK" — so screening flags candidates
+to verify, and the smoke probe proves them. Targets: `transformers` (default),
+`torch`, `vllm`, `accelerate` (**SGLang is unsupported** — modelopt has no
+sglang integration). For each dependency symbol the scan reports the contiguous
+version window where it imports cleanly, plus signature drift.
+
+## How the scan works (static layer)
 
 1. **Locate** — find the modelopt installed in the current environment (via
    `importlib.util.find_spec`, without importing it).
@@ -298,26 +306,35 @@ MIT — see [LICENSE](LICENSE).
 
 # modelopt-ptq-transformers-doctor
 
-> **NVIDIA TensorRT Model Optimizer(modelopt)PTQ ↔ HuggingFace Transformers 兼容性矩阵。**
-> 回答*「当前安装的 `modelopt` 版本,其训练后量化(PTQ:FP8 / NVFP4 / INT4-AWQ)到底兼容哪些
-> `transformers` 发布?」*—— 通过静态依赖提取、在隔离环境中逐版本探测、以及签名漂移检测,
-> 输出 JSON、Markdown、带样式的 HTML 页面与 Jupyter notebook。
+> **面向 NVIDIA TensorRT Model Optimizer(modelopt)PTQ 流水线 ↔ 其依赖库的兼容性医生**
+> —— HuggingFace Transformers、PyTorch、vLLM、accelerate。
+> 回答*「当前安装的 `modelopt`,其训练后量化(PTQ:FP8 / NVFP4 / INT4-AWQ)在
+> init → quantize → export 全流程上到底兼容哪些库版本?」*—— 结合静态依赖/API 扫描、
+> 导出能力筛查、以及真实的 load→quantize→export 冒烟探测。输出 JSON、Markdown、
+> 带样式的 HTML 与 notebook。
 
 **关键词:** NVIDIA modelopt · TensorRT Model Optimizer · HuggingFace Transformers ·
-训练后量化 PTQ · FP8 / NVFP4 / INT4-AWQ · LLM 量化 · 版本兼容性矩阵 · 依赖扫描。
+PyTorch · vLLM · accelerate · 训练后量化 PTQ · FP8 / NVFP4 / INT4-AWQ · LLM 量化 ·
+版本兼容性矩阵 · 依赖扫描。
 
-构建 [NVIDIA TensorRT Model Optimizer
-(modelopt)](https://github.com/NVIDIA/TensorRT-Model-Optimizer) PTQ 与
-`transformers` 库之间的**兼容性矩阵**:静态提取 modelopt PTQ 依赖的
-`transformers` 符号集合,并在一系列 `transformers` 版本上逐一探测每个符号。
+modelopt 的 PTQ 流水线(init / 模块替换 → 量化 → 导出)会调用 `transformers`、
+`torch`、`vllm`、`accelerate` 的具体 API,而这些 API 会随版本漂移。本工具尽早发现这些
+不兼容。
 
-对每个依赖符号,工具会报告它能干净导入的**连续版本区间**,从而回答"当前安装的
-modelopt 到底兼容哪些 `transformers` 版本"。
+## 检查的三个层次
 
-工具还会逐版本记录每个符号的**签名**,并标记**签名漂移**——符号仍能导入、但签名
-在区间内发生了变化(典型的"能导入、运行时却崩"的失败模式)。
+| 层次 | 命令 | 回答 | 是否真跑模型 |
+|---|---|---|:--:|
+| **静态 API 扫描** | `doctor scan --target <lib>` | modelopt PTQ 符号能在哪些库版本上干净导入,以及**签名漂移** | 否 |
+| **导出能力筛查** | `doctor capabilities` | modelopt 能*量化*、但导出路径可能不支持的 MoE experts(「能量化、却导不出」) | 否 |
+| **运行时冒烟探测** | `doctor smoke` · `doctor smoke-matrix` | 真实的 **load → quantize → export** 是否成功(单次,或逐版本) | 是(GPU) |
 
-## 工作原理
+静态层是廉价的**批量筛查**;冒烟探测是**运行时判定**。「能导入 + 签名 OK」≠「能跑」——
+所以筛查标记待验证候选,冒烟探测给出实证。目标库:`transformers`(默认)、`torch`、
+`vllm`、`accelerate`(**不支持 SGLang**——modelopt 无 sglang 集成)。对每个依赖符号,
+扫描报告它能干净导入的连续版本区间,以及签名漂移。
+
+## 工作原理(静态扫描层)
 
 1. **定位** —— 通过 `importlib.util.find_spec`(不导入)找到当前环境中已安装的
    modelopt。

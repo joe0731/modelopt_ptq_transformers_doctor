@@ -96,3 +96,18 @@ throwaway `uv` virtualenv. So the target modelopt only needs its source on disk
 - `matrix.json` is the source of truth; `REPORT.md` is the tool's native plain
   report; `compatibility.html` / `.ipynb` are the presentation artifacts.
 - `report/modelopt044/` is a worked example to mirror.
+
+## Related commands (beyond the static scan)
+
+The scan above is the **static API layer**. Two more layers exist for questions
+the scan can't answer (see `AGENTS.md` for the full boundary):
+
+- `doctor capabilities [--out caps.json]` — **static export-capability
+  screening**: flags MoE experts modelopt quantizes but the export path may not
+  support ("quantizes but won't export", e.g. NemotronH). A screening signal,
+  not a verdict.
+- `doctor smoke --model <id> --recipe FP8_DEFAULT_CFG --device cuda` and
+  `doctor smoke-matrix --model <id> --modelopt nvidia-modelopt==X --target <lib> --min A --max B`
+  — **runtime verdict**: actually run load → quantize → export (single, or per
+  version) and report the failing stage. Needs modelopt + transformers + torch
+  installed; real recipes need a GPU.
