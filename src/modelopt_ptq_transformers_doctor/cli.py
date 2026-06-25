@@ -13,6 +13,7 @@ from .driver import build_matrix
 from .envman import EnvRunner
 from .progress import ProgressReporter, NullProgress
 from .report import write_report
+from .smoke import build_real_stages, format_result, run_smoke
 from .targets import TARGETS
 from .versions import fetch_available_versions, select_versions
 
@@ -37,6 +38,17 @@ def build_arg_parser() -> argparse.ArgumentParser:
         "capabilities",
         help="screen modelopt PTQ export-capability gaps (static screening — verify candidates at runtime)")
     cap.add_argument("--out", default=None, help="also write the screening report as JSON to this path")
+
+    smoke = sub.add_parser(
+        "smoke",
+        help="runtime smoke probe: load → quantize → export one model; report the failing stage")
+    smoke.add_argument("--model", required=True, help="HF model id or local path")
+    smoke.add_argument("--recipe", default="FP8_DEFAULT_CFG",
+                       help="modelopt.torch.quantization config name (e.g. FP8_DEFAULT_CFG, NVFP4_DEFAULT_CFG)")
+    smoke.add_argument("--device", default="cuda", help="cuda or cpu (default: cuda)")
+    smoke.add_argument("--trust-remote-code", action="store_true",
+                       help="allow custom model code from the checkpoint")
+    smoke.add_argument("--out", default=None, help="also write the smoke result as JSON to this path")
     return parser
 
 
@@ -92,12 +104,29 @@ def _run_capabilities(args) -> int:
     return 0
 
 
+def _run_smoke(args) -> int:
+    stages = build_real_stages(args.model, args.recipe, device=args.device,
+                               trust_remote_code=args.trust_remote_code)
+    result = run_smoke(stages)
+    print(format_result(args.model, args.recipe, result))
+    if args.out:
+        import json
+        os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
+        with open(args.out, "w", encoding="utf-8") as fh:
+            json.dump({"model": args.model, "recipe": args.recipe, **result}, fh,
+                      indent=2, ensure_ascii=False)
+        print(f"wrote {args.out}", file=sys.stderr)
+    return 0
+
+
 def main(argv=None) -> int:
     args = build_arg_parser().parse_args(argv)
     if args.command == "scan":
         return _run_scan(args)
     if args.command == "capabilities":
         return _run_capabilities(args)
+    if args.command == "smoke":
+        return _run_smoke(args)
     return 1
 
 
