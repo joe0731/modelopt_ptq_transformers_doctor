@@ -68,6 +68,42 @@ These thoughts mean you are about to overclaim:
 - "Zero output probably means zero hits." Verify attach success separately.
 - "Existing optimized C++ symbols are stable enough for CI."
 
+## Prompt Strategy Stack
+
+Use these prompt strategies together when applying this skill. They are selected
+because this workflow is an evidence-gated agent task, not a creative writing or
+multiple-choice task.
+
+| Strategy | How to use it here | Why |
+|---|---|---|
+| Layered Prompt | State `Goal -> Required tools -> Graph node -> Evidence -> Output format`. | Keeps the investigation ordered and prevents rule mixing. |
+| Flipped Interaction | If code point, testcase, binary, or permission context is missing, ask up to 3 concrete questions before tracing. | Avoids tracing the wrong symbol or workload. |
+| ReAct + Prompt Chaining | For each graph node: decide the next action, run the command, record the observation, then follow the next edge. | Keeps tool output tied to the graph state. |
+| Symbolic Placeholder | Put the final evidence block between `<<<runtime_reach_evidence>>>` and `<<<end_runtime_reach_evidence>>>`. | Makes the verdict easy to parse and review. |
+| Self-Contrast | Before the verdict, list evidence that could disprove runtime reach: missing symbol, no bpftrace, attach error, zero hits, wrong testcase. | Prevents overclaiming. |
+| Prompt Repetition | Repeat the boundary in the final block: `runtime reach only; not semantic correctness`. | Reinforces the hardest rule at the point of reporting. |
+
+Do not use prompt techniques that weaken evidence discipline here. Temperature
+changes, creative brainstorming, option-first MCQ, or hidden chain-of-thought are
+not useful for this skill. If the user asks for reasoning, summarize observable
+evidence and decisions, not private reasoning.
+
+Use this final output shape:
+
+```text
+<<<runtime_reach_evidence>>>
+goal: <code point and testcase>
+tools: <present/missing summary>
+path: <graph path taken>
+symbol: <binary + symbol>
+nm_result: <present|missing>
+bpftrace_result: <hit count | attach error | unavailable>
+state: <hit|zero-hit|missing-symbol|untested>
+disconfirming_evidence: <what could undermine the claim>
+boundary: runtime reach only; not semantic correctness
+<<<end_runtime_reach_evidence>>>
+```
+
 ## Flow
 
 Read this graph as the required execution order, not as an illustration. Start at
